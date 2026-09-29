@@ -1,0 +1,10 @@
+{
+  "name": "Mari's Clothing Brand",
+  "description": "Mari's Clothing Brand - Luxury fashion atelier featuring curated cashmere collections, bilingual support (English & Spanish), AI doubt-solving Concierge Chat Bot, bespoke styling, and inventory ledger.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

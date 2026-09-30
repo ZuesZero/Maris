@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Product, Size, User } from '../types';
 import { Language } from '../data/translations';
-import { Heart, ShoppingBag, Sparkles, ShieldCheck, Truck, RotateCcw, ChevronDown, ChevronUp, Star, Ruler, Check, Share2, ArrowRight, ArrowLeft, Pencil, ChevronLeft, ChevronRight, Sliders } from 'lucide-react';
+import { Heart, ShoppingBag, Sparkles, ShieldCheck, Truck, RotateCcw, ChevronDown, ChevronUp, Star, Ruler, Check, Share2, ArrowRight, ArrowLeft, Pencil, ChevronLeft, ChevronRight, Sliders, Trash2, AlertTriangle, X } from 'lucide-react';
 import { formatPrice } from '../utils/currency';
 import { getTranslatedProduct, getCategoryDisplayName } from '../utils/productTranslations';
 import { getImageFrameStyles } from '../utils/imageFrame';
@@ -20,6 +20,7 @@ interface ProductDetailViewProps {
   onBack?: () => void;
   currentUser?: User | null;
   onEditProduct?: (product: Product) => void;
+  onDeleteProduct?: (productId: string) => void;
   language?: Language;
 }
 
@@ -36,6 +37,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   onBack,
   currentUser,
   onEditProduct,
+  onDeleteProduct,
   language = 'en'
 }) => {
   const product = getTranslatedProduct(rawProduct, language);
@@ -45,6 +47,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   const [selectedColor, setSelectedColor] = useState<string>(product.colors[0]?.name || '');
   const [openAccordion, setOpenAccordion] = useState<'fit' | 'fabric' | 'care' | 'shipping'>('fit');
   const [addedAnimation, setAddedAnimation] = useState(false);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
   // Picture frame adjustment tool state
   const [isFrameToolOpen, setIsFrameToolOpen] = useState(false);
@@ -284,7 +287,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
             </div>
 
             {/* Admin Edit Controls Bar for Luis */}
-            {isAdminUser && onEditProduct && (
+            {isAdminUser && (onEditProduct || onDeleteProduct) && (
               <div className="p-3 bg-[#FAF8F5] border border-[#B88A58]/60 rounded-xs flex items-center justify-between gap-3 shadow-xs">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-[#B88A58] animate-pulse"></div>
@@ -297,14 +300,29 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                     </p>
                   </div>
                 </div>
-                <button
-                  id={`btn-edit-detail-${product.id}`}
-                  onClick={() => onEditProduct(rawProduct)}
-                  className="px-3.5 py-1.5 bg-[#B88A58] text-white hover:bg-[#1C1B20] text-xs font-bold uppercase tracking-wider rounded-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
-                >
-                  <Pencil className="w-3.5 h-3.5 text-white" />
-                  <span>{language === 'es' ? 'EDITAR PIEZA' : 'EDIT PIECE'}</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  {onEditProduct && (
+                    <button
+                      id={`btn-edit-detail-${product.id}`}
+                      onClick={() => onEditProduct(rawProduct)}
+                      className="px-3.5 py-1.5 bg-[#B88A58] text-white hover:bg-[#1C1B20] text-xs font-bold uppercase tracking-wider rounded-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+                    >
+                      <Pencil className="w-3.5 h-3.5 text-white" />
+                      <span>{language === 'es' ? 'EDITAR PIEZA' : 'EDIT PIECE'}</span>
+                    </button>
+                  )}
+                  {onDeleteProduct && (
+                    <button
+                      id={`btn-delete-detail-${product.id}`}
+                      onClick={() => setIsConfirmingDelete(true)}
+                      className="px-3.5 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider rounded-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+                      title={language === 'es' ? 'Eliminar prenda permanentemente' : 'Delete item permanently'}
+                    >
+                      <Trash2 className="w-3.5 h-3.5 text-white" />
+                      <span>{language === 'es' ? 'ELIMINAR' : 'DELETE'}</span>
+                    </button>
+                  )}
+                </div>
               </div>
             )}
 
@@ -670,6 +688,72 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
         currentUser={currentUser}
         language={language}
       />
+
+      {/* Delete Confirmation Modal for Luis */}
+      {isConfirmingDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
+          <div className="bg-white border-2 border-red-600 max-w-md w-full p-6 space-y-4 shadow-2xl rounded-xs">
+            <div className="flex items-center justify-between pb-2 border-b border-neutral-200">
+              <div className="flex items-center gap-2 text-red-600 font-bold uppercase tracking-wider text-xs">
+                <AlertTriangle className="w-4 h-4" />
+                <span>{language === 'es' ? 'Confirmar Eliminación de Prenda' : 'Confirm Piece Deletion'}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsConfirmingDelete(false)}
+                className="text-neutral-400 hover:text-neutral-700 p-1 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3 p-3 bg-neutral-50 border border-neutral-200 rounded-xs">
+              <img
+                src={product.images[0] || 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b'}
+                alt={product.name}
+                className="w-12 h-14 object-cover border border-[#1C1B20] shrink-0"
+              />
+              <div className="min-w-0">
+                <p className="font-bold text-[#1C1B20] text-sm truncate">{product.name}</p>
+                <p className="text-xs text-[#8C9083] font-mono">{product.id}</p>
+                <p className="text-xs text-[#B88A58] font-semibold">{formatPrice(product.price, currency)}</p>
+              </div>
+            </div>
+
+            <p className="text-xs text-[#4A4947] leading-relaxed">
+              {language === 'es'
+                ? '¿Estás seguro de que deseas eliminar permanentemente esta prenda del catálogo y del inventario? Esta acción no se puede deshacer.'
+                : 'Are you sure you want to permanently delete this piece from the catalog and inventory? This action cannot be undone.'}
+            </p>
+
+            <div className="flex justify-end gap-2.5 pt-2 border-t border-neutral-200">
+              <button
+                type="button"
+                onClick={() => setIsConfirmingDelete(false)}
+                className="px-4 py-2 border border-neutral-300 text-neutral-700 hover:bg-neutral-100 text-xs font-semibold rounded-xs cursor-pointer transition-colors"
+              >
+                {language === 'es' ? 'Cancelar' : 'Cancel'}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (onDeleteProduct) {
+                    onDeleteProduct(rawProduct.id);
+                  }
+                  setIsConfirmingDelete(false);
+                  if (onBack) {
+                    onBack();
+                  }
+                }}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider rounded-xs cursor-pointer shadow-sm flex items-center gap-1.5"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>{language === 'es' ? 'Sí, Eliminar' : 'Yes, Delete'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

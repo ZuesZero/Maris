@@ -45,11 +45,11 @@ export const UsersView: React.FC<UsersViewProps> = ({
     restrictedBadge: isEs ? 'Vista Restringida para Desarrollador' : 'Developer Restricted View',
     restrictedTitle: isEs ? 'Acceso Restringido al Directorio de Usuarios' : 'Registered Users Directory Access Restricted',
     restrictedDesc: isEs
-      ? 'La tabla de registro de usuarios está estrictamente reservada para el acceso de la cuenta de desarrollador (luis.delarosacosio@gmail.com).'
-      : 'The user storage registry table is strictly reserved for developer account access (luis.delarosacosio@gmail.com).',
+      ? 'La tabla de registro de usuarios está estrictamente reservada para el acceso de la cuenta de administrador autorizada.'
+      : 'The user storage registry table is strictly reserved for authorized administrator account access.',
     loggedInAs: isEs ? 'Sesión iniciada actualmente como:' : 'Currently logged in as:',
-    notLoggedInDev: isEs ? 'Actualmente no has iniciado sesión como desarrollador.' : 'You are currently not logged in as developer.',
-    signInDev: isEs ? 'Iniciar Sesión como Luis de la Rosa (Desarrollador)' : 'Sign In as Luis de la Rosa (Developer)',
+    notLoggedInDev: isEs ? 'Actualmente no has iniciado sesión como administrador.' : 'You are currently not logged in as administrator.',
+    signInDev: isEs ? 'Iniciar Sesión como Administrador' : 'Sign In as Administrator',
 
     // Header
     adminControl: isEs ? 'Control Administrativo del Desarrollador' : 'Developer Administrative Control',

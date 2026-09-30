@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { Product, FilterState, User, Category } from '../types';
 import { Language } from '../data/translations';
-import { Eye, Heart, ShoppingBag, SlidersHorizontal, X, ArrowUpDown, Grid, LayoutGrid, PlusCircle, Pencil, Sparkles, Mic, MicOff, Search } from 'lucide-react';
+import { Eye, Heart, ShoppingBag, SlidersHorizontal, X, ArrowUpDown, Grid, LayoutGrid, PlusCircle, Pencil, Sparkles, Mic, MicOff, Search, Trash2, AlertTriangle } from 'lucide-react';
 import { formatPrice } from '../utils/currency';
 import { getTranslatedProduct, getCategoryDisplayName } from '../utils/productTranslations';
 import { getImageFrameStyles } from '../utils/imageFrame';
@@ -83,6 +83,7 @@ interface CatalogViewProps {
   initialSearchQuery?: string;
   onOpenAddProduct?: () => void;
   onEditProduct?: (product: Product) => void;
+  onDeleteProduct?: (productId: string) => void;
   onCategoryChange?: (category: string) => void;
   currentUser?: User | null;
   language?: Language;
@@ -99,11 +100,13 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   initialSearchQuery = '',
   onOpenAddProduct,
   onEditProduct,
+  onDeleteProduct,
   onCategoryChange,
   currentUser,
   language = 'en'
 }) => {
   const isAdminUser = currentUser?.email?.toLowerCase().trim() === 'luis.delarosacosio@gmail.com';
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [filters, setFilters] = useState<FilterState>({
     category: initialCategory,
     color: '',
@@ -613,19 +616,36 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
 
                   {/* Badges */}
                   <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-                    {isAdminUser && onEditProduct && (
-                      <button
-                        id={`btn-edit-catalog-${product.id}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onEditProduct(product);
-                        }}
-                        className="px-2.5 py-1 bg-[#B88A58] hover:bg-[#1C1B20] text-white text-[9px] uppercase tracking-widest font-bold rounded-xs flex items-center gap-1 shadow-md transition-all cursor-pointer"
-                        title="Edit piece (Luis Delarosa Admin)"
-                      >
-                        <Pencil className="w-3 h-3 text-white" />
-                        <span>Edit</span>
-                      </button>
+                    {isAdminUser && (
+                      <div className="flex items-center gap-1">
+                        {onEditProduct && (
+                          <button
+                            id={`btn-edit-catalog-${product.id}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onEditProduct(product);
+                            }}
+                            className="px-2 py-1 bg-[#B88A58] hover:bg-[#1C1B20] text-white text-[9px] uppercase tracking-widest font-bold rounded-xs flex items-center gap-1 shadow-md transition-all cursor-pointer"
+                            title="Edit piece (Luis Delarosa Admin)"
+                          >
+                            <Pencil className="w-3 h-3 text-white" />
+                            <span>Edit</span>
+                          </button>
+                        )}
+                        {onDeleteProduct && (
+                          <button
+                            id={`btn-delete-catalog-${product.id}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setProductToDelete(rawProduct);
+                            }}
+                            className="p-1 bg-red-600 hover:bg-red-700 text-white text-[9px] font-bold rounded-xs flex items-center shadow-md transition-all cursor-pointer"
+                            title={language === 'es' ? 'Eliminar prenda permanentemente' : 'Delete piece permanently'}
+                          >
+                            <Trash2 className="w-3 h-3 text-white" />
+                          </button>
+                        )}
+                      </div>
                     )}
                     {product.isNewArrival && (
                       <span className="px-2.5 py-1 bg-[#1C1B20] text-white text-[9px] uppercase tracking-widest font-semibold rounded-xs">
@@ -783,6 +803,69 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal for Luis */}
+      {productToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
+          <div className="bg-white border-2 border-red-600 max-w-md w-full p-6 space-y-4 shadow-2xl rounded-xs">
+            <div className="flex items-center justify-between pb-2 border-b border-neutral-200">
+              <div className="flex items-center gap-2 text-red-600 font-bold uppercase tracking-wider text-xs">
+                <AlertTriangle className="w-4 h-4" />
+                <span>{language === 'es' ? 'Confirmar Eliminación de Prenda' : 'Confirm Piece Deletion'}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setProductToDelete(null)}
+                className="text-neutral-400 hover:text-neutral-700 p-1 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3 p-3 bg-neutral-50 border border-neutral-200 rounded-xs">
+              <img
+                src={productToDelete.images[0] || 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b'}
+                alt={productToDelete.name}
+                className="w-12 h-14 object-cover border border-[#1C1B20] shrink-0"
+              />
+              <div className="min-w-0">
+                <p className="font-bold text-[#1C1B20] text-sm truncate">{productToDelete.name}</p>
+                <p className="text-xs text-[#8C9083] font-mono">{productToDelete.id}</p>
+                <p className="text-xs text-[#B88A58] font-semibold">{formatPrice(productToDelete.price, currency)}</p>
+              </div>
+            </div>
+
+            <p className="text-xs text-[#4A4947] leading-relaxed">
+              {language === 'es'
+                ? '¿Estás seguro de que deseas eliminar permanentemente esta prenda del catálogo y del inventario? Esta acción no se puede deshacer.'
+                : 'Are you sure you want to permanently delete this piece from the catalog and inventory? This action cannot be undone.'}
+            </p>
+
+            <div className="flex justify-end gap-2.5 pt-2 border-t border-neutral-200">
+              <button
+                type="button"
+                onClick={() => setProductToDelete(null)}
+                className="px-4 py-2 border border-neutral-300 text-neutral-700 hover:bg-neutral-100 text-xs font-semibold rounded-xs cursor-pointer transition-colors"
+              >
+                {language === 'es' ? 'Cancelar' : 'Cancel'}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (onDeleteProduct && productToDelete) {
+                    onDeleteProduct(productToDelete.id);
+                  }
+                  setProductToDelete(null);
+                }}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider rounded-xs cursor-pointer shadow-sm flex items-center gap-1.5"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>{language === 'es' ? 'Sí, Eliminar' : 'Yes, Delete'}</span>
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

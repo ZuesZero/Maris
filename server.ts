@@ -4,6 +4,7 @@ import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import { ZipArchive } from "archiver";
+import * as dbQueries from "./src/db/queries.ts";
 
 const DATA_DIR = path.join(process.cwd(), "server_data");
 if (!fs.existsSync(DATA_DIR)) {
@@ -94,42 +95,75 @@ async function startServer() {
   });
 
   // API Route: Get and Save Image Frame Settings
-  app.get("/api/image-frame-settings", (req, res) => {
+  app.get("/api/image-frame-settings", async (req, res) => {
+    try {
+      const dbSettings = await dbQueries.getAllFrameSettings();
+      if (Object.keys(dbSettings).length > 0) {
+        return res.json(dbSettings);
+      }
+    } catch (e) {
+      console.warn("Falling back to local frame settings:", e);
+    }
     const settings = readJsonFile(FRAME_SETTINGS_FILE, {});
     res.json(settings);
   });
 
-  app.post("/api/image-frame-settings", (req, res) => {
+  app.post("/api/image-frame-settings", async (req, res) => {
     const { productId, settings, isGlobal, allSettings } = req.body;
     const current = readJsonFile(FRAME_SETTINGS_FILE, {});
     
     if (allSettings && typeof allSettings === 'object') {
       const merged = { ...current, ...allSettings };
       writeJsonFile(FRAME_SETTINGS_FILE, merged);
+      try {
+        for (const [key, val] of Object.entries(allSettings)) {
+          await dbQueries.saveFrameSettings(key, val);
+        }
+      } catch (e) {
+        console.warn("DB save frame settings warning:", e);
+      }
       return res.json({ success: true, settings: merged });
     }
 
-    if (isGlobal) {
-      current["__global__"] = settings;
-    } else if (productId) {
-      current[productId] = settings;
+    const targetKey = isGlobal ? "__global__" : productId;
+    if (targetKey && settings) {
+      current[targetKey] = settings;
+      writeJsonFile(FRAME_SETTINGS_FILE, current);
+      try {
+        await dbQueries.saveFrameSettings(targetKey, settings);
+      } catch (e) {
+        console.warn("DB save single frame setting warning:", e);
+      }
     }
-    writeJsonFile(FRAME_SETTINGS_FILE, current);
     res.json({ success: true, settings: current });
   });
 
   // API Route: Get all custom and edited products
-  app.get("/api/products/persisted", (req, res) => {
+  app.get("/api/products/persisted", async (req, res) => {
+    try {
+      const dbProducts = await dbQueries.getAllProducts();
+      if (dbProducts && dbProducts.length > 0) {
+        return res.json({ custom: dbProducts, edited: [] });
+      }
+    } catch (e) {
+      console.warn("Falling back to local file products:", e);
+    }
     const custom = readJsonFile(PRODUCTS_FILE, []);
     const edited = readJsonFile(EDITED_PRODUCTS_FILE, []);
     res.json({ custom, edited });
   });
 
   // API Route: Save or update product
-  app.post("/api/products", (req, res) => {
+  app.post("/api/products", async (req, res) => {
     const { product, isEdit } = req.body;
     if (!product || !product.id) {
       return res.status(400).json({ error: "Invalid product data" });
+    }
+
+    try {
+      await dbQueries.upsertProduct(product);
+    } catch (e) {
+      console.warn("Cloud SQL upsert product error, maintaining local backup:", e);
     }
 
     if (isEdit) {
@@ -165,8 +199,14 @@ async function startServer() {
   });
 
   // API Route: Delete product
-  app.delete("/api/products/:id", (req, res) => {
+  app.delete("/api/products/:id", async (req, res) => {
     const id = req.params.id;
+    try {
+      await dbQueries.deleteProductById(id);
+    } catch (e) {
+      console.warn("Cloud SQL delete product error:", e);
+    }
+
     let custom = readJsonFile(PRODUCTS_FILE, []);
     custom = custom.filter((p: any) => p.id !== id);
     writeJsonFile(PRODUCTS_FILE, custom);
@@ -176,6 +216,67 @@ async function startServer() {
     writeJsonFile(EDITED_PRODUCTS_FILE, edited);
 
     res.json({ success: true });
+  });
+
+  // API Route: Sales Transactions (Cloud SQL)
+  app.get("/api/sales-transactions", async (req, res) => {
+    try {
+      const txs = await dbQueries.getAllSalesTransactions();
+      res.json(txs);
+    } catch (e) {
+      console.error("Failed to fetch sales transactions from Cloud SQL:", e);
+      res.status(500).json({ error: "Failed to fetch sales transactions" });
+    }
+  });
+
+  app.post("/api/sales-transactions", async (req, res) => {
+    try {
+      const { transaction } = req.body;
+      if (!transaction || !transaction.id) {
+        return res.status(400).json({ error: "Invalid transaction data" });
+      }
+      const saved = await dbQueries.upsertSaleTransaction(transaction);
+      res.json({ success: true, transaction: saved[0] });
+    } catch (e) {
+      console.error("Failed to save sales transaction to Cloud SQL:", e);
+      res.status(500).json({ error: "Failed to save sales transaction" });
+    }
+  });
+
+  app.delete("/api/sales-transactions/:id", async (req, res) => {
+    try {
+      const id = req.params.id;
+      await dbQueries.deleteSaleTransactionById(id);
+      res.json({ success: true });
+    } catch (e) {
+      console.error("Failed to delete sales transaction from Cloud SQL:", e);
+      res.status(500).json({ error: "Failed to delete sales transaction" });
+    }
+  });
+
+  // API Route: Users (Cloud SQL)
+  app.get("/api/users", async (req, res) => {
+    try {
+      const dbUsers = await dbQueries.getAllUsers();
+      res.json(dbUsers);
+    } catch (e) {
+      console.error("Failed to fetch users from Cloud SQL:", e);
+      res.status(500).json({ error: "Failed to fetch users" });
+    }
+  });
+
+  app.post("/api/users", async (req, res) => {
+    try {
+      const { uid, email, name, avatar } = req.body;
+      if (!uid || !email) {
+        return res.status(400).json({ error: "Missing uid or email" });
+      }
+      const user = await dbQueries.getOrCreateUser(uid, email, name, avatar);
+      res.json({ success: true, user });
+    } catch (e) {
+      console.error("Failed to upsert user in Cloud SQL:", e);
+      res.status(500).json({ error: "Failed to upsert user" });
+    }
   });
 
   // API Route: AI Bespoke Stylist Advice

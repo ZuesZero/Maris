@@ -60,6 +60,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [adminNotice, setAdminNotice] = useState('');
+  const [adminPasswordPrompt, setAdminPasswordPrompt] = useState(false);
+  const [adminEmailInput, setAdminEmailInput] = useState('');
+  const [adminPasswordInput, setAdminPasswordInput] = useState('');
+  const [adminPasswordError, setAdminPasswordError] = useState('');
+  const [showAdminPassword, setShowAdminPassword] = useState(false);
 
   // Avatar Edit State
   const [avatarInputUrl, setAvatarInputUrl] = useState('');
@@ -124,7 +130,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       id: 'usr-' + Date.now(),
       name: formattedName,
       email: cleanEmail,
-      cellphone: cellphone.trim() || '+52 55 1234 5678',
+      cellphone: cellphone.trim() || '',
       profile: isDev ? 'Developer' : 'User',
       memberTier: isDev ? 'Lead Developer' : (isEs ? 'Miembro Atelier Privé' : 'Atelier Privé Member'),
       avatar: userAvatar
@@ -143,6 +149,67 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   };
 
   const handleSelectAdmin = () => {
+    if (isDevAdmin) {
+      setSuccessMessage(isEs ? 'Modo Administrador ya está activo (Luis delarosacosio)' : 'Administrator mode already active (Luis delarosacosio)');
+      setTimeout(() => setSuccessMessage(''), 2000);
+      return;
+    }
+
+    if (currentUser) {
+      // User is currently logged in as Guest or another user.
+      // Request administrator email and password to switch/grant permissions.
+      setAdminPasswordPrompt(true);
+      setAdminEmailInput('');
+      setAdminPasswordInput('');
+      setAdminPasswordError('');
+    } else {
+      // User is not logged in: request logging access (email and password)
+      setEmail('');
+      setMode('login');
+      setError('');
+      setAdminNotice(
+        isEs
+          ? 'Acceso de Administrador: Por favor ingresa el correo y la contraseña autorizados para iniciar sesión con permisos de Administrador.'
+          : 'Administrator Access: Please enter your authorized email and password to sign in with Administrator permissions.'
+      );
+      setTimeout(() => {
+        const emailInput = document.getElementById('input-login-email');
+        if (emailInput) emailInput.focus();
+      }, 100);
+    }
+  };
+
+  const handleAdminPasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanEmail = adminEmailInput.trim().toLowerCase();
+
+    if (!cleanEmail || !cleanEmail.includes('@')) {
+      setAdminPasswordError(
+        isEs
+          ? 'Por favor ingresa un correo electrónico de administrador válido.'
+          : 'Please enter a valid administrator email address.'
+      );
+      return;
+    }
+
+    if (cleanEmail !== 'luis.delarosacosio@gmail.com') {
+      setAdminPasswordError(
+        isEs
+          ? 'El correo ingresado no cuenta con permisos de Administrador.'
+          : 'The entered email does not have Administrator permissions.'
+      );
+      return;
+    }
+
+    if (!adminPasswordInput || adminPasswordInput.length < 6) {
+      setAdminPasswordError(
+        isEs
+          ? 'La contraseña de administrador debe tener al menos 6 caracteres.'
+          : 'Administrator password must be at least 6 characters.'
+      );
+      return;
+    }
+
     const adminEmail = 'luis.delarosacosio@gmail.com';
     const fallbackAvatar = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200';
     const currentAdminAvatar = currentUser?.email?.toLowerCase().trim() === adminEmail ? currentUser.avatar : '';
@@ -152,14 +219,26 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       id: 'usr-dev-1',
       name: 'Luis delarosacosio',
       email: adminEmail,
-      cellphone: '+52 55 1234 5678',
+      cellphone: '',
       profile: 'Developer',
       memberTier: 'Lead Developer',
       avatar: adminAvatar
     };
+
     onLogin(adminUser);
-    setSuccessMessage(isEs ? 'Modo Administrador Autorizado activado (Luis delarosacosio)' : 'Authorized Admin mode enabled (Luis delarosacosio)');
-    setTimeout(() => setSuccessMessage(''), 2200);
+    setAdminPasswordPrompt(false);
+    setAdminEmailInput('');
+    setAdminPasswordInput('');
+    setAdminPasswordError('');
+    setSuccessMessage(
+      isEs
+        ? 'Autenticado con éxito. Permisos de Administrador activados.'
+        : 'Authenticated successfully. Administrator permissions enabled.'
+    );
+    setTimeout(() => {
+      setSuccessMessage('');
+      onClose();
+    }, 1500);
   };
 
   const handleSelectGuest = () => {
@@ -292,12 +371,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         {currentUser.name}
                       </h3>
                       <p className="text-xs text-[#8C9083] font-mono truncate">{currentUser.email}</p>
-                      {currentUser.cellphone && (
-                        <p className="text-[11px] text-[#A8A49E] flex items-center gap-1 mt-0.5">
-                          <Phone className="w-3 h-3 text-[#B88A58]" />
-                          <span>{currentUser.cellphone}</span>
-                        </p>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -333,20 +406,37 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           }`}>
                             {isEs ? 'ADMINISTRADOR' : 'AUTHORIZED ADMIN'}
                           </span>
-                          {isDevAdmin && (
+                          {isDevAdmin ? (
                             <CheckCircle2 className="w-4 h-4 text-[#B88A58] shrink-0" />
+                          ) : (
+                            <Lock className="w-3.5 h-3.5 text-[#B88A58] shrink-0" />
                           )}
                         </div>
-                        <p className={`text-xs font-serif font-bold ${isDevAdmin ? 'text-white' : 'text-[#1C1B20]'}`}>
-                          Luis delarosacosio
-                        </p>
-                        <p className={`text-[10px] font-mono truncate mt-0.5 ${isDevAdmin ? 'text-[#D5CEBF]' : 'text-[#88847C]'}`}>
-                          luis.delarosacosio@gmail.com
-                        </p>
+                        {isDevAdmin ? (
+                          <>
+                            <p className="text-xs font-serif font-bold text-white">
+                              Luis delarosacosio
+                            </p>
+                            <p className="text-[10px] font-mono truncate mt-0.5 text-[#D5CEBF]">
+                              luis.delarosacosio@gmail.com
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <p className="text-xs font-serif font-bold text-[#1C1B20]">
+                              {isEs ? 'Cuenta de Administrador' : 'Administrator Account'}
+                            </p>
+                            <p className="text-[10px] font-mono truncate mt-0.5 text-[#88847C]">
+                              {isEs ? 'Acceso Privado' : 'Private Access'}
+                            </p>
+                          </>
+                        )}
                       </div>
                       <div className="pt-2 mt-2 border-t border-white/10 text-[10px]">
                         <span className={isDevAdmin ? 'text-[#E8D0B5]' : 'text-[#8C9083]'}>
-                          {isEs ? '✓ Control total, subir prendas y stock' : '✓ Full control, upload items & stock'}
+                          {isDevAdmin 
+                            ? (isEs ? '✓ Control total, subir prendas y stock' : '✓ Full control, upload items & stock')
+                            : (isEs ? '🔒 Requiere correo y contraseña' : '🔒 Email and password required')}
                         </span>
                       </div>
                     </button>
@@ -387,6 +477,97 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                       </div>
                     </button>
                   </div>
+
+                  {/* Inline Admin Password Prompt */}
+                  {adminPasswordPrompt && (
+                    <div className="p-4 bg-[#1C1B20] text-white border border-[#B88A58] rounded-xs space-y-3 animate-fadeIn">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#E8D0B5]">
+                          <Lock className="w-3.5 h-3.5 text-[#B88A58]" />
+                          <span>{isEs ? 'Inicio de Sesión de Administrador Requerido' : 'Administrator Sign In Required'}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => { setAdminPasswordPrompt(false); setAdminPasswordError(''); }}
+                          className="text-[#A8A09B] hover:text-white cursor-pointer"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      <p className="text-[11px] text-[#D5CEBF] leading-relaxed">
+                        {isEs 
+                          ? 'Para otorgar permisos de Administrador, ingresa tu correo y contraseña autorizados:' 
+                          : 'To grant Administrator permissions, enter your authorized email and password:'}
+                      </p>
+
+                      {adminPasswordError && (
+                        <div className="p-2 bg-rose-950/80 border border-rose-500 text-rose-200 text-xs">
+                          {adminPasswordError}
+                        </div>
+                      )}
+
+                      <form onSubmit={handleAdminPasswordSubmit} className="space-y-2.5">
+                        {/* Email Input */}
+                        <div className="space-y-1">
+                          <label className="text-[10px] uppercase tracking-wider text-[#A8A09B] font-semibold block">
+                            {isEs ? 'Correo Electrónico de Administrador' : 'Administrator Email'}
+                          </label>
+                          <div className="relative">
+                            <Mail className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#8C9083]" />
+                            <input
+                              type="email"
+                              value={adminEmailInput}
+                              onChange={(e) => { setAdminEmailInput(e.target.value); setAdminPasswordError(''); }}
+                              placeholder={isEs ? 'ej. correo@ejemplo.com' : 'e.g. email@example.com'}
+                              autoFocus
+                              className="w-full pl-9 pr-3 py-2 bg-[#2A292F] border border-[#44424A] text-white text-xs placeholder:text-[#7A7672] focus:border-[#B88A58] focus:outline-none"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Password Input */}
+                        <div className="space-y-1">
+                          <label className="text-[10px] uppercase tracking-wider text-[#A8A09B] font-semibold block">
+                            {isEs ? 'Contraseña' : 'Password'}
+                          </label>
+                          <div className="relative">
+                            <Lock className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#8C9083]" />
+                            <input
+                              type={showAdminPassword ? 'text' : 'password'}
+                              value={adminPasswordInput}
+                              onChange={(e) => { setAdminPasswordInput(e.target.value); setAdminPasswordError(''); }}
+                              placeholder={isEs ? 'Contraseña (mín. 6 caracteres)' : 'Password (min. 6 chars)'}
+                              className="w-full pl-9 pr-9 py-2 bg-[#2A292F] border border-[#44424A] text-white text-xs placeholder:text-[#7A7672] focus:border-[#B88A58] focus:outline-none"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowAdminPassword(!showAdminPassword)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8C9083] hover:text-white cursor-pointer"
+                            >
+                              {showAdminPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-2 pt-1">
+                          <button
+                            type="submit"
+                            className="flex-1 py-2 bg-[#B88A58] hover:bg-[#a17849] text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                          >
+                            {isEs ? 'Verificar e Iniciar Sesión' : 'Verify & Sign In'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { setAdminPasswordPrompt(false); setAdminPasswordError(''); }}
+                            className="px-3 py-2 bg-[#2A292F] hover:bg-[#38363F] text-[#A8A09B] text-xs transition-colors cursor-pointer"
+                          >
+                            {isEs ? 'Cancelar' : 'Cancel'}
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  )}
                 </div>
 
                 {/* Account Status / Perks Box */}
@@ -552,16 +733,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     <span className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 bg-[#B88A58] text-[#1C1B20] rounded-2xs">
                       {isEs ? 'ADMINISTRADOR AUTORIZADO' : 'AUTHORIZED ADMIN'}
                     </span>
-                    <ShieldCheck className="w-4 h-4 text-[#B88A58] group-hover:scale-110 transition-transform" />
+                    <Lock className="w-4 h-4 text-[#B88A58] group-hover:scale-110 transition-transform" />
                   </div>
                   <p className="text-sm font-serif font-bold text-white">
-                    Luis delarosacosio
+                    {isEs ? 'Cuenta de Administrador' : 'Administrator Account'}
                   </p>
                   <p className="text-[10px] font-mono text-[#D5CEBF] mt-0.5">
-                    luis.delarosacosio@gmail.com
+                    {isEs ? 'Acceso Privado' : 'Private Access'}
                   </p>
-                  <div className="mt-2 pt-2 border-t border-white/15 text-[10px] text-[#E8D0B5]">
-                    {isEs ? '✓ Acceso completo a carga de prendas, inventario y métricas' : '✓ Full access to batch upload, inventory & metrics'}
+                  <div className="mt-2 pt-2 border-t border-white/15 text-[10px] text-[#E8D0B5] flex items-center justify-between">
+                    <span>{isEs ? '🔒 Requiere correo y contraseña' : '🔒 Requires email & password'}</span>
+                    <span className="text-[9px] underline uppercase tracking-wider text-[#B88A58]">{isEs ? 'Iniciar sesión' : 'Sign in'} &rarr;</span>
                   </div>
                 </button>
 
@@ -617,6 +799,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     {isEs ? 'Crear Cuenta' : 'Register'}
                   </button>
                 </div>
+
+                {adminNotice && !error && (
+                  <div className="p-3 bg-[#FAF6F0] border border-[#B88A58]/60 text-[#8C6D3B] text-xs flex items-center gap-2 rounded-xs animate-fadeIn">
+                    <Lock className="w-4 h-4 text-[#B88A58] shrink-0" />
+                    <span className="leading-relaxed">{adminNotice}</span>
+                  </div>
+                )}
 
                 {error && (
                   <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs text-center font-medium">

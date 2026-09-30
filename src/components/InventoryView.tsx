@@ -89,11 +89,11 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
     restrictedTitle: lang === 'es' ? 'Acceso Restringido a Inventario, Ventas y Analítica' : 'Inventory, Sales & Financial Analytics Restricted',
     restrictedBadge: lang === 'es' ? 'Vista Restringida de Desarrollador' : 'Developer Restricted View',
     restrictedDesc: lang === 'es'
-      ? "El libro de ingresos de ventas, registros de transacciones y métricas de valoración de inventario están estrictamente reservados para la cuenta de desarrollador (luis.delarosacosio@gmail.com)."
-      : "The Atelier sales revenue ledger, transaction records, and inventory valuation metrics are strictly reserved for developer account access (luis.delarosacosio@gmail.com).",
+      ? "El libro de ingresos de ventas, registros de transacciones y métricas de valoración de inventario están estrictamente reservados para la cuenta de administrador autorizada."
+      : "The Atelier sales revenue ledger, transaction records, and inventory valuation metrics are strictly reserved for authorized administrator account access.",
     loggedInAs: lang === 'es' ? 'Sesión iniciada como:' : 'Currently logged in as:',
-    notLoggedInDev: lang === 'es' ? 'No has iniciado sesión como desarrollador.' : 'You are currently not logged in as developer.',
-    signInDev: lang === 'es' ? 'Iniciar sesión como Luis de la Rosa (Desarrollador)' : 'Sign In as Luis de la Rosa (Developer)',
+    notLoggedInDev: lang === 'es' ? 'No has iniciado sesión como administrador.' : 'You are currently not logged in as administrator.',
+    signInDev: lang === 'es' ? 'Iniciar sesión como Administrador' : 'Sign In as Administrator',
 
     // Header Banner
     adminControl: lang === 'es' ? 'Control Administrativo de Desarrollador' : 'Developer Administrative Control',
@@ -228,6 +228,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
   // Active View Tab: 'sales' (Sales Made & Transactions) | 'inventory' (Inventory Quantity & Valuation Projections)
   const [activeTab, setActiveTab] = useState<'sales' | 'inventory'>('sales');
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [transactionToDelete, setTransactionToDelete] = useState<SaleTransaction | null>(null);
 
   // Shared Filters
   const [selectedYear, setSelectedYear] = useState<'2024' | '2025' | '2026' | 'All'>('2026');
@@ -258,6 +259,12 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
     } catch (e) {
       console.error('Failed to save sales transactions', e);
     }
+  };
+
+  const handleDeleteSaleTransaction = (transactionId: string) => {
+    const updated = salesTransactions.filter(st => st.id !== transactionId);
+    saveSalesTransactions(updated);
+    setTransactionToDelete(null);
   };
 
   // Quick Sell Modal State (Change state from available to sold & move to book of sales)
@@ -801,9 +808,6 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
             </h2>
             <p className="text-xs text-[#4A4947] leading-relaxed pt-2">
               {t.restrictedDesc}
-              <span className="block font-mono font-bold text-[#1C1B20] mt-1 bg-[#F9F9F9] py-1 px-2 border border-[#1C1B20]">
-                luis.delarosacosio@gmail.com
-              </span>
             </p>
           </div>
 
@@ -1133,82 +1137,85 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
 
             {/* Sales Products Table */}
             <div className="overflow-x-auto border border-[#1C1B20] bg-white shadow-xs">
-              <table className="w-full text-left text-xs min-w-[1360px]">
-                <thead className="bg-[#1C1B20] text-[#F4F0EA] uppercase text-[10px] tracking-wider border-b border-[#1C1B20] whitespace-nowrap font-bold">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-[#1C1B20] text-[#F4F0EA] uppercase text-[9px] tracking-wider border-b border-[#1C1B20] whitespace-nowrap font-bold">
                   <tr>
-                    <th className="py-3.5 px-4 min-w-[160px]">{t.colTxId} &amp; {t.colDateTime}</th>
-                    <th className="py-3.5 px-4 min-w-[220px]">{t.colProduct}</th>
-                    <th className="py-3.5 px-4 min-w-[130px]">{t.colCategory}</th>
-                    <th className="py-3.5 px-4 min-w-[180px]">{t.colClient}</th>
-                    <th className="py-3.5 px-4 text-center min-w-[80px]">{t.colQty}</th>
-                    <th className="py-3.5 px-4 text-right min-w-[130px]">{t.colUnitCost}</th>
-                    <th className="py-3.5 px-4 text-right min-w-[140px]">{t.colTotalAmount}</th>
-                    <th className="py-3.5 px-4 text-right min-w-[140px]">{lang === 'es' ? 'Ganancia Neta' : 'Net Profit'}</th>
-                    <th className="py-3.5 px-4 min-w-[180px]">{t.colChannel} &amp; {t.colPayment}</th>
-                    <th className="py-3.5 px-4 text-center min-w-[110px]">{t.colStatus}</th>
+                    <th className="py-2.5 px-2 text-left">{t.colTxId} &amp; {t.colDateTime}</th>
+                    <th className="py-2.5 px-2 text-left">{t.colProduct}</th>
+                    <th className="py-2.5 px-2 text-left">{t.colCategory}</th>
+                    <th className="py-2.5 px-2 text-left">{t.colClient}</th>
+                    <th className="py-2.5 px-1 text-center">{t.colQty}</th>
+                    <th className="py-2.5 px-2 text-right">{t.colUnitCost}</th>
+                    <th className="py-2.5 px-2 text-right">{t.colTotalAmount}</th>
+                    <th className="py-2.5 px-2 text-right">{lang === 'es' ? 'Ganancia Neta' : 'Net Profit'}</th>
+                    <th className="py-2.5 px-2 text-left">{t.colChannel} &amp; {t.colPayment}</th>
+                    <th className="py-2.5 px-1 text-center">{t.colStatus}</th>
+                    <th className="py-2.5 px-1 text-center">{t.colActions}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#1C1B20] text-[#1C1B20]">
                   {filteredSalesTransactions.length === 0 ? (
                     <tr>
-                      <td colSpan={10} className="py-8 text-center text-[#8C9083]">
+                      <td colSpan={11} className="py-6 text-center text-[#8C9083]">
                         {t.noSalesFound}
                       </td>
                     </tr>
                   ) : (
                     filteredSalesTransactions.map(tx => (
                       <tr key={tx.id} className="hover:bg-[#F9F9F9] transition-colors">
-                        <td className="py-3 px-4">
-                          <span className="font-mono font-bold text-[#1C1B20] block">{tx.id}</span>
-                          <span className="text-[10px] text-[#8C9083]">{tx.date}</span>
+                        <td className="py-2 px-2 whitespace-nowrap">
+                          <span className="font-mono font-bold text-[#1C1B20] text-[11px] block">{tx.id}</span>
+                          <span className="text-[9px] text-[#8C9083]">{tx.date}</span>
                         </td>
-                        <td className="py-3 px-4">
-                          <div className="flex items-center gap-3">
+                        <td className="py-2 px-2">
+                          <div className="flex items-center gap-2">
                             <img
                               src={tx.productImage}
                               alt={tx.productName}
-                              className="w-9 h-11 object-cover border border-[#1C1B20]"
+                              className="w-8 h-10 object-cover border border-[#1C1B20] shrink-0"
                             />
-                            <div>
-                              <span className="font-bold text-[#1C1B20] block">{tx.productName}</span>
-                              <div className="flex items-center gap-2 text-[10px] text-[#8C9083]">
-                                <span>{t.sizeLabel}: {tx.size}</span>
+                            <div className="min-w-0 max-w-[150px]">
+                              <span className="font-bold text-[#1C1B20] block text-[11px] truncate">{tx.productName}</span>
+                              <div className="flex items-center gap-1.5 text-[9px] text-[#8C9083] truncate">
+                                <span>{tx.size}</span>
                                 <span>•</span>
-                                <span>{tx.color}</span>
+                                <span className="truncate">{tx.color}</span>
                               </div>
                             </div>
                           </div>
                         </td>
-                        <td className="py-3 px-4">
-                          <span className="px-2 py-0.5 bg-[#F9F9F9] border border-[#1C1B20] text-[10px] font-semibold text-[#1C1B20]">
+                        <td className="py-2 px-2 whitespace-nowrap">
+                          <span className="px-1.5 py-0.5 bg-[#F9F9F9] border border-[#1C1B20] text-[9px] font-semibold text-[#1C1B20]">
                             {tx.category}
                           </span>
                         </td>
-                        <td className="py-3 px-4">
-                          <span className="font-semibold text-[#1C1B20] block">{tx.customerName}</span>
-                          <span className="text-[10px] text-[#8C9083] font-mono">{tx.customerEmail}</span>
+                        <td className="py-2 px-2">
+                          <div className="min-w-0 max-w-[130px]">
+                            <span className="font-semibold text-[#1C1B20] block text-[11px] truncate">{tx.customerName}</span>
+                            <span className="text-[9px] text-[#8C9083] font-mono block truncate">{tx.customerEmail}</span>
+                          </div>
                         </td>
-                        <td className="py-3 px-4 text-center font-bold font-sans tabular-nums">
+                        <td className="py-2 px-1 text-center font-bold font-sans tabular-nums text-xs whitespace-nowrap">
                           {tx.quantity} pc
                         </td>
-                        <td className="py-3 px-4 text-right font-sans font-semibold tabular-nums">
+                        <td className="py-2 px-2 text-right font-sans font-semibold tabular-nums text-xs whitespace-nowrap">
                           {formatCurrency(tx.unitPrice)}
                         </td>
-                        <td className="py-3 px-4 text-right font-sans font-bold text-[#1C1B20] tabular-nums">
+                        <td className="py-2 px-2 text-right font-sans font-bold text-[#1C1B20] tabular-nums text-xs whitespace-nowrap">
                           {formatCurrency(tx.totalSale)}
                         </td>
-                        <td className="py-3 px-4 text-right font-sans font-bold text-emerald-800 tabular-nums">
+                        <td className="py-2 px-2 text-right font-sans font-bold text-emerald-800 tabular-nums text-xs whitespace-nowrap">
                           +{formatCurrency(tx.grossProfit)}
                         </td>
-                        <td className="py-3 px-4">
-                          <span className="font-semibold text-[#1C1B20] block text-[11px]">{tx.channel}</span>
-                          <span className="text-[10px] text-[#8C9083] flex items-center gap-1">
-                            <CreditCard className="w-3 h-3 text-[#B88A58]" />
-                            {tx.paymentMethod}
+                        <td className="py-2 px-2 whitespace-nowrap">
+                          <span className="font-semibold text-[#1C1B20] block text-[10px] leading-tight">{tx.channel}</span>
+                          <span className="text-[9px] text-[#8C9083] flex items-center gap-1">
+                            <CreditCard className="w-2.5 h-2.5 text-[#B88A58]" />
+                            <span className="truncate max-w-[100px]">{tx.paymentMethod}</span>
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-center">
-                          <span className={`px-2 py-0.5 text-[10px] font-bold border ${
+                        <td className="py-2 px-1 text-center whitespace-nowrap">
+                          <span className={`px-1.5 py-0.5 text-[9px] font-bold border ${
                             tx.status === 'Completed' || tx.status === 'Delivered'
                               ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                               : tx.status === 'In Transit'
@@ -1217,6 +1224,16 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                           }`}>
                             {lang === 'es' && tx.status === 'Completed' ? 'Completado' : tx.status}
                           </span>
+                        </td>
+                        <td className="py-2 px-1 text-center whitespace-nowrap">
+                          <button
+                            type="button"
+                            onClick={() => setTransactionToDelete(tx)}
+                            className="p-1 text-red-600 hover:text-white hover:bg-red-600 border border-red-200 hover:border-red-600 rounded-xs transition-colors cursor-pointer inline-flex items-center justify-center shadow-2xs group"
+                            title={lang === 'es' ? 'Eliminar transacción del libro de ventas' : 'Delete transaction from sales book'}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
                         </td>
                       </tr>
                     ))
@@ -2264,6 +2281,68 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                   }
                   setProductToDelete(null);
                 }}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider rounded-xs cursor-pointer transition-colors shadow-xs flex items-center gap-1.5"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>{lang === 'es' ? 'Sí, Eliminar' : 'Yes, Delete'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal for Sale Transaction */}
+      {transactionToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fadeIn">
+          <div className="bg-white border-2 border-red-600 max-w-md w-full p-6 shadow-2xl space-y-4 rounded-xs">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E8E2D9]">
+              <div className="flex items-center gap-2 text-red-600">
+                <AlertTriangle className="w-5 h-5" />
+                <h3 className="font-serif text-lg font-bold text-[#1C1B20]">
+                  {lang === 'es' ? 'Eliminar Registro de Venta' : 'Delete Sales Record'}
+                </h3>
+              </div>
+              <button
+                onClick={() => setTransactionToDelete(null)}
+                className="p-1 text-[#8C9083] hover:text-[#1C1B20] cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3 p-3 bg-[#FAF8F5] border border-[#E8E2D9] rounded-xs">
+              <img
+                src={transactionToDelete.productImage || 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b'}
+                alt={transactionToDelete.productName}
+                className="w-12 h-14 object-cover border border-[#1C1B20] shrink-0"
+              />
+              <div className="min-w-0">
+                <p className="font-bold text-[#1C1B20] text-sm truncate">{transactionToDelete.productName}</p>
+                <p className="text-xs text-[#8C9083] font-mono">{transactionToDelete.id} • {transactionToDelete.date}</p>
+                <p className="text-xs text-[#B88A58] font-semibold">
+                  {formatCurrency(transactionToDelete.totalSale)} ({transactionToDelete.quantity} {transactionToDelete.quantity === 1 ? 'pc' : 'pcs'})
+                </p>
+                <p className="text-[11px] text-[#4A4947] truncate">{transactionToDelete.customerName}</p>
+              </div>
+            </div>
+
+            <p className="text-xs text-[#666562] leading-relaxed">
+              {lang === 'es'
+                ? '¿Estás seguro de que deseas eliminar permanentemente este registro del Libro de Ventas y Transacciones? Esta acción recalculará los ingresos y métricas financieras.'
+                : 'Are you sure you want to permanently delete this record from the Sales and Transactions Book? This action will recalculate revenue and financial metrics.'}
+            </p>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E8E2D9]">
+              <button
+                type="button"
+                onClick={() => setTransactionToDelete(null)}
+                className="px-4 py-2 border border-[#D5CECE] hover:border-[#1C1B20] text-[#1C1B20] text-xs font-semibold uppercase tracking-wider rounded-xs cursor-pointer transition-colors"
+              >
+                {lang === 'es' ? 'Cancelar' : 'Cancel'}
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDeleteSaleTransaction(transactionToDelete.id)}
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider rounded-xs cursor-pointer transition-colors shadow-xs flex items-center gap-1.5"
               >
                 <Trash2 className="w-3.5 h-3.5" />

@@ -26,7 +26,7 @@ const INITIAL_REGISTERED_USERS: User[] = [
     id: 'usr-dev-1',
     name: 'Luis de la Rosa',
     email: 'luis.delarosacosio@gmail.com',
-    cellphone: '+52 55 1234 5678',
+    cellphone: '',
     profile: 'Developer',
     memberTier: 'Lead Developer',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200',
@@ -184,14 +184,7 @@ export default function App() {
     } catch (e) {
       console.error('Failed to load user', e);
     }
-    const defaultDev = INITIAL_REGISTERED_USERS[0];
-    try {
-      const savedDevAvatar = localStorage.getItem(`maris_avatar_${defaultDev.email.toLowerCase().trim()}`) || localStorage.getItem(`ales_avatar_${defaultDev.email.toLowerCase().trim()}`);
-      if (savedDevAvatar) {
-        return { ...defaultDev, avatar: savedDevAvatar };
-      }
-    } catch (e) {}
-    return defaultDev;
+    return null;
   });
 
   // Modals / Drawers state
@@ -284,7 +277,7 @@ export default function App() {
         const newUser: User = {
           ...user,
           profile: isDev ? 'Developer' : (user.profile || 'User'),
-          cellphone: user.cellphone || '+52 55 1234 5678',
+          cellphone: user.cellphone || '',
           createdAt: new Date().toISOString().split('T')[0]
         };
         updated = [newUser, ...prev];
@@ -472,6 +465,10 @@ export default function App() {
 
   // Navigation handlers
   const handleNavigate = (view: ViewMode) => {
+    if ((view === 'inventory' || view === 'users') && !isAdminUser) {
+      handleOpenLogin('login');
+      return;
+    }
     if (currentView !== view && currentView !== 'product-detail') {
       setPreviousView(currentView);
     }
@@ -625,6 +622,7 @@ export default function App() {
             initialSearchQuery=""
             onOpenAddProduct={handleOpenAddProduct}
             onEditProduct={handleEditProduct}
+            onDeleteProduct={isAdminUser ? handleDeleteProduct : undefined}
             currentUser={currentUser}
             language={language}
           />
@@ -645,6 +643,7 @@ export default function App() {
             onBack={handleReturnToPreviousSection}
             currentUser={currentUser}
             onEditProduct={handleEditProduct}
+            onDeleteProduct={isAdminUser ? handleDeleteProduct : undefined}
             language={language}
           />
         )}

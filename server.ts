@@ -79,8 +79,7 @@ async function startServer() {
           ".cache/**",
           ".npm/**",
           "*.log",
-          "*.tmp",
-          "package-lock.json"
+          "*.tmp"
         ],
         dot: true,
       });

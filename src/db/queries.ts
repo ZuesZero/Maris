@@ -12,7 +12,22 @@ function formatDbError(error: unknown): string {
 // Products Queries
 export async function getAllProducts() {
   try {
-    return await db.select().from(products).orderBy(desc(products.createdAt));
+    const rows = await db.select().from(products).orderBy(desc(products.createdAt));
+    return rows.map((row: any) => {
+      const frame = row.imageFrameSettings && typeof row.imageFrameSettings === 'object' ? { ...row.imageFrameSettings } : null;
+      const exactPrice = frame && typeof frame.__exactPrice === 'number' ? frame.__exactPrice : row.price;
+      const exactCostPrice = frame && typeof frame.__exactCostPrice === 'number' ? frame.__exactCostPrice : row.costPrice;
+      if (frame) {
+        delete frame.__exactPrice;
+        delete frame.__exactCostPrice;
+      }
+      return {
+        ...row,
+        price: exactPrice,
+        costPrice: exactCostPrice,
+        imageFrameSettings: frame && Object.keys(frame).length > 0 ? frame : undefined,
+      };
+    });
   } catch (error) {
     console.warn('Database query notice for getAllProducts:', formatDbError(error));
     throw new Error('Database query failed for products');
@@ -21,14 +36,22 @@ export async function getAllProducts() {
 
 export async function upsertProduct(productData: any) {
   try {
+    const numericPrice = Number(productData.price) || 0;
+    const numericCostPrice = productData.costPrice != null ? Number(productData.costPrice) : null;
+    const framePayload = {
+      ...(productData.imageFrameSettings && typeof productData.imageFrameSettings === 'object' ? productData.imageFrameSettings : {}),
+      __exactPrice: numericPrice,
+      ...(numericCostPrice != null ? { __exactCostPrice: numericCostPrice } : {}),
+    };
+
     return await db
       .insert(products)
       .values({
         id: productData.id,
         name: productData.name,
         subtitle: productData.subtitle || null,
-        price: Number(productData.price) || 0,
-        costPrice: productData.costPrice ? Number(productData.costPrice) : null,
+        price: Math.round(numericPrice),
+        costPrice: numericCostPrice != null ? Math.round(numericCostPrice) : null,
         category: productData.category,
         description: productData.description || null,
         images: productData.images || [],
@@ -41,7 +64,7 @@ export async function upsertProduct(productData: any) {
         isNewArrival: Boolean(productData.isNewArrival),
         isBestseller: Boolean(productData.isBestseller),
         isFeatured: Boolean(productData.isFeatured),
-        imageFrameSettings: productData.imageFrameSettings || null,
+        imageFrameSettings: framePayload,
         updatedAt: new Date(),
       })
       .onConflictDoUpdate({
@@ -49,8 +72,8 @@ export async function upsertProduct(productData: any) {
         set: {
           name: productData.name,
           subtitle: productData.subtitle || null,
-          price: Number(productData.price) || 0,
-          costPrice: productData.costPrice ? Number(productData.costPrice) : null,
+          price: Math.round(numericPrice),
+          costPrice: numericCostPrice != null ? Math.round(numericCostPrice) : null,
           category: productData.category,
           description: productData.description || null,
           images: productData.images || [],
@@ -63,7 +86,7 @@ export async function upsertProduct(productData: any) {
           isNewArrival: Boolean(productData.isNewArrival),
           isBestseller: Boolean(productData.isBestseller),
           isFeatured: Boolean(productData.isFeatured),
-          imageFrameSettings: productData.imageFrameSettings || null,
+          imageFrameSettings: framePayload,
           updatedAt: new Date(),
         },
       })

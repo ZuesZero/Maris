@@ -1,5 +1,6 @@
 import { Product } from '../types';
 import { PRODUCTS } from '../data/products';
+import bundledData from '../data/bundledPersistedData.json';
 
 const DB_NAME = 'maris_store_db';
 const DB_VERSION = 1;
@@ -55,10 +56,41 @@ async function idbPutAll<T extends { id: string }>(storeName: string, items: T[]
   }
 }
 
-// Read custom and edited products from all local sources (localStorage, IndexedDB)
+// Read custom and edited products from all local sources (bundled DB snapshot, localStorage, IndexedDB)
 export function getLocalStoredProductsSync(): { custom: Product[]; edited: Product[] } {
   const customMap = new Map<string, Product>();
   const editedMap = new Map<string, Product>();
+
+  let deletedIds = new Set<string>();
+  try {
+    const rawDeleted = localStorage.getItem('maris_deleted_product_ids');
+    if (rawDeleted) {
+      const parsedDeleted = JSON.parse(rawDeleted);
+      if (Array.isArray(parsedDeleted)) {
+        deletedIds = new Set(parsedDeleted);
+      }
+    }
+  } catch (e) {}
+
+  // Seed with bundled database snapshot (so Vercel / GitHub Pages static builds match AI Studio DB)
+  try {
+    const bundledCustom = (bundledData as any)?.customProducts;
+    if (Array.isArray(bundledCustom)) {
+      bundledCustom.forEach((p: Product) => {
+        if (p && p.id && !deletedIds.has(p.id) && !PRODUCTS.some((dp) => dp.id === p.id)) {
+          customMap.set(p.id, p);
+        }
+      });
+    }
+    const bundledEdited = (bundledData as any)?.editedProducts;
+    if (Array.isArray(bundledEdited)) {
+      bundledEdited.forEach((p: Product) => {
+        if (p && p.id && !deletedIds.has(p.id) && PRODUCTS.some((dp) => dp.id === p.id)) {
+          editedMap.set(p.id, p);
+        }
+      });
+    }
+  } catch (e) {}
 
   // Check all possible localStorage keys
   const customKeys = [
@@ -189,13 +221,24 @@ export async function loadAllPersistedProducts(): Promise<{
   // Save reconciled data back to IndexedDB and localStorage
   saveProductsToStorage(merged);
 
-  // Sync any custom products that are not yet on the server
+  // Sync any custom products and modified base products to the server (and bundledPersistedData.json)
   finalCustom.forEach((cp) => {
     fetch('/api/products', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ product: cp, isEdit: false })
     }).catch(() => {});
+  });
+
+  finalEdits.forEach((ep) => {
+    const orig = PRODUCTS.find((dp) => dp.id === ep.id);
+    if (!orig || JSON.stringify(ep) !== JSON.stringify(orig)) {
+      fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ product: ep, isEdit: true })
+      }).catch(() => {});
+    }
   });
 
   return {
@@ -246,7 +289,16 @@ export async function deleteProductFromStorage(productId: string): Promise<void>
     console.warn('IndexedDB delete error:', e);
   }
 
-  // 2. Delete from LocalStorage
+  // 2. Delete from LocalStorage and record deleted ID
+  try {
+    const rawDel = localStorage.getItem('maris_deleted_product_ids');
+    const delList: string[] = rawDel ? JSON.parse(rawDel) : [];
+    if (!delList.includes(productId)) {
+      delList.push(productId);
+      localStorage.setItem('maris_deleted_product_ids', JSON.stringify(delList));
+    }
+  } catch (e) {}
+
   const customKeys = ['maris_custom_products', 'ales_custom_products', 'custom_products', 'maris_products', 'ales_products', 'products'];
   for (const k of customKeys) {
     try {

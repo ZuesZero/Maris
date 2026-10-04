@@ -1,6 +1,7 @@
 import { Product } from '../types';
+import customProductsData from './customProducts.json';
 
-export const PRODUCTS: Product[] = [
+export const BASE_PRODUCTS: Product[] = [
   {
     id: 'sculpted-cashmere-overcoat',
     name: "The Sculpted Cashmere Overcoat",
@@ -754,4 +755,12 @@ export const PRODUCTS: Product[] = [
     completeTheLookIds: ['minimalist-leather-tote', 'silk-poplin-shirt']
   }
 ];
+
+export const PRODUCTS: Product[] = [
+  ...(customProductsData as unknown as Product[]),
+  ...BASE_PRODUCTS.filter(
+    (bp) => !(customProductsData as unknown as Product[]).some((cp) => cp.id === bp.id)
+  )
+];
+
 

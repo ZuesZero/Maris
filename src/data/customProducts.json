@@ -1,0 +1,4743 @@
+[
+  {
+    "id": "custom-1787533585610-globos-para-fiesta",
+    "name": "Globos para fiesta",
+    "subtitle": "Globos para fiesta",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787533585610-globos-para-fiesta-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787533585610",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "contain",
+      "positionY": 50,
+      "positionX": 50,
+      "zoom": 95,
+      "padding": 12,
+      "backgroundColor": "#FFFFFF"
+    }
+  },
+  {
+    "id": "custom-1787435617345-globo-para-fiesta",
+    "name": "Globo para fiesta",
+    "subtitle": "Globos para fiesta",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787435617345-globo-para-fiesta-0.jpg",
+      "./catalog/custom-1787435617345-globo-para-fiesta-1.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787435617345",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787534702944-1-globos-de-fiesta--2",
+    "name": "Globos para fiesta #2",
+    "subtitle": "Globos para fiesta",
+    "price": 2.2222222222222223,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787534702944-1-globos-de-fiesta--2-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787534702944-1",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "contain",
+      "positionY": 50,
+      "positionX": 50,
+      "zoom": 95,
+      "padding": 12,
+      "backgroundColor": "#FFFFFF"
+    }
+  },
+  {
+    "id": "custom-1787435268671-bolsa-de-regalo",
+    "name": "Bolsa de regalo",
+    "subtitle": "Bolsa de regalo 1",
+    "price": 1.6666666666666667,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787435268671-bolsa-de-regalo-0.jpg",
+      "./catalog/custom-1787435268671-bolsa-de-regalo-1.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787435268671",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787435534119-bolsa-de-regalo",
+    "name": "Bolsa de regalo",
+    "subtitle": "Bolsa de regalo",
+    "price": 1.6666666666666667,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787435534119-bolsa-de-regalo-0.jpg",
+      "./catalog/custom-1787435534119-bolsa-de-regalo-1.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787435534119",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787437136926-bolsa-de-regalo",
+    "name": "Bolsa de regalo",
+    "subtitle": "Bolsa de regalo",
+    "price": 2.2222222222222223,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787437136926-bolsa-de-regalo-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787437136927",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787534702944-2-globos-de-fiesta--3",
+    "name": "Globos para fiesta #3",
+    "subtitle": "Globos para fiesta",
+    "price": 2.2222222222222223,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787534702944-2-globos-de-fiesta--3-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787534702944-2",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "contain",
+      "positionY": 50,
+      "positionX": 50,
+      "zoom": 95,
+      "padding": 12,
+      "backgroundColor": "#FFFFFF"
+    }
+  },
+  {
+    "id": "custom-1787719621626-1-bolsa-de-mano--2",
+    "name": "Bolsa de mano #2",
+    "subtitle": "Bolsa de mano",
+    "price": 12.222222222222221,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787719621626-1-bolsa-de-mano--2-0.jpg",
+      "./catalog/custom-1787719621626-1-bolsa-de-mano--2-1.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787719621626-1",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 32,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787631940350-3-guantes--4",
+    "name": "Guantes #4",
+    "subtitle": "Guantes",
+    "price": 3.3333333333333335,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787631940350-3-guantes--4-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787631940350-3",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787018327076-taza",
+    "name": "Taza",
+    "subtitle": "Taza 10",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787018327076-taza-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787018327076",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787631940350-4-guantes--5",
+    "name": "Guantes #5",
+    "subtitle": "Guantes",
+    "price": 3.3333333333333335,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787631940350-4-guantes--5-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 2,
+    "inStock": true,
+    "stock": {
+      "EU 48": 2,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787631940350-4",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787631940350-0-guantes--1",
+    "name": "Guantes #1",
+    "subtitle": "Guantes",
+    "price": 3.3333333333333335,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787631940350-0-guantes--1-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 2,
+    "inStock": true,
+    "stock": {
+      "EU 48": 2,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787631940350-0",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787435492600-bolsa-de-regalo",
+    "name": "Bolsa de regalo",
+    "subtitle": "Bolsa de regalo",
+    "price": 1.6666666666666667,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787435492600-bolsa-de-regalo-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787435492600",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787631940350-6-guantes--7",
+    "name": "Guantes #7",
+    "subtitle": "Guantes",
+    "price": 3.3333333333333335,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787631940350-6-guantes--7-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787631940350-6",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787631940350-7-guantes--8",
+    "name": "Guantes #8",
+    "subtitle": "Guantes",
+    "price": 3.3333333333333335,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787631940350-7-guantes--8-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787631940350-7",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787436607435-bolsa-de-regalo",
+    "name": "Bolsa de regalo",
+    "subtitle": "Bolsa de regalo",
+    "price": 2.2222222222222223,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787436607435-bolsa-de-regalo-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787436607435",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 89,
+      "positionX": 94,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787436114679-bolsa-de-regalo",
+    "name": "Bolsa de regalo",
+    "subtitle": "Bolsa de regalo",
+    "price": 1.6666666666666667,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787436114679-bolsa-de-regalo-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787436114679",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 21,
+      "positionX": 50,
+      "zoom": 70,
+      "padding": 0,
+      "backgroundColor": "#FFFFFF"
+    }
+  },
+  {
+    "id": "custom-1787631940350-5-guantes--6",
+    "name": "Guantes #6",
+    "subtitle": "Guantes",
+    "price": 3.3333333333333335,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787631940350-5-guantes--6-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 3,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 1,
+      "EU 52": 1
+    },
+    "reviews": [
+      {
+        "id": "rev-1787631940350-5",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787631940350-1-guantes--2",
+    "name": "Guantes #2",
+    "subtitle": "Guantes",
+    "price": 3.3333333333333335,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787631940350-1-guantes--2-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787631940350-1",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787534702944-3-globos-de-fiesta--4",
+    "name": "Globos para fiesta #4",
+    "subtitle": "Globos para fiesta",
+    "price": 2.2222222222222223,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787534702944-3-globos-de-fiesta--4-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787534702944-3",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "contain",
+      "positionY": 100,
+      "positionX": 52,
+      "zoom": 100,
+      "padding": 12,
+      "backgroundColor": "#FFFFFF"
+    }
+  },
+  {
+    "id": "custom-1787435369333-weaving-cap",
+    "name": "Weaving Cap",
+    "subtitle": "Weaving Cap",
+    "price": 1.6666666666666667,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787435369333-weaving-cap-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787435369333",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787631940350-2-guantes--3",
+    "name": "Guantes #3",
+    "subtitle": "Guantes",
+    "price": 3.3333333333333335,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787631940350-2-guantes--3-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787631940350-2",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787719621626-2-bolsa-de-mano--3",
+    "name": "Bolsa de mano #3",
+    "subtitle": "Bolsa de mano",
+    "price": 12.222222222222221,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787719621626-2-bolsa-de-mano--3-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787719621626-2",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 32,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787435677428-bolsa-de-regalo",
+    "name": "Bolsa de regalo",
+    "subtitle": "Bolsa de regalo",
+    "price": 1.6666666666666667,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787435677428-bolsa-de-regalo-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787435677428",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 0,
+      "positionX": 0,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787436157481-bolsa-de-regalo",
+    "name": "Bolsa de regalo",
+    "subtitle": "Bolsa de regalo",
+    "price": 1.6666666666666667,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787436157481-bolsa-de-regalo-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787436157481",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787534970401-4-bolsas-de-regalos--5",
+    "name": "Bolsas de regalos #5",
+    "subtitle": "Bolsas de regalos",
+    "price": 1.6666666666666667,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787534970401-4-bolsas-de-regalos--5-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787534970401-4",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 32,
+      "positionX": 50,
+      "zoom": 90,
+      "padding": 0,
+      "backgroundColor": "#FFFFFF"
+    }
+  },
+  {
+    "id": "custom-1787437173719-bolsa-de-regalo",
+    "name": "Bolsa de regalo",
+    "subtitle": "Bolsa de regalo",
+    "price": 2.2222222222222223,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787437173719-bolsa-de-regalo-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787437173721",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787436645753-bolsa-de-regalo",
+    "name": "Bolsa de regalo",
+    "subtitle": "Bolsa de regalo",
+    "price": 2.2222222222222223,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787436645753-bolsa-de-regalo-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787436645753",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787436561914-bolsa-de-regalo",
+    "name": "Bolsa de regalo",
+    "subtitle": "Bolsa de regalo",
+    "price": 1.6666666666666667,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787436561914-bolsa-de-regalo-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787436561914",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787109633588-mono-de-felpa",
+    "name": "Mono de Felpa",
+    "subtitle": "Stitch Mono de Felpa",
+    "price": 7.777777777777778,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Azul",
+        "hex": "#4341d2"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787109633588-mono-de-felpa-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 0,
+    "inStock": false,
+    "stock": {
+      "EU 48": 0,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787109633588",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "totalUnits": 1,
+    "baseUnitCostUSD": 3,
+    "unitCost": 54,
+    "retailPrice": 144,
+    "totalCostValue": 54,
+    "totalRetailValue": 144,
+    "marginDollar": 90,
+    "marginPercent": 63
+  },
+  {
+    "id": "custom-1787719621625-0-bolsa-de-mano--1",
+    "name": "Bolsa de mano #1",
+    "subtitle": "Bolsa de mano",
+    "price": 12.222222222222221,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787719621625-0-bolsa-de-mano--1-0.jpg",
+      "./catalog/custom-1787719621625-0-bolsa-de-mano--1-1.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787719621626-0",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 42,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787534970401-2-bolsas-de-regalos--3",
+    "name": "Bolsas de regalos #3",
+    "subtitle": "Bolsas de regalos",
+    "price": 1.6666666666666667,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787534970401-2-bolsas-de-regalos--3-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787534970401-2",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "contain",
+      "positionY": 14,
+      "positionX": 50,
+      "zoom": 120,
+      "padding": 0,
+      "backgroundColor": "#FFFFFF"
+    }
+  },
+  {
+    "id": "custom-1787534702944-0-globos-de-fiesta--1",
+    "name": "Globos para fiesta #1",
+    "subtitle": "Globos para fiesta",
+    "price": 1.6666666666666667,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787534702944-0-globos-de-fiesta--1-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787534702944-0",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787018143266-taza",
+    "name": "Taza",
+    "subtitle": "Taza 6",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787018143266-taza-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787018143266",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787435406992-cepillo",
+    "name": "Cepillo",
+    "subtitle": "Cepilo",
+    "price": 1.6666666666666667,
+    "category": "Outerwear",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787435406992-cepillo-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787435406992",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 0,
+      "positionX": 100,
+      "zoom": 100,
+      "padding": 1,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787719699109-1-sombrero--con-malla--2",
+    "name": "Sombrero  con malla #2",
+    "subtitle": "Sombrero con malla",
+    "price": 3.888888888888889,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787719699109-1-sombrero--con-malla--2-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787719699109-1",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 43,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787719699109-0-sombrero--con-malla--1",
+    "name": "Sombrero  con malla #1",
+    "subtitle": "Sombrero con malla",
+    "price": 3.888888888888889,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787719699109-0-sombrero--con-malla--1-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787719699109-0",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 54,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787719699109-3-sombrero--con-malla--4",
+    "name": "Sombrero  con malla #4",
+    "subtitle": "Sombrero con malla",
+    "price": 3.888888888888889,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787719699109-3-sombrero--con-malla--4-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787719699109-3",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 18,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787534970401-1-bolsas-de-regalos--2",
+    "name": "Bolsas de regalos #2",
+    "subtitle": "Bolsas de regalos",
+    "price": 1.6666666666666667,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787534970401-1-bolsas-de-regalos--2-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787534970401-1",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 38,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1786943914805-taza",
+    "name": "Taza",
+    "subtitle": "Taza 6",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786943914805-taza-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786943914805",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787719699109-2-sombrero--con-malla--3",
+    "name": "Sombrero  con malla #3",
+    "subtitle": "Sombrero con malla",
+    "price": 3.888888888888889,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787719699109-2-sombrero--con-malla--3-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787719699109-2",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 43,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787719621626-5-bolsa-de-mano--6",
+    "name": "Bolsa de mano #6",
+    "subtitle": "Bolsa de mano",
+    "price": 12.222222222222221,
+    "category": "Outerwear",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787719621626-5-bolsa-de-mano--6-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787719621626-5",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 64,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787437214069-bolsa-de-regalo",
+    "name": "Bolsa de regalo",
+    "subtitle": "Bolsa de regalo",
+    "price": 2.2222222222222223,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787437214069-bolsa-de-regalo-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787437214069",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787533537402-globos-para-fiesta",
+    "name": "Globos para fiesta",
+    "subtitle": "Globos para fiesta",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787533537402-globos-para-fiesta-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787533537403",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1786677137087-calcetas",
+    "name": "Calcetas",
+    "subtitle": "Paquete de ocho calcetas",
+    "price": 8.88888888888889,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786677137087-calcetas-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786677137088",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 10,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1786943802915-taza",
+    "name": "Taza",
+    "subtitle": "Taza 4",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786943802915-taza-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786943802915",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787018372462-broche",
+    "name": "Broche",
+    "subtitle": "Broche 1",
+    "price": 1.6666666666666667,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787018372462-broche-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787018372462",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787719621626-4-bolsa-de-mano--5",
+    "name": "Bolsa de mano #5",
+    "subtitle": "Bolsa de mano",
+    "price": 12.222222222222221,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787719621626-4-bolsa-de-mano--5-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787719621626-4",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 58,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787719621626-6-bolsa-de-mano--7",
+    "name": "Bolsa de mano #7",
+    "subtitle": "Bolsa de mano",
+    "price": 12.222222222222221,
+    "category": "Outerwear",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787719621626-6-bolsa-de-mano--7-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787719621626-6",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 34,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787018241326-taza",
+    "name": "Taza",
+    "subtitle": "Taza 8",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787018241326-taza-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787018241326",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787534970401-0-bolsas-de-regalos--1",
+    "name": "Bolsas de regalos #1",
+    "subtitle": "Bolsas de regalos",
+    "price": 1.6666666666666667,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787534970401-0-bolsas-de-regalos--1-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787534970401-0",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787719621626-3-bolsa-de-mano--4",
+    "name": "Bolsa de mano #4",
+    "subtitle": "Bolsa de mano",
+    "price": 12.222222222222221,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787719621626-3-bolsa-de-mano--4-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787719621626-3",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 32,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787719549048-0-diadema-reno",
+    "name": "Diadema reno",
+    "subtitle": "Diadema reno",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787719549048-0-diadema-reno-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787719549049-0",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 39,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787018192387-taza",
+    "name": "Taza",
+    "subtitle": "Taza 7",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787018192387-taza-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787018192387",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787533500608-globos-para-fiesta",
+    "name": "Globos para fiesta",
+    "subtitle": "Globos para fiesta",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787533500608-globos-para-fiesta-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787533500608",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1786676742893-sombrero",
+    "name": "Sombrero",
+    "subtitle": "Sombrero 6",
+    "price": 3.888888888888889,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786676742893-sombrero-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786676742893",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 49,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1787018277528-taza",
+    "name": "Taza",
+    "subtitle": "Taza 9",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787018277528-taza-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787018277528",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1787534702944-4-globos-de-fiesta--5",
+    "name": "Globos para fiesta",
+    "subtitle": "Globos para fiesta",
+    "price": 2.2222222222222223,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787534702944-4-globos-de-fiesta--5-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787534702944-4",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 29,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1786943881106-taza",
+    "name": "Taza",
+    "subtitle": "Taza 5",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786943881106-taza-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786943881106",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1786674101018-sombrero",
+    "name": "Sombrero",
+    "subtitle": "Sombrero 1",
+    "price": 3.888888888888889,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786674101018-sombrero-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786674101018",
+        "author": "Ale Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 43,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1786680084480-reloj",
+    "name": "Reloj",
+    "subtitle": "Reloj de pulsera",
+    "price": 16,
+    "costPrice": null,
+    "category": "Miscellaneous",
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "images": [
+      "./catalog/custom-1786680084480-reloj-0.jpg"
+    ],
+    "colors": [
+      {
+        "hex": "#DED3C4",
+        "name": "Mezcla de Avena"
+      },
+      {
+        "hex": "#1C1B20",
+        "name": "Noir Black"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "imageFrameSettings": {
+      "fit": "cover",
+      "zoom": 100,
+      "padding": 0,
+      "positionX": 50,
+      "positionY": 56,
+      "backgroundColor": "#F4F0EA"
+    },
+    "createdAt": "2026-10-03T23:18:55.709Z",
+    "updatedAt": "2026-10-04T00:04:45.052Z"
+  },
+  {
+    "id": "custom-1787534970401-3-bolsas-de-regalos--4",
+    "name": "Bolsas de regalos #4",
+    "subtitle": "Bolsas de regalos",
+    "price": 1.6666666666666667,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Oatmeal Melange",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1787534970401-3-bolsas-de-regalos--4-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1787534970401-3",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 32,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1786676848428-sombrero",
+    "name": "Sombrero",
+    "subtitle": "Sombrero 8",
+    "price": 3.888888888888889,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786676848428-sombrero-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786676848428",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 36,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1786674715597-sombrero",
+    "name": "Sombrero",
+    "subtitle": "Sombrero 2",
+    "price": 3.888888888888889,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786674715597-sombrero-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786674715597",
+        "author": "Ale Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 33,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1786675045941-sombrero",
+    "name": "Sombrero",
+    "subtitle": "Sombrero 3",
+    "price": 3.888888888888889,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786675045941-sombrero-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786675045942",
+        "author": "Ale Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 40,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1786676913683-sombrero",
+    "name": "Sombrero",
+    "subtitle": "Sombrero 8",
+    "price": 3.888888888888889,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786676913683-sombrero-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786676913683",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 50,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1786676660154-sombrero",
+    "name": "Sombrero",
+    "subtitle": "Sombrero 5",
+    "price": 3.888888888888889,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786676660154-sombrero-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786676660154",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 49,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1786943621215-taza",
+    "name": "Taza",
+    "subtitle": "Taza 1",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786943621215-taza-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786943621215",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 0,
+      "positionX": 30,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1786676590305-sombrero",
+    "name": "Sombrero",
+    "subtitle": "Sombrero 4",
+    "price": 3.888888888888889,
+    "category": "Accessories",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786676590305-sombrero-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786676590306",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 38,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1786943678072-taza",
+    "name": "Taza",
+    "subtitle": "Taza 2",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786943678072-taza-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786943678072",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1786943759386-taza",
+    "name": "Taza",
+    "subtitle": "Taza 3",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786943759386-taza-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786943759386",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  },
+  {
+    "id": "custom-1786676986269-alas-de-disfraz",
+    "name": "Alas de disfraz",
+    "subtitle": "Ales rojas de disfraz",
+    "price": 3.888888888888889,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786676986269-alas-de-disfraz-0.jpg"
+    ],
+    "description": "Architectural silhouette engineered with traditional Italian craftsmanship and soft touch textures.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Complimentary worldwide express shipping & luxury gift packaging.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786676986269",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Just now",
+        "title": "Exquisite Craftsmanship",
+        "comment": "The weight of the cloth and precision of the stitching are unmatched.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 32,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1786680141119-pulsera",
+    "name": "Pulsera",
+    "subtitle": "Pulsera de mano",
+    "price": 2.7777777777777777,
+    "category": "Miscellaneous",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786680141119-pulsera-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786680141119",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": [],
+    "imageFrameSettings": {
+      "fit": "cover",
+      "positionY": 57,
+      "positionX": 50,
+      "zoom": 100,
+      "padding": 0,
+      "backgroundColor": "#F4F0EA"
+    }
+  },
+  {
+    "id": "custom-1786679016424-playera-vans",
+    "name": "Playera Vans",
+    "subtitle": "Playera Vans color negro",
+    "price": 27.77777777777778,
+    "category": "Shirts & Silk",
+    "colors": [
+      {
+        "name": "Mezcla de Avena",
+        "hex": "#DED3C4"
+      },
+      {
+        "name": "Noir Black",
+        "hex": "#1C1B20"
+      }
+    ],
+    "sizes": [
+      "EU 48",
+      "EU 50",
+      "EU 52"
+    ],
+    "images": [
+      "./catalog/custom-1786679016424-playera-vans-0.jpg"
+    ],
+    "description": "Silueta arquitectónica diseñada con artesanía italiana tradicional y texturas de tacto suave.",
+    "fabricDetails": [
+      "100% Loro Piana Italian Virgin Cashmere",
+      "100% Bemberg Cupro Lining",
+      "Hand-finished Horn Buttons"
+    ],
+    "garmentCare": [
+      "Specialist dry clean only",
+      "Store on contoured wooden coat hanger",
+      "Do not wash or tumble dry"
+    ],
+    "shippingInfo": "Envío exprés internacional de cortesía y empaque de regalo de lujo.",
+    "isNewArrival": true,
+    "isBestseller": false,
+    "isFeatured": false,
+    "stockQuantity": 1,
+    "inStock": true,
+    "stock": {
+      "EU 48": 1,
+      "EU 50": 0,
+      "EU 52": 0
+    },
+    "reviews": [
+      {
+        "id": "rev-1786679016425",
+        "author": "Mari Studio VIP",
+        "location": "Milan, Italy",
+        "rating": 5,
+        "date": "Ahora mismo",
+        "title": "Artesanía Exquisita",
+        "comment": "El peso de la tela y la precisión de la costura son incomparables.",
+        "verified": true
+      }
+    ],
+    "completeTheLookIds": []
+  }
+]

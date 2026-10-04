@@ -1,5 +1,6 @@
 import React, { CSSProperties } from 'react';
 import { ImageFrameSettings, Product } from '../types';
+import bundledData from '../data/bundledPersistedData.json';
 
 export const DEFAULT_IMAGE_FRAME_SETTINGS: ImageFrameSettings = {
   fit: 'cover',
@@ -35,6 +36,11 @@ export function getStoredImageSettings(productId: string): ImageFrameSettings | 
       const parsed = JSON.parse(raw);
       if (parsed[productId]) return parsed[productId];
       if (parsed['__global__']) return parsed['__global__'];
+    }
+    const bundledFrames = (bundledData as any)?.frameSettings;
+    if (bundledFrames && typeof bundledFrames === 'object') {
+      if (bundledFrames[productId]) return bundledFrames[productId];
+      if (bundledFrames['__global__']) return bundledFrames['__global__'];
     }
   } catch (e) {
     console.error('Failed to parse image frame settings', e);
@@ -73,9 +79,17 @@ export async function fetchServerImageSettings(): Promise<Record<string, ImageFr
       if (serverSettings && typeof serverSettings === 'object') {
         const localRaw = localStorage.getItem('maris_image_frame_settings') || localStorage.getItem('ales_image_frame_settings');
         const localParsed = localRaw ? JSON.parse(localRaw) : {};
-        const merged = { ...localParsed, ...serverSettings };
+        const bundledFrames = (bundledData as any)?.frameSettings || {};
+        const merged = { ...bundledFrames, ...localParsed, ...serverSettings };
         localStorage.setItem('maris_image_frame_settings', JSON.stringify(merged));
         localStorage.setItem('ales_image_frame_settings', JSON.stringify(merged));
+        if (Object.keys(localParsed).length > 0) {
+          fetch('/api/image-frame-settings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ allSettings: merged })
+          }).catch(() => {});
+        }
         return merged;
       }
     }

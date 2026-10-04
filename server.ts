@@ -18,6 +18,31 @@ if (!fs.existsSync(DATA_DIR)) {
 const PRODUCTS_FILE = path.join(DATA_DIR, "custom_products.json");
 const EDITED_PRODUCTS_FILE = path.join(DATA_DIR, "edited_products.json");
 const FRAME_SETTINGS_FILE = path.join(DATA_DIR, "image_frame_settings.json");
+const BUNDLED_DATA_FILE = path.join(process.cwd(), "src", "data", "bundledPersistedData.json");
+
+async function syncBundledDataSnapshot() {
+  try {
+    const dbProducts = await dbQueries.getAllProducts();
+    const frameSettings = await dbQueries.getAllFrameSettings();
+    const salesTransactions = await dbQueries.getAllSalesTransactions();
+    const existingBundled = readJsonFile(BUNDLED_DATA_FILE, {
+      customProducts: [],
+      editedProducts: [],
+      frameSettings: {},
+      salesTransactions: []
+    });
+    const custom = dbProducts.filter((p: any) => String(p.id).startsWith("custom-"));
+    const edited = dbProducts.filter((p: any) => !String(p.id).startsWith("custom-"));
+    writeJsonFile(BUNDLED_DATA_FILE, {
+      customProducts: custom.length > 0 ? custom : existingBundled.customProducts || [],
+      editedProducts: edited,
+      frameSettings: Object.keys(frameSettings).length > 0 ? frameSettings : existingBundled.frameSettings || {},
+      salesTransactions: salesTransactions.length > 0 ? salesTransactions : existingBundled.salesTransactions || []
+    });
+  } catch (e) {
+    console.warn("Could not update bundledPersistedData.json snapshot:", e);
+  }
+}
 
 function readJsonFile(filePath: string, fallback: any) {
   try {
@@ -123,6 +148,7 @@ async function startServer() {
         for (const [key, val] of Object.entries(allSettings)) {
           await dbQueries.saveFrameSettings(key, val);
         }
+        await syncBundledDataSnapshot();
       } catch (e) {
         console.warn("DB save frame settings warning:", e);
       }
@@ -135,6 +161,7 @@ async function startServer() {
       writeJsonFile(FRAME_SETTINGS_FILE, current);
       try {
         await dbQueries.saveFrameSettings(targetKey, settings);
+        await syncBundledDataSnapshot();
       } catch (e) {
         console.warn("DB save single frame setting warning:", e);
       }
@@ -147,7 +174,9 @@ async function startServer() {
     try {
       const dbProducts = await dbQueries.getAllProducts();
       if (dbProducts && dbProducts.length > 0) {
-        return res.json({ custom: dbProducts, edited: [] });
+        const custom = dbProducts.filter((p: any) => String(p.id).startsWith("custom-"));
+        const edited = dbProducts.filter((p: any) => !String(p.id).startsWith("custom-"));
+        return res.json({ custom, edited });
       }
     } catch (e) {
       console.warn("Falling back to local file products:", e);
@@ -166,6 +195,7 @@ async function startServer() {
 
     try {
       await dbQueries.upsertProduct(product);
+      await syncBundledDataSnapshot();
     } catch (e) {
       console.warn("Cloud SQL upsert product error, maintaining local backup:", e);
     }
@@ -207,6 +237,7 @@ async function startServer() {
     const id = req.params.id;
     try {
       await dbQueries.deleteProductById(id);
+      await syncBundledDataSnapshot();
     } catch (e) {
       console.warn("Cloud SQL delete product error:", e);
     }

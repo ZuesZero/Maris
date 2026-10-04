@@ -3,7 +3,7 @@ import { PRODUCTS } from './data/products';
 import { Product, CartItem, Size, ViewMode, User } from './types';
 import { Language } from './data/translations';
 import { fetchServerImageSettings } from './utils/imageFrame';
-import { getLocalStoredProductsSync, loadAllPersistedProducts, saveProductsToStorage, deleteProductFromStorage } from './utils/productStorage';
+import { getLocalStoredProductsSync, getDeletedProductIdsSync, loadAllPersistedProducts, saveProductsToStorage, deleteProductFromStorage, deleteAllProductsFromStorage } from './utils/productStorage';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { HomeView } from './components/HomeView';
@@ -77,8 +77,9 @@ const INITIAL_REGISTERED_USERS: User[] = [
 export default function App() {
   const [products, setProducts] = useState<Product[]>(() => {
     try {
+      const deletedIds = getDeletedProductIdsSync();
       const localData = getLocalStoredProductsSync();
-      let baseProducts = [...PRODUCTS];
+      let baseProducts = PRODUCTS.filter(p => !deletedIds.has(p.id));
 
       if (localData.edited.length > 0) {
         baseProducts = baseProducts.map(p => {
@@ -88,7 +89,7 @@ export default function App() {
       }
 
       if (localData.custom.length > 0) {
-        const customOnly = localData.custom.filter(p => !baseProducts.some(dp => dp.id === p.id));
+        const customOnly = localData.custom.filter(p => !deletedIds.has(p.id) && !baseProducts.some(dp => dp.id === p.id));
         return [...customOnly, ...baseProducts];
       }
 
@@ -105,7 +106,7 @@ export default function App() {
       try {
         // Load all persisted products from IndexedDB, localStorage and server
         const { mergedProducts } = await loadAllPersistedProducts();
-        if (Array.isArray(mergedProducts) && mergedProducts.length > 0) {
+        if (Array.isArray(mergedProducts)) {
           setProducts(mergedProducts);
         }
 
@@ -420,6 +421,21 @@ export default function App() {
     setProductToEdit(null);
   };
 
+  const handleDeleteAllProducts = () => {
+    const currentIds = products.map(p => p.id);
+    setProducts([]);
+    try {
+      deleteAllProductsFromStorage(currentIds);
+    } catch (e) {
+      console.error('Failed to delete all products from storage', e);
+    }
+    setCartItems([]);
+    setWishlistIds([]);
+    setSelectedProduct(null as any);
+    setIsAddProductOpen(false);
+    setProductToEdit(null);
+  };
+
   // Cart operations
   const handleAddToCart = (product: Product, size: Size, color: string) => {
     setCartItems(prev => {
@@ -657,6 +673,7 @@ export default function App() {
             onEditProduct={handleEditProduct}
             onUpdateProduct={handleSaveProduct}
             onDeleteProduct={handleDeleteProduct}
+            onDeleteAllProducts={handleDeleteAllProducts}
             currency={currency}
             language={language}
           />

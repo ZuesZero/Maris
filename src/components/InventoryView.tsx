@@ -62,6 +62,7 @@ interface InventoryViewProps {
   onEditProduct?: (product: Product) => void;
   onUpdateProduct?: (product: Product) => void;
   onDeleteProduct?: (productId: string) => void;
+  onDeleteAllProducts?: () => void;
   currency: string;
   language?: Language;
 }
@@ -74,6 +75,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
   onEditProduct,
   onUpdateProduct,
   onDeleteProduct,
+  onDeleteAllProducts,
   currency,
   language = 'en'
 }) => {
@@ -108,6 +110,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
       : 'Current in-store stock units, cost valuation analysis, time-series projections starting today, and individual SKU stock status.',
     logNewSale: lang === 'es' ? 'Registrar Nueva Venta' : 'Log New Sale',
     addNewProduct: lang === 'es' ? 'Añadir Nuevo Producto' : 'Add New Product',
+    deleteAllItems: lang === 'es' ? 'Eliminar Todos los Artículos' : 'Delete All Items',
     downloadZip: lang === 'es' ? 'Descargar Proyecto (.ZIP)' : 'Download Project (.ZIP)',
 
     // Tabs
@@ -228,6 +231,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
   // Active View Tab: 'sales' (Sales Made & Transactions) | 'inventory' (Inventory Quantity & Valuation Projections)
   const [activeTab, setActiveTab] = useState<'sales' | 'inventory'>('sales');
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
   const [transactionToDelete, setTransactionToDelete] = useState<SaleTransaction | null>(null);
 
   // Shared Filters
@@ -895,15 +899,27 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
               <span>{t.logNewSale}</span>
             </button>
           ) : (
-            onOpenAddProduct && (
-              <button
-                onClick={onOpenAddProduct}
-                className="px-4 py-2.5 bg-[#B88A58] hover:bg-[#a17849] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm shrink-0"
-              >
-                <Plus className="w-4 h-4" />
-                <span>{t.addNewProduct}</span>
-              </button>
-            )
+            <div className="flex flex-wrap items-center gap-2">
+              {onOpenAddProduct && (
+                <button
+                  onClick={onOpenAddProduct}
+                  className="px-4 py-2.5 bg-[#B88A58] hover:bg-[#a17849] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm shrink-0"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>{t.addNewProduct}</span>
+                </button>
+              )}
+              {isAuthorized && onDeleteAllProducts && products.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setIsDeleteAllModalOpen(true)}
+                  className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm shrink-0"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>{t.deleteAllItems}</span>
+                </button>
+              )}
+            </div>
           )}
 
           <a
@@ -1485,6 +1501,17 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                   <option value="Low">{t.lowStockOption}</option>
                   <option value="OutOfStock">{t.outOfStockOption}</option>
                 </select>
+
+                {isAuthorized && onDeleteAllProducts && products.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setIsDeleteAllModalOpen(true)}
+                    className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white border border-red-700 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>{t.deleteAllItems}</span>
+                  </button>
+                )}
               </div>
             </div>
 
@@ -2223,6 +2250,64 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete All Items Confirmation Modal */}
+      {isDeleteAllModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fadeIn">
+          <div className="bg-white border-2 border-red-600 max-w-md w-full p-6 shadow-2xl space-y-4 rounded-xs">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E8E2D9]">
+              <div className="flex items-center gap-2 text-red-600">
+                <AlertTriangle className="w-5 h-5" />
+                <h3 className="font-serif text-lg font-bold text-[#1C1B20]">
+                  {lang === 'es' ? 'Eliminar Todos los Artículos' : 'Delete All Inventory Items'}
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsDeleteAllModalOpen(false)}
+                className="p-1 text-[#8C9083] hover:text-[#1C1B20] cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-3 bg-red-50 border border-red-200 rounded-xs space-y-1">
+              <p className="font-bold text-red-900 text-xs uppercase tracking-wider">
+                {lang === 'es'
+                  ? `${products.length} SKUs (${inventoryMetrics.totalUnitsInStore} unidades en tienda)`
+                  : `${products.length} SKUs (${inventoryMetrics.totalUnitsInStore} total units in store)`}
+              </p>
+              <p className="text-xs text-red-800 leading-relaxed">
+                {lang === 'es'
+                  ? '¿Estás seguro de que deseas eliminar permanentemente todos los artículos del inventario y del catálogo? Esta acción vaciará toda la lista de productos.'
+                  : 'Are you sure you want to permanently delete all items from the inventory and catalog? This action will clear all products.'}
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E8E2D9]">
+              <button
+                type="button"
+                onClick={() => setIsDeleteAllModalOpen(false)}
+                className="px-4 py-2 border border-[#D5CECE] hover:border-[#1C1B20] text-[#1C1B20] text-xs font-semibold uppercase tracking-wider rounded-xs cursor-pointer transition-colors"
+              >
+                {lang === 'es' ? 'Cancelar' : 'Cancel'}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (onDeleteAllProducts && isAuthorized) {
+                    onDeleteAllProducts();
+                  }
+                  setIsDeleteAllModalOpen(false);
+                }}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider rounded-xs cursor-pointer transition-colors shadow-xs flex items-center gap-1.5"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>{lang === 'es' ? 'Sí, Eliminar Todo' : 'Yes, Delete All'}</span>
+              </button>
+            </div>
           </div>
         </div>
       )}

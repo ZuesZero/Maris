@@ -12,22 +12,7 @@ function formatDbError(error: unknown): string {
 // Products Queries
 export async function getAllProducts() {
   try {
-    const rows = await db.select().from(products).orderBy(desc(products.createdAt));
-    return rows.map((row: any) => {
-      const frame = row.imageFrameSettings && typeof row.imageFrameSettings === 'object' ? { ...row.imageFrameSettings } : null;
-      const exactPrice = frame && typeof frame.__exactPrice === 'number' ? frame.__exactPrice : row.price;
-      const exactCostPrice = frame && typeof frame.__exactCostPrice === 'number' ? frame.__exactCostPrice : row.costPrice;
-      if (frame) {
-        delete frame.__exactPrice;
-        delete frame.__exactCostPrice;
-      }
-      return {
-        ...row,
-        price: exactPrice,
-        costPrice: exactCostPrice,
-        imageFrameSettings: frame && Object.keys(frame).length > 0 ? frame : undefined,
-      };
-    });
+    return await db.select().from(products).orderBy(desc(products.createdAt));
   } catch (error) {
     console.warn('Database query notice for getAllProducts:', formatDbError(error));
     throw new Error('Database query failed for products');
@@ -36,22 +21,14 @@ export async function getAllProducts() {
 
 export async function upsertProduct(productData: any) {
   try {
-    const numericPrice = Number(productData.price) || 0;
-    const numericCostPrice = productData.costPrice != null ? Number(productData.costPrice) : null;
-    const framePayload = {
-      ...(productData.imageFrameSettings && typeof productData.imageFrameSettings === 'object' ? productData.imageFrameSettings : {}),
-      __exactPrice: numericPrice,
-      ...(numericCostPrice != null ? { __exactCostPrice: numericCostPrice } : {}),
-    };
-
     return await db
       .insert(products)
       .values({
         id: productData.id,
         name: productData.name,
         subtitle: productData.subtitle || null,
-        price: Math.round(numericPrice),
-        costPrice: numericCostPrice != null ? Math.round(numericCostPrice) : null,
+        price: Number(productData.price) || 0,
+        costPrice: productData.costPrice ? Number(productData.costPrice) : null,
         category: productData.category,
         description: productData.description || null,
         images: productData.images || [],
@@ -64,7 +41,7 @@ export async function upsertProduct(productData: any) {
         isNewArrival: Boolean(productData.isNewArrival),
         isBestseller: Boolean(productData.isBestseller),
         isFeatured: Boolean(productData.isFeatured),
-        imageFrameSettings: framePayload,
+        imageFrameSettings: productData.imageFrameSettings || null,
         updatedAt: new Date(),
       })
       .onConflictDoUpdate({
@@ -72,8 +49,8 @@ export async function upsertProduct(productData: any) {
         set: {
           name: productData.name,
           subtitle: productData.subtitle || null,
-          price: Math.round(numericPrice),
-          costPrice: numericCostPrice != null ? Math.round(numericCostPrice) : null,
+          price: Number(productData.price) || 0,
+          costPrice: productData.costPrice ? Number(productData.costPrice) : null,
           category: productData.category,
           description: productData.description || null,
           images: productData.images || [],
@@ -86,7 +63,7 @@ export async function upsertProduct(productData: any) {
           isNewArrival: Boolean(productData.isNewArrival),
           isBestseller: Boolean(productData.isBestseller),
           isFeatured: Boolean(productData.isFeatured),
-          imageFrameSettings: framePayload,
+          imageFrameSettings: productData.imageFrameSettings || null,
           updatedAt: new Date(),
         },
       })
@@ -103,6 +80,15 @@ export async function deleteProductById(productId: string) {
   } catch (error) {
     console.warn('Database query notice for deleteProductById:', formatDbError(error));
     throw new Error('Database query failed to delete product');
+  }
+}
+
+export async function deleteAllProducts() {
+  try {
+    return await db.delete(products).returning();
+  } catch (error) {
+    console.warn('Database query notice for deleteAllProducts:', formatDbError(error));
+    throw new Error('Database query failed to delete all products');
   }
 }
 

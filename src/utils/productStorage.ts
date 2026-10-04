@@ -56,21 +56,32 @@ async function idbPutAll<T extends { id: string }>(storeName: string, items: T[]
   }
 }
 
-// Read custom and edited products from all local sources (bundled DB snapshot, localStorage, IndexedDB)
-export function getLocalStoredProductsSync(): { custom: Product[]; edited: Product[] } {
-  const customMap = new Map<string, Product>();
-  const editedMap = new Map<string, Product>();
-
-  let deletedIds = new Set<string>();
+export function getDeletedProductIdsSync(): Set<string> {
+  const deletedIds = new Set<string>();
+  try {
+    const bundledDeleted = (bundledData as any)?.deletedProductIds;
+    if (Array.isArray(bundledDeleted)) {
+      bundledDeleted.forEach((id: string) => deletedIds.add(id));
+    }
+  } catch (e) {}
   try {
     const rawDeleted = localStorage.getItem('maris_deleted_product_ids');
     if (rawDeleted) {
       const parsedDeleted = JSON.parse(rawDeleted);
       if (Array.isArray(parsedDeleted)) {
-        deletedIds = new Set(parsedDeleted);
+        parsedDeleted.forEach((id: string) => deletedIds.add(id));
       }
     }
   } catch (e) {}
+  return deletedIds;
+}
+
+// Read custom and edited products from all local sources (bundled DB snapshot, localStorage, IndexedDB)
+export function getLocalStoredProductsSync(): { custom: Product[]; edited: Product[] } {
+  const customMap = new Map<string, Product>();
+  const editedMap = new Map<string, Product>();
+
+  const deletedIds = getDeletedProductIdsSync();
 
   // Seed with bundled database snapshot (so Vercel / GitHub Pages static builds match AI Studio DB)
   try {
@@ -115,7 +126,7 @@ export function getLocalStoredProductsSync(): { custom: Product[]; edited: Produ
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) {
           parsed.forEach((p: Product) => {
-            if (p && p.id && PRODUCTS.some((dp) => dp.id === p.id)) {
+            if (p && p.id && !deletedIds.has(p.id) && PRODUCTS.some((dp) => dp.id === p.id)) {
               editedMap.set(p.id, p);
             }
           });
@@ -131,7 +142,7 @@ export function getLocalStoredProductsSync(): { custom: Product[]; edited: Produ
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) {
           parsed.forEach((p: Product) => {
-            if (p && p.id && !PRODUCTS.some((dp) => dp.id === p.id)) {
+            if (p && p.id && !deletedIds.has(p.id) && !PRODUCTS.some((dp) => dp.id === p.id)) {
               customMap.set(p.id, p);
             }
           });
@@ -152,6 +163,8 @@ export async function loadAllPersistedProducts(): Promise<{
   customProducts: Product[];
   editedProducts: Product[];
 }> {
+  const deletedIds = getDeletedProductIdsSync();
+
   // 1. Start with base products
   let baseProducts = [...PRODUCTS];
 
@@ -160,8 +173,12 @@ export async function loadAllPersistedProducts(): Promise<{
   const customMap = new Map<string, Product>();
   const editedMap = new Map<string, Product>();
 
-  syncData.custom.forEach((p) => customMap.set(p.id, p));
-  syncData.edited.forEach((p) => editedMap.set(p.id, p));
+  syncData.custom.forEach((p) => {
+    if (!deletedIds.has(p.id)) customMap.set(p.id, p);
+  });
+  syncData.edited.forEach((p) => {
+    if (!deletedIds.has(p.id)) editedMap.set(p.id, p);
+  });
 
   // 3. Read from IndexedDB
   try {
@@ -169,13 +186,13 @@ export async function loadAllPersistedProducts(): Promise<{
     const idbEdits = await idbGetAll<Product>(STORE_EDITS);
 
     idbCustom.forEach((p) => {
-      if (p && p.id && !PRODUCTS.some((dp) => dp.id === p.id)) {
+      if (p && p.id && !deletedIds.has(p.id) && !PRODUCTS.some((dp) => dp.id === p.id)) {
         customMap.set(p.id, p);
       }
     });
 
     idbEdits.forEach((p) => {
-      if (p && p.id && PRODUCTS.some((dp) => dp.id === p.id)) {
+      if (p && p.id && !deletedIds.has(p.id) && PRODUCTS.some((dp) => dp.id === p.id)) {
         editedMap.set(p.id, p);
       }
     });
@@ -185,17 +202,27 @@ export async function loadAllPersistedProducts(): Promise<{
   try {
     const res = await fetch('/api/products/persisted');
     if (res.ok) {
-      const { custom: srvCustom, edited: srvEdits } = await res.json();
+      const { custom: srvCustom, edited: srvEdits, deletedIds: srvDeletedIds } = await res.json();
+      if (Array.isArray(srvDeletedIds)) {
+        srvDeletedIds.forEach((id: string) => {
+          deletedIds.add(id);
+          customMap.delete(id);
+          editedMap.delete(id);
+        });
+        try {
+          localStorage.setItem('maris_deleted_product_ids', JSON.stringify(Array.from(deletedIds)));
+        } catch (e) {}
+      }
       if (Array.isArray(srvCustom)) {
         srvCustom.forEach((p: Product) => {
-          if (p && p.id && !PRODUCTS.some((dp) => dp.id === p.id)) {
+          if (p && p.id && !deletedIds.has(p.id) && !PRODUCTS.some((dp) => dp.id === p.id)) {
             customMap.set(p.id, p);
           }
         });
       }
       if (Array.isArray(srvEdits)) {
         srvEdits.forEach((p: Product) => {
-          if (p && p.id && PRODUCTS.some((dp) => dp.id === p.id)) {
+          if (p && p.id && !deletedIds.has(p.id) && PRODUCTS.some((dp) => dp.id === p.id)) {
             editedMap.set(p.id, p);
           }
         });
@@ -205,8 +232,10 @@ export async function loadAllPersistedProducts(): Promise<{
     console.warn('Server sync offline or skipped:', e);
   }
 
-  const finalCustom = Array.from(customMap.values());
-  const finalEdits = Array.from(editedMap.values());
+  baseProducts = baseProducts.filter((p) => !deletedIds.has(p.id));
+
+  const finalCustom = Array.from(customMap.values()).filter((p) => !deletedIds.has(p.id));
+  const finalEdits = Array.from(editedMap.values()).filter((p) => !deletedIds.has(p.id));
 
   // Apply edits to base products
   if (finalEdits.length > 0) {
@@ -250,6 +279,19 @@ export async function loadAllPersistedProducts(): Promise<{
 
 // Persist all products into IndexedDB, localStorage & Server
 export function saveProductsToStorage(allProducts: Product[]): void {
+  // Remove any active product IDs from deleted list
+  try {
+    const activeIds = new Set(allProducts.map((p) => p.id));
+    const rawDel = localStorage.getItem('maris_deleted_product_ids');
+    if (rawDel) {
+      const delList: string[] = JSON.parse(rawDel);
+      if (Array.isArray(delList)) {
+        const remainingDeleted = delList.filter((id) => !activeIds.has(id));
+        localStorage.setItem('maris_deleted_product_ids', JSON.stringify(remainingDeleted));
+      }
+    }
+  } catch (e) {}
+
   const customItems = allProducts.filter((p) => !PRODUCTS.some((dp) => dp.id === p.id));
   const editedItems = allProducts.filter((p) => PRODUCTS.some((dp) => dp.id === p.id));
 
@@ -273,6 +315,59 @@ export function saveProductsToStorage(allProducts: Product[]): void {
     localStorage.setItem('ales_edited_products', editedJson);
     localStorage.setItem('edited_products', editedJson);
   } catch (e) {}
+}
+
+// Delete all products permanently from all storage tiers (IndexedDB, LocalStorage, Server)
+export async function deleteAllProductsFromStorage(currentProductIds: string[] = []): Promise<void> {
+  const allIdsToDelete = Array.from(
+    new Set([
+      ...PRODUCTS.map((p) => p.id),
+      ...currentProductIds,
+      ...Array.from(getDeletedProductIdsSync())
+    ])
+  );
+
+  // 1. Clear IndexedDB stores
+  try {
+    const db = await openDatabase();
+    const txCustom = db.transaction(STORE_CUSTOM, 'readwrite');
+    txCustom.objectStore(STORE_CUSTOM).clear();
+
+    const txEdits = db.transaction(STORE_EDITS, 'readwrite');
+    txEdits.objectStore(STORE_EDITS).clear();
+  } catch (e) {
+    console.warn('IndexedDB clear error:', e);
+  }
+
+  // 2. Clear LocalStorage and record all deleted IDs
+  try {
+    localStorage.setItem('maris_deleted_product_ids', JSON.stringify(allIdsToDelete));
+  } catch (e) {}
+
+  const customKeys = ['maris_custom_products', 'ales_custom_products', 'custom_products', 'maris_products', 'ales_products', 'products'];
+  for (const k of customKeys) {
+    try {
+      localStorage.setItem(k, JSON.stringify([]));
+    } catch (e) {}
+  }
+
+  const editKeys = ['maris_edited_products', 'ales_edited_products', 'edited_products'];
+  for (const k of editKeys) {
+    try {
+      localStorage.setItem(k, JSON.stringify([]));
+    } catch (e) {}
+  }
+
+  // 3. Delete all from Server API
+  try {
+    await fetch('/api/products', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ deletedIds: allIdsToDelete })
+    });
+  } catch (e) {
+    console.warn('Server delete all error:', e);
+  }
 }
 
 // Delete a product permanently from all storage tiers (IndexedDB, LocalStorage, Server)

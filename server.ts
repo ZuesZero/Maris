@@ -17,10 +17,11 @@ if (!fs.existsSync(DATA_DIR)) {
 
 const PRODUCTS_FILE = path.join(DATA_DIR, "custom_products.json");
 const EDITED_PRODUCTS_FILE = path.join(DATA_DIR, "edited_products.json");
+const DELETED_PRODUCTS_FILE = path.join(DATA_DIR, "deleted_products.json");
 const FRAME_SETTINGS_FILE = path.join(DATA_DIR, "image_frame_settings.json");
 const BUNDLED_DATA_FILE = path.join(process.cwd(), "src", "data", "bundledPersistedData.json");
 
-async function syncBundledDataSnapshot() {
+async function syncBundledDataSnapshot(overrideDeletedIds?: string[]) {
   try {
     const dbProducts = await dbQueries.getAllProducts();
     const frameSettings = await dbQueries.getAllFrameSettings();
@@ -28,14 +29,18 @@ async function syncBundledDataSnapshot() {
     const existingBundled = readJsonFile(BUNDLED_DATA_FILE, {
       customProducts: [],
       editedProducts: [],
+      deletedProductIds: [],
       frameSettings: {},
       salesTransactions: []
     });
-    const custom = dbProducts.filter((p: any) => String(p.id).startsWith("custom-"));
-    const edited = dbProducts.filter((p: any) => !String(p.id).startsWith("custom-"));
+    const deletedProductIds: string[] = overrideDeletedIds ?? readJsonFile(DELETED_PRODUCTS_FILE, existingBundled.deletedProductIds || []);
+    const deletedSet = new Set(deletedProductIds);
+    const custom = dbProducts.filter((p: any) => String(p.id).startsWith("custom-") && !deletedSet.has(p.id));
+    const edited = dbProducts.filter((p: any) => !String(p.id).startsWith("custom-") && !deletedSet.has(p.id));
     writeJsonFile(BUNDLED_DATA_FILE, {
-      customProducts: custom.length > 0 ? custom : existingBundled.customProducts || [],
+      customProducts: custom,
       editedProducts: edited,
+      deletedProductIds,
       frameSettings: Object.keys(frameSettings).length > 0 ? frameSettings : existingBundled.frameSettings || {},
       salesTransactions: salesTransactions.length > 0 ? salesTransactions : existingBundled.salesTransactions || []
     });
@@ -171,19 +176,21 @@ async function startServer() {
 
   // API Route: Get all custom and edited products
   app.get("/api/products/persisted", async (req, res) => {
+    const deletedIds: string[] = readJsonFile(DELETED_PRODUCTS_FILE, []);
+    const deletedSet = new Set(deletedIds);
     try {
       const dbProducts = await dbQueries.getAllProducts();
       if (dbProducts && dbProducts.length > 0) {
-        const custom = dbProducts.filter((p: any) => String(p.id).startsWith("custom-"));
-        const edited = dbProducts.filter((p: any) => !String(p.id).startsWith("custom-"));
-        return res.json({ custom, edited });
+        const custom = dbProducts.filter((p: any) => String(p.id).startsWith("custom-") && !deletedSet.has(p.id));
+        const edited = dbProducts.filter((p: any) => !String(p.id).startsWith("custom-") && !deletedSet.has(p.id));
+        return res.json({ custom, edited, deletedIds });
       }
     } catch (e) {
       console.warn("Falling back to local file products:", e);
     }
-    const custom = readJsonFile(PRODUCTS_FILE, []);
-    const edited = readJsonFile(EDITED_PRODUCTS_FILE, []);
-    res.json({ custom, edited });
+    const custom = readJsonFile(PRODUCTS_FILE, []).filter((p: any) => !deletedSet.has(p.id));
+    const edited = readJsonFile(EDITED_PRODUCTS_FILE, []).filter((p: any) => !deletedSet.has(p.id));
+    res.json({ custom, edited, deletedIds });
   });
 
   // API Route: Save or update product
@@ -193,9 +200,16 @@ async function startServer() {
       return res.status(400).json({ error: "Invalid product data" });
     }
 
+    // Remove from deleted list if re-saved
+    let deletedIds: string[] = readJsonFile(DELETED_PRODUCTS_FILE, []);
+    if (deletedIds.includes(product.id)) {
+      deletedIds = deletedIds.filter((id) => id !== product.id);
+      writeJsonFile(DELETED_PRODUCTS_FILE, deletedIds);
+    }
+
     try {
       await dbQueries.upsertProduct(product);
-      await syncBundledDataSnapshot();
+      await syncBundledDataSnapshot(deletedIds);
     } catch (e) {
       console.warn("Cloud SQL upsert product error, maintaining local backup:", e);
     }
@@ -232,12 +246,37 @@ async function startServer() {
     }
   });
 
+  // API Route: Delete all products
+  app.delete("/api/products", async (req, res) => {
+    const incomingDeletedIds: string[] = Array.isArray(req.body?.deletedIds) ? req.body.deletedIds : [];
+    const currentDeleted: string[] = readJsonFile(DELETED_PRODUCTS_FILE, []);
+    const allDeleted = Array.from(new Set([...currentDeleted, ...incomingDeletedIds]));
+    writeJsonFile(DELETED_PRODUCTS_FILE, allDeleted);
+    writeJsonFile(PRODUCTS_FILE, []);
+    writeJsonFile(EDITED_PRODUCTS_FILE, []);
+
+    try {
+      await dbQueries.deleteAllProducts();
+      await syncBundledDataSnapshot(allDeleted);
+    } catch (e) {
+      console.warn("Cloud SQL delete all products error:", e);
+    }
+
+    res.json({ success: true, deletedIds: allDeleted });
+  });
+
   // API Route: Delete product
   app.delete("/api/products/:id", async (req, res) => {
     const id = req.params.id;
+    const currentDeleted: string[] = readJsonFile(DELETED_PRODUCTS_FILE, []);
+    if (!currentDeleted.includes(id)) {
+      currentDeleted.push(id);
+      writeJsonFile(DELETED_PRODUCTS_FILE, currentDeleted);
+    }
+
     try {
       await dbQueries.deleteProductById(id);
-      await syncBundledDataSnapshot();
+      await syncBundledDataSnapshot(currentDeleted);
     } catch (e) {
       console.warn("Cloud SQL delete product error:", e);
     }

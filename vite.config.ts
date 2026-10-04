@@ -3,10 +3,24 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
-export default defineConfig(() => {
+export default defineConfig(({ command }) => {
   return {
-    base: process.env.VITE_BASE_PATH || './',
+    base: process.env.VITE_BASE_PATH || (command === 'build' ? './' : '/'),
     plugins: [react(), tailwindcss()],
+    optimizeDeps: {
+      entries: ['index.html', 'src/main.tsx'],
+      exclude: [
+        'drizzle-kit',
+        'drizzle-orm',
+        'pg',
+        'dotenv',
+        'firebase-admin',
+        'firebase-admin/app',
+        'firebase-admin/auth',
+        'archiver',
+        'express',
+      ],
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),

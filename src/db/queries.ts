@@ -2,13 +2,20 @@ import { db } from './index.ts';
 import { products, salesTransactions, users, imageFrameSettings } from './schema.ts';
 import { eq, desc } from 'drizzle-orm';
 
+function formatDbError(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message.slice(0, 300);
+  }
+  return String(error).slice(0, 300);
+}
+
 // Products Queries
 export async function getAllProducts() {
   try {
     return await db.select().from(products).orderBy(desc(products.createdAt));
   } catch (error) {
-    console.error('Database query failed for getAllProducts:', error);
-    throw new Error('Database query failed for products', { cause: error });
+    console.warn('Database query notice for getAllProducts:', formatDbError(error));
+    throw new Error('Database query failed for products');
   }
 }
 
@@ -62,8 +69,8 @@ export async function upsertProduct(productData: any) {
       })
       .returning();
   } catch (error) {
-    console.error('Database query failed for upsertProduct:', error);
-    throw new Error('Database query failed to upsert product', { cause: error });
+    console.warn('Database query notice for upsertProduct:', formatDbError(error));
+    throw new Error('Database query failed to upsert product');
   }
 }
 
@@ -71,8 +78,8 @@ export async function deleteProductById(productId: string) {
   try {
     return await db.delete(products).where(eq(products.id, productId)).returning();
   } catch (error) {
-    console.error('Database query failed for deleteProductById:', error);
-    throw new Error('Database query failed to delete product', { cause: error });
+    console.warn('Database query notice for deleteProductById:', formatDbError(error));
+    throw new Error('Database query failed to delete product');
   }
 }
 
@@ -81,8 +88,8 @@ export async function getAllSalesTransactions() {
   try {
     return await db.select().from(salesTransactions).orderBy(desc(salesTransactions.createdAt));
   } catch (error) {
-    console.error('Database query failed for getAllSalesTransactions:', error);
-    throw new Error('Database query failed for sales transactions', { cause: error });
+    console.warn('Database query notice for getAllSalesTransactions:', formatDbError(error));
+    throw new Error('Database query failed for sales transactions');
   }
 }
 
@@ -138,8 +145,8 @@ export async function upsertSaleTransaction(tx: any) {
       })
       .returning();
   } catch (error) {
-    console.error('Database query failed for upsertSaleTransaction:', error);
-    throw new Error('Database query failed to upsert transaction', { cause: error });
+    console.warn('Database query notice for upsertSaleTransaction:', formatDbError(error));
+    throw new Error('Database query failed to upsert transaction');
   }
 }
 
@@ -147,8 +154,8 @@ export async function deleteSaleTransactionById(transactionId: string) {
   try {
     return await db.delete(salesTransactions).where(eq(salesTransactions.id, transactionId)).returning();
   } catch (error) {
-    console.error('Database query failed for deleteSaleTransactionById:', error);
-    throw new Error('Database query failed to delete transaction', { cause: error });
+    console.warn('Database query notice for deleteSaleTransactionById:', formatDbError(error));
+    throw new Error('Database query failed to delete transaction');
   }
 }
 
@@ -174,8 +181,8 @@ export async function getOrCreateUser(uid: string, email: string, name?: string,
       .returning();
     return result[0];
   } catch (error) {
-    console.error('Database query failed for getOrCreateUser:', error);
-    throw new Error('Database query failed to upsert user', { cause: error });
+    console.warn('Database query notice for getOrCreateUser:', formatDbError(error));
+    throw new Error('Database query failed to upsert user');
   }
 }
 
@@ -183,8 +190,8 @@ export async function getAllUsers() {
   try {
     return await db.select().from(users).orderBy(desc(users.createdAt));
   } catch (error) {
-    console.error('Database query failed for getAllUsers:', error);
-    throw new Error('Database query failed to fetch users', { cause: error });
+    console.warn('Database query notice for getAllUsers:', formatDbError(error));
+    throw new Error('Database query failed to fetch users');
   }
 }
 
@@ -194,8 +201,8 @@ export async function getFrameSettings(id: string = '__global__') {
     const rows = await db.select().from(imageFrameSettings).where(eq(imageFrameSettings.id, id));
     return rows[0]?.settings || null;
   } catch (error) {
-    console.error('Database query failed for getFrameSettings:', error);
-    throw new Error('Database query failed to fetch frame settings', { cause: error });
+    console.warn('Database query notice for getFrameSettings:', formatDbError(error));
+    throw new Error('Database query failed to fetch frame settings');
   }
 }
 
@@ -208,8 +215,8 @@ export async function getAllFrameSettings() {
     });
     return map;
   } catch (error) {
-    console.error('Database query failed for getAllFrameSettings:', error);
-    throw new Error('Database query failed to fetch all frame settings', { cause: error });
+    console.warn('Database query notice for getAllFrameSettings:', formatDbError(error));
+    throw new Error('Database query failed to fetch all frame settings');
   }
 }
 
@@ -231,7 +238,7 @@ export async function saveFrameSettings(id: string, settings: any) {
       })
       .returning();
   } catch (error) {
-    console.error('Database query failed for saveFrameSettings:', error);
-    throw new Error('Database query failed to save frame settings', { cause: error });
+    console.warn('Database query notice for saveFrameSettings:', formatDbError(error));
+    throw new Error('Database query failed to save frame settings');
   }
 }

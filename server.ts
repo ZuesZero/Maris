@@ -43,7 +43,12 @@ function writeJsonFile(filePath: string, data: any) {
 
 async function startServer() {
   const app = express();
-  const PORT = Number(process.env.PORT) || 3000;
+  // Use DEFAULT_APP_PORT (3000) or fallback to 3000, avoiding collision with NGINX on 8080
+  const PORT = process.env.DEFAULT_APP_PORT
+    ? Number(process.env.DEFAULT_APP_PORT)
+    : (process.env.PORT && process.env.PORT !== process.env.NGINX_PORT && process.env.NODE_ENV === "production"
+      ? Number(process.env.PORT)
+      : 3000);
 
   app.use(express.json({ limit: "50mb" }));
 
@@ -541,6 +546,18 @@ Guidelines:
 
   // Vite Middleware for Development
   if (process.env.NODE_ENV !== "production") {
+    app.use((req, res, next) => {
+      if (
+        req.path.startsWith("/src/db/") ||
+        req.path.startsWith("/src/middleware/") ||
+        req.path.startsWith("/src/lib/firebase-admin")
+      ) {
+        res.setHeader("Content-Type", "application/javascript");
+        return res.status(200).send("export {};\n");
+      }
+      next();
+    });
+
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",

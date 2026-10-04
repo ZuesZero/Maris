@@ -46,7 +46,17 @@ jobs:
           fi
 
       - name: Build with Vite
-        run: npm run build
+        run: |
+          npm run build
+          touch ./dist/.nojekyll
+          cp ./dist/index.html ./dist/404.html
+
+      - name: Deploy to gh-pages branch (Supports "Deploy from a branch" mode)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+        continue-on-error: true
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
@@ -60,6 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages (Supports "GitHub Actions" mode)
         id: deployment
         uses: actions/deploy-pages@v4
+        continue-on-error: true

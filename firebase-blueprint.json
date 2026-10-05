@@ -1,0 +1,135 @@
+{
+  "entities": {
+    "CatalogProduct": {
+      "title": "CatalogProduct",
+      "description": "A luxury garment or accessory item in Mari's Atelier catalog.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique product identifier",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Product display title",
+          "maxLength": 300
+        },
+        "subtitle": {
+          "type": "string",
+          "description": "Product subtitle or material tagline",
+          "maxLength": 500
+        },
+        "price": {
+          "type": "number",
+          "description": "Retail price in base USD"
+        },
+        "costPrice": {
+          "type": "number",
+          "description": "Unit manufacturing cost in base USD"
+        },
+        "category": {
+          "type": "string",
+          "description": "Product category",
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "description": "Full product description",
+          "maxLength": 5000
+        },
+        "shippingInfo": {
+          "type": "string",
+          "description": "Shipping details",
+          "maxLength": 1000
+        },
+        "isNewArrival": {
+          "type": "boolean",
+          "description": "Whether product is marked as new arrival"
+        },
+        "isBestseller": {
+          "type": "boolean",
+          "description": "Whether product is marked as bestseller"
+        },
+        "isFeatured": {
+          "type": "boolean",
+          "description": "Whether product is featured in hero"
+        },
+        "inStock": {
+          "type": "boolean",
+          "description": "Whether product has available stock"
+        },
+        "stockQuantity": {
+          "type": "number",
+          "description": "Total available stock units"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last update",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "name", "price", "category"]
+    },
+    "CatalogMeta": {
+      "title": "CatalogMeta",
+      "description": "Global catalog synchronization metadata including deleted product IDs.",
+      "type": "object",
+      "properties": {
+        "deletedProductIds": {
+          "type": "string",
+          "description": "List of deleted product IDs"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last update",
+          "maxLength": 64
+        }
+      },
+      "required": ["deletedProductIds", "updatedAt"]
+    },
+    "ImageFrameDoc": {
+      "title": "ImageFrameDoc",
+      "description": "Image framing settings for a product or global preset.",
+      "type": "object",
+      "properties": {
+        "fit": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "positionX": {
+          "type": "number"
+        },
+        "positionY": {
+          "type": "number"
+        },
+        "zoom": {
+          "type": "number"
+        },
+        "padding": {
+          "type": "number"
+        },
+        "backgroundColor": {
+          "type": "string",
+          "maxLength": 32
+        }
+      },
+      "required": ["fit", "positionX", "positionY", "zoom", "padding", "backgroundColor"]
+    }
+  },
+  "firestore": {
+    "/catalog_products/{productId}": {
+      "schema": { "$ref": "#/entities/CatalogProduct" },
+      "description": "Live cloud-synced catalog products (custom and edited)."
+    },
+    "/catalog_meta/{docId}": {
+      "schema": { "$ref": "#/entities/CatalogMeta" },
+      "description": "Global catalog metadata tracking deleted product IDs across devices."
+    },
+    "/image_frames/{frameId}": {
+      "schema": { "$ref": "#/entities/ImageFrameDoc" },
+      "description": "Cloud-synced product image framing settings."
+    }
+  }
+}

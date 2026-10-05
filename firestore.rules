@@ -1,0 +1,70 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function isValidCatalogProduct(data) {
+      return data.keys().hasAll(['id', 'name', 'price', 'category']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 300 &&
+        data.price is number && data.price >= 0 &&
+        data.category is string && data.category.size() >= 1 && data.category.size() <= 100 &&
+        (!('images' in data) || (data.images is list && data.images.size() <= 20)) &&
+        (!('sizes' in data) || (data.sizes is list && data.sizes.size() <= 20)) &&
+        (!('colors' in data) || (data.colors is list && data.colors.size() <= 30));
+    }
+
+    function isValidCatalogMeta(data) {
+      return data.keys().hasAll(['deletedProductIds', 'updatedAt']) &&
+        data.deletedProductIds is list && data.deletedProductIds.size() <= 500 &&
+        data.updatedAt is string && data.updatedAt.size() <= 64;
+    }
+
+    function isValidImageFrame(data) {
+      return data.keys().hasAll(['fit', 'positionX', 'positionY', 'zoom', 'padding', 'backgroundColor']) &&
+        data.fit is string && data.fit.size() <= 32 &&
+        data.positionX is number &&
+        data.positionY is number &&
+        data.zoom is number &&
+        data.padding is number &&
+        data.backgroundColor is string && data.backgroundColor.size() <= 32;
+    }
+
+    match /test/{docId} {
+      allow get: if isValidId(docId);
+    }
+
+    match /catalog_products/{productId} {
+      allow get: if isValidId(productId);
+      allow list: if resource.data.id is string && resource.data.id.size() <= 128;
+      allow create, update: if isValidId(productId) && isValidCatalogProduct(incoming()) && incoming().id == productId;
+      allow delete: if isValidId(productId);
+    }
+
+    match /catalog_meta/{docId} {
+      allow get: if isValidId(docId);
+      allow list: if resource.data.updatedAt is string;
+      allow create, update: if isValidId(docId) && isValidCatalogMeta(incoming());
+      allow delete: if isValidId(docId);
+    }
+
+    match /image_frames/{frameId} {
+      allow get: if isValidId(frameId);
+      allow list: if resource.data.fit is string;
+      allow create, update: if isValidId(frameId) && isValidImageFrame(incoming());
+      allow delete: if isValidId(frameId);
+    }
+  }
+}

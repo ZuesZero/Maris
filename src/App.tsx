@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { PRODUCTS } from './data/products';
 import { Product, CartItem, Size, ViewMode, User } from './types';
 import { Language } from './data/translations';
-import { fetchServerImageSettings } from './utils/imageFrame';
-import { getLocalStoredProductsSync, getDeletedProductIdsSync, loadAllPersistedProducts, saveProductsToStorage, deleteProductFromStorage, deleteAllProductsFromStorage } from './utils/productStorage';
+import { fetchServerImageSettings, subscribeToRealtimeImageFrames } from './utils/imageFrame';
+import { getLocalStoredProductsSync, getDeletedProductIdsSync, loadAllPersistedProducts, saveProductsToStorage, saveProductToFirestore, deleteProductFromStorage, deleteAllProductsFromStorage, subscribeToRealtimeCatalog } from './utils/productStorage';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { HomeView } from './components/HomeView';
@@ -100,11 +100,14 @@ export default function App() {
     return PRODUCTS;
   });
 
-  // Sync persisted products & image frame settings from IndexedDB & server on mount
+  // Sync persisted products & image frame settings from IndexedDB, Server & Firebase Firestore on mount
   useEffect(() => {
+    let unsubCatalog: (() => void) | undefined;
+    let unsubFrames: (() => void) | undefined;
+
     async function syncServerData() {
       try {
-        // Load all persisted products from IndexedDB, localStorage and server
+        // Load all persisted products from IndexedDB, localStorage, server, and Firestore
         const { mergedProducts } = await loadAllPersistedProducts();
         if (Array.isArray(mergedProducts)) {
           setProducts(mergedProducts);
@@ -115,9 +118,22 @@ export default function App() {
       } catch (err) {
         console.warn('Server sync skipped (offline or initial boot):', err);
       }
+
+      // Attach real-time Firestore listeners so changes on Vercel sync immediately to cellphones and other devices
+      unsubCatalog = subscribeToRealtimeCatalog((liveProducts) => {
+        setProducts(liveProducts);
+      });
+      unsubFrames = subscribeToRealtimeImageFrames(() => {
+        setProducts((prev) => [...prev]);
+      });
     }
 
     syncServerData();
+
+    return () => {
+      if (unsubCatalog) unsubCatalog();
+      if (unsubFrames) unsubFrames();
+    };
   }, []);
 
   const [currentView, setCurrentView] = useState<ViewMode>('home');
@@ -336,6 +352,7 @@ export default function App() {
       }
       try {
         saveProductsToStorage(updated);
+        saveProductToFirestore(savedProduct).catch(err => console.warn('Could not sync product to Firestore', err));
 
         const isEdit = PRODUCTS.some(dp => dp.id === savedProduct.id);
         // Async sync to server API for persistent storage across deploys/publishes
@@ -368,8 +385,9 @@ export default function App() {
       const updated = [...newProductsList, ...prev];
       try {
         saveProductsToStorage(updated);
-        // Async sync to server API for all products
+        // Async sync to server API and Firebase Firestore for all products
         newProductsList.forEach(prod => {
+          saveProductToFirestore(prod).catch(err => console.warn('Could not sync batch product to Firestore', err));
           fetch('/api/products', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

@@ -75,12 +75,8 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
   const [newColorHex, setNewColorHex] = useState('#B88A58');
 
   // Fabric & Care
-  const [fabricDetails, setFabricDetails] = useState<string>(
-    '100% Loro Piana Italian Virgin Cashmere\n100% Bemberg Cupro Lining\nHand-finished Horn Buttons'
-  );
-  const [garmentCare, setGarmentCare] = useState<string>(
-    'Specialist dry clean only\nStore on contoured wooden coat hanger\nDo not wash or tumble dry'
-  );
+  const [fabricDetails, setFabricDetails] = useState<string>('');
+  const [garmentCare, setGarmentCare] = useState<string>('');
 
   // Badges
   const [isNewArrival, setIsNewArrival] = useState(true);
@@ -106,8 +102,12 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
         setSelectedSizes(productToEdit.sizes && productToEdit.sizes.length > 0 ? productToEdit.sizes : ['EU 48', 'EU 50']);
         setUploadedImages(productToEdit.images || []);
         setColors(productToEdit.colors || [{ name: 'Default', hex: '#1C1B20' }]);
-        setFabricDetails(productToEdit.fabricDetails ? productToEdit.fabricDetails.join('\n') : '');
-        setGarmentCare(productToEdit.garmentCare ? productToEdit.garmentCare.join('\n') : '');
+        const rawFabric = productToEdit.fabricDetails ? productToEdit.fabricDetails.join('\n') : '';
+        const rawCare = productToEdit.garmentCare ? productToEdit.garmentCare.join('\n') : '';
+        const isLegacyDefaultFabric = rawFabric === '100% Loro Piana Italian Virgin Cashmere\n100% Bemberg Cupro Lining\nHand-finished Horn Buttons';
+        const isLegacyDefaultCare = rawCare === 'Specialist dry clean only\nStore on contoured wooden coat hanger\nDo not wash or tumble dry';
+        setFabricDetails(productToEdit.id?.startsWith('custom-') && isLegacyDefaultFabric ? '' : rawFabric);
+        setGarmentCare(productToEdit.id?.startsWith('custom-') && isLegacyDefaultCare ? '' : rawCare);
         setIsNewArrival(!!productToEdit.isNewArrival);
         setIsBestseller(!!productToEdit.isBestseller);
         setIsFeatured(!!productToEdit.isFeatured);
@@ -132,8 +132,8 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
           { name: 'Oatmeal Melange', hex: '#DED3C4' },
           { name: 'Noir Black', hex: '#1C1B20' }
         ]);
-        setFabricDetails('100% Loro Piana Italian Virgin Cashmere\n100% Bemberg Cupro Lining\nHand-finished Horn Buttons');
-        setGarmentCare('Specialist dry clean only\nStore on contoured wooden coat hanger\nDo not wash or tumble dry');
+        setFabricDetails('');
+        setGarmentCare('');
         setIsNewArrival(true);
         setIsBestseller(false);
         setIsFeatured(false);
@@ -845,6 +845,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                     </label>
                     <textarea
                       rows={3}
+                      placeholder={isEs ? "Ingrese las especificaciones del material (1 por línea)..." : "Enter fabric & material specifications (1 per line)..."}
                       value={fabricDetails}
                       onChange={(e) => setFabricDetails(e.target.value)}
                       className="w-full text-xs p-2.5 border border-[#D1C9BD] bg-white rounded-sm focus:outline-none focus:border-[#B88A58]"
@@ -857,6 +858,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                     </label>
                     <textarea
                       rows={3}
+                      placeholder={isEs ? "Ingrese las instrucciones de cuidado (1 por línea)..." : "Enter garment care instructions (1 per line)..."}
                       value={garmentCare}
                       onChange={(e) => setGarmentCare(e.target.value)}
                       className="w-full text-xs p-2.5 border border-[#D1C9BD] bg-white rounded-sm focus:outline-none focus:border-[#B88A58]"

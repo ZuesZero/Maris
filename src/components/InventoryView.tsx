@@ -899,27 +899,15 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
               <span>{t.logNewSale}</span>
             </button>
           ) : (
-            <div className="flex flex-wrap items-center gap-2">
-              {onOpenAddProduct && (
-                <button
-                  onClick={onOpenAddProduct}
-                  className="px-4 py-2.5 bg-[#B88A58] hover:bg-[#a17849] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm shrink-0"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>{t.addNewProduct}</span>
-                </button>
-              )}
-              {isAuthorized && onDeleteAllProducts && products.length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setIsDeleteAllModalOpen(true)}
-                  className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm shrink-0"
-                >
-                  <Trash2 className="w-4 h-4" />
-                  <span>{t.deleteAllItems}</span>
-                </button>
-              )}
-            </div>
+            onOpenAddProduct && (
+              <button
+                onClick={onOpenAddProduct}
+                className="px-4 py-2.5 bg-[#B88A58] hover:bg-[#a17849] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm shrink-0"
+              >
+                <Plus className="w-4 h-4" />
+                <span>{t.addNewProduct}</span>
+              </button>
+            )
           )}
 
           <a

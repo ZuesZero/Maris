@@ -331,21 +331,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Sparkles className="w-3 h-3 text-[#B88A58] animate-pulse" />
           </button>
 
-          {/* Upload New Piece Button */}
-          {onOpenAddProduct && (
-            <button
-              id="btn-open-add-product"
-              onClick={onOpenAddProduct}
-              className="p-1.5 text-[#1A1A1A] hover:text-[#B88A58] transition-colors flex items-center gap-1 cursor-pointer"
-              title="Upload New Garment"
-            >
-              <PlusCircle className="w-5 h-5 text-[#B88A58]" />
-              <span className="hidden xl:inline text-[10px] font-bold tracking-wider text-[#1A1A1A] uppercase">Upload</span>
-            </button>
-          )}
-
-
-
           {/* Wishlist Button */}
           <button
             id="btn-open-wishlist"

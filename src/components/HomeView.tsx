@@ -4,6 +4,7 @@ import { ArrowRight, Sparkles, Heart, ShoppingBag, Eye, ShieldCheck, Feather, Aw
 import { Language, translations } from '../data/translations';
 import { formatPrice } from '../utils/currency';
 import { getTranslatedProduct } from '../utils/productTranslations';
+import { HeroRotationFrame } from './HeroRotationFrame';
 
 const ProductCardImage: React.FC<{
   images: string[];
@@ -148,59 +149,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
     : products.filter(p => p.category === activeCategoryTab);
 
   return (
-    <div className="space-y-24 pb-20 animate-fadeIn">
-      {/* 1. EDITORIAL HERO SECTION */}
-      <section className="relative min-h-[380px] sm:min-h-[440px] lg:h-[52vh] lg:max-h-[500px] w-full overflow-hidden bg-[#1C1B20] text-[#F4F0EA] flex items-center py-8 sm:py-12">
-        {/* Background Editorial Image */}
-        <div className="absolute inset-0">
-          <img
-            src="https://i.ytimg.com/vi/I4M9DluNqWY/maxresdefault.jpg"
-            alt="Mari's Autumn 2026 Campaign"
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover object-[85%_top] sm:object-[right_top] opacity-85 scale-100 transition-all duration-1000"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1C1B20] via-[#1C1B20]/80 sm:via-[#1C1B20]/60 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1C1B20] via-transparent to-black/30 opacity-70"></div>
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 py-6">
-          <div className="max-w-2xl space-y-4 sm:space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#B88A58]/25 border border-[#B88A58]/50 rounded-full text-[#E8D0B5] text-[11px] font-mono tracking-widest uppercase backdrop-blur-xs">
-              <Sparkles className="w-3.5 h-3.5 text-[#B88A58]" />
-              <span>{t.heroBadge}</span>
-            </div>
-
-            <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl font-light tracking-[0.1em] text-white leading-tight uppercase">
-              {t.heroTitleLine1} <br />
-              <span className="italic font-normal text-[#E8D0B5]">{t.heroTitleHighlight}</span>
-            </h1>
-
-            <p className="text-xs sm:text-sm text-[#E2DCDA] font-light leading-relaxed max-w-lg">
-              {t.heroSubtitle}
-            </p>
-
-            <div className="pt-2 sm:pt-4 flex flex-wrap items-center gap-3.5">
-              <button
-                id="btn-hero-discover"
-                onClick={() => onNavigate('catalog')}
-                className="px-6 sm:px-8 py-3.5 bg-[#F4F0EA] text-[#1C1B20] text-xs uppercase tracking-[0.18em] font-bold hover:bg-[#B88A58] hover:text-white transition-all flex items-center gap-2.5 rounded-sm shadow-xl cursor-pointer"
-              >
-                <span>{t.heroDiscover}</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 text-center text-[#A8A09B] text-[10px] tracking-[0.3em] uppercase hidden md:block z-10">
-          <p>{t.heroScroll}</p>
-          <div className="w-0.5 h-4 bg-[#A8A09B]/40 mx-auto mt-1 animate-bounce"></div>
-        </div>
-      </section>
+    <div className="space-y-6 pb-20 animate-fadeIn">
+      {/* 1. 5-MINUTE ROTATION FRAME HERO SECTION */}
+      <HeroRotationFrame
+        language={language}
+        isAdminUser={isAdminUser}
+        onSeeDetails={() => onNavigate('catalog')}
+      />
 
       {/* 3. CURATED ESSENTIALS COLLECTION OVERVIEW */}
-      <section id="products-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <section id="products-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2">
         {/* Product Cards Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6 lg:gap-8">
           {filteredProducts.slice(0, 16).map((rawProduct) => {

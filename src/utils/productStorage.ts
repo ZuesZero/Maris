@@ -493,179 +493,188 @@ export async function deleteAllProductsFromStorage(currentProductIds: string[] =
     console.warn('Server delete all error:', e);
   }
 
-  try {
-    await setDoc(doc(db, FIRESTORE_META_COL, FIRESTORE_META_DOC), {
-      deletedProductIds: allIdsToDelete.slice(0, 500),
-      updatedAt: new Date().toISOString()
-    });
-    const colSnap = await getDocs(collection(db, FIRESTORE_PRODUCTS_COL));
-    const deletePromises: Promise<void>[] = [];
-    colSnap.forEach((docSnap) => {
-      deletePromises.push(deleteDoc(doc(db, FIRESTORE_PRODUCTS_COL, docSnap.id)));
-    });
-    await Promise.all(deletePromises);
-  } catch (error) {
     try {
-      handleFirestoreError(error, OperationType.DELETE, FIRESTORE_PRODUCTS_COL);
-    } catch (_) {}
-  }
-}
-
-// Delete a product permanently from all storage tiers (IndexedDB, LocalStorage, Server)
-export async function deleteProductFromStorage(productId: string): Promise<void> {
-  // 1. Delete from IndexedDB
-  try {
-    const db = await openDatabase();
-    const txCustom = db.transaction(STORE_CUSTOM, 'readwrite');
-    txCustom.objectStore(STORE_CUSTOM).delete(productId);
-
-    const txEdits = db.transaction(STORE_EDITS, 'readwrite');
-    txEdits.objectStore(STORE_EDITS).delete(productId);
-  } catch (e) {
-    console.warn('IndexedDB delete error:', e);
-  }
-
-  // 2. Delete from LocalStorage and record deleted ID
-  try {
-    const rawDel = localStorage.getItem('maris_deleted_product_ids');
-    const delList: string[] = rawDel ? JSON.parse(rawDel) : [];
-    if (!delList.includes(productId)) {
-      delList.push(productId);
-      localStorage.setItem('maris_deleted_product_ids', JSON.stringify(delList));
-    }
-  } catch (e) {}
-
-  const customKeys = ['maris_custom_products', 'ales_custom_products', 'custom_products', 'maris_products', 'ales_products', 'products'];
-  for (const k of customKeys) {
-    try {
-      const raw = localStorage.getItem(k);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) {
-          const filtered = parsed.filter((p: Product) => p?.id !== productId);
-          localStorage.setItem(k, JSON.stringify(filtered));
-        }
-      }
-    } catch (e) {}
-  }
-
-  const editKeys = ['maris_edited_products', 'ales_edited_products', 'edited_products'];
-  for (const k of editKeys) {
-    try {
-      const raw = localStorage.getItem(k);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) {
-          const filtered = parsed.filter((p: Product) => p?.id !== productId);
-          localStorage.setItem(k, JSON.stringify(filtered));
-        }
-      }
-    } catch (e) {}
-  }
-
-  // 3. Delete from Server API & Firebase Firestore
-  try {
-    await fetch(`/api/products/${encodeURIComponent(productId)}`, {
-      method: 'DELETE'
-    });
-  } catch (e) {
-    console.warn('Server delete error:', e);
-  }
-
-  try {
-    const safeId = sanitizeDocId(productId);
-    await deleteDoc(doc(db, FIRESTORE_PRODUCTS_COL, safeId));
-    const currentDeleted = Array.from(getDeletedProductIdsSync());
-    if (!currentDeleted.includes(productId)) currentDeleted.push(productId);
-    await setDoc(doc(db, FIRESTORE_META_COL, FIRESTORE_META_DOC), {
-      deletedProductIds: currentDeleted.slice(0, 500),
-      updatedAt: new Date().toISOString()
-    });
-  } catch (error) {
-    try {
-      handleFirestoreError(error, OperationType.DELETE, `${FIRESTORE_PRODUCTS_COL}/${productId}`);
-    } catch (_) {}
-  }
-}
-
-// Real-time Firestore listener so changes on Vercel (computer) appear immediately on cellphone
-export function subscribeToRealtimeCatalog(
-  onUpdate: (mergedProducts: Product[]) => void
-): () => void {
-  let latestFsProducts = new Map<string, Product>();
-  let latestDeletedIds = getDeletedProductIdsSync();
-  let hasLoadedMeta = false;
-  let hasLoadedProducts = false;
-
-  const recomputeAndNotify = () => {
-    if (!hasLoadedMeta && !hasLoadedProducts) return;
-
-    let baseProducts = PRODUCTS.filter((p) => !latestDeletedIds.has(p.id));
-    const customMap = new Map<string, Product>();
-    const editedMap = new Map<string, Product>();
-
-    // Include bundled snapshot items unless deleted
-    try {
-      const bundledCustom = (bundledData as any)?.customProducts;
-      if (Array.isArray(bundledCustom)) {
-        bundledCustom.forEach((p: Product) => {
-          if (p && p.id && !latestDeletedIds.has(p.id) && !PRODUCTS.some((dp) => dp.id === p.id)) {
-            customMap.set(p.id, p);
-          }
-        });
-      }
-      const bundledEdited = (bundledData as any)?.editedProducts;
-      if (Array.isArray(bundledEdited)) {
-        bundledEdited.forEach((p: Product) => {
-          if (p && p.id && !latestDeletedIds.has(p.id) && PRODUCTS.some((dp) => dp.id === p.id)) {
-            editedMap.set(p.id, p);
-          }
-        });
-      }
-    } catch (_) {}
-
-    // Overlay live Firestore products
-    latestFsProducts.forEach((p) => {
-      if (p && p.id && !latestDeletedIds.has(p.id)) {
-        if (PRODUCTS.some((dp) => dp.id === p.id)) {
-          editedMap.set(p.id, p);
-        } else {
-          customMap.set(p.id, p);
-        }
-      }
-    });
-
-    baseProducts = baseProducts.map((p) => {
-      const edited = editedMap.get(p.id);
-      return edited ? edited : p;
-    });
-
-    const merged = [...Array.from(customMap.values()), ...baseProducts];
-    saveProductsToStorage(merged);
-    onUpdate(merged);
-  };
-
-  const unsubMeta = onSnapshot(
-    doc(db, FIRESTORE_META_COL, FIRESTORE_META_DOC),
-    (docSnap) => {
-      hasLoadedMeta = true;
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        if (Array.isArray(data?.deletedProductIds)) {
-          latestDeletedIds = new Set<string>(data.deletedProductIds);
-          try {
-            localStorage.setItem('maris_deleted_product_ids', JSON.stringify(data.deletedProductIds));
-          } catch (_) {}
-        }
-      }
-      recomputeAndNotify();
-    },
-    (error) => {
+      await setDoc(doc(db, FIRESTORE_META_COL, FIRESTORE_META_DOC), {
+        deletedProductIds: allIdsToDelete.slice(-500),
+        updatedAt: new Date().toISOString()
+      });
+      const colSnap = await getDocs(collection(db, FIRESTORE_PRODUCTS_COL));
+      const deletePromises: Promise<void>[] = [];
+      colSnap.forEach((docSnap) => {
+        deletePromises.push(deleteDoc(doc(db, FIRESTORE_PRODUCTS_COL, docSnap.id)));
+      });
+      await Promise.all(deletePromises);
+    } catch (error) {
       try {
-        handleFirestoreError(error, OperationType.GET, `${FIRESTORE_META_COL}/${FIRESTORE_META_DOC}`);
+        handleFirestoreError(error, OperationType.DELETE, FIRESTORE_PRODUCTS_COL);
       } catch (_) {}
     }
-  );
+  }
+
+  // Delete a product permanently from all storage tiers (IndexedDB, LocalStorage, Server)
+  export async function deleteProductFromStorage(productId: string): Promise<void> {
+    // 1. Delete from IndexedDB
+    try {
+      const db = await openDatabase();
+      const txCustom = db.transaction(STORE_CUSTOM, 'readwrite');
+      txCustom.objectStore(STORE_CUSTOM).delete(productId);
+
+      const txEdits = db.transaction(STORE_EDITS, 'readwrite');
+      txEdits.objectStore(STORE_EDITS).delete(productId);
+    } catch (e) {
+      console.warn('IndexedDB delete error:', e);
+    }
+
+    // 2. Delete from LocalStorage and record deleted ID
+    try {
+      const rawDel = localStorage.getItem('maris_deleted_product_ids');
+      const delList: string[] = rawDel ? JSON.parse(rawDel) : [];
+      if (!delList.includes(productId)) {
+        delList.push(productId);
+        localStorage.setItem('maris_deleted_product_ids', JSON.stringify(delList));
+      }
+    } catch (e) {}
+
+    const customKeys = ['maris_custom_products', 'ales_custom_products', 'custom_products', 'maris_products', 'ales_products', 'products'];
+    for (const k of customKeys) {
+      try {
+        const raw = localStorage.getItem(k);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            const filtered = parsed.filter((p: Product) => p?.id !== productId);
+            localStorage.setItem(k, JSON.stringify(filtered));
+          }
+        }
+      } catch (e) {}
+    }
+
+    const editKeys = ['maris_edited_products', 'ales_edited_products', 'edited_products'];
+    for (const k of editKeys) {
+      try {
+        const raw = localStorage.getItem(k);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            const filtered = parsed.filter((p: Product) => p?.id !== productId);
+            localStorage.setItem(k, JSON.stringify(filtered));
+          }
+        }
+      } catch (e) {}
+    }
+
+    // 3. Delete from Server API & Firebase Firestore
+    try {
+      await fetch(`/api/products/${encodeURIComponent(productId)}`, {
+        method: 'DELETE'
+      });
+    } catch (e) {
+      console.warn('Server delete error:', e);
+    }
+
+    try {
+      const safeId = sanitizeDocId(productId);
+      await deleteDoc(doc(db, FIRESTORE_PRODUCTS_COL, safeId));
+      const currentDeleted = Array.from(getDeletedProductIdsSync());
+      if (!currentDeleted.includes(productId)) currentDeleted.push(productId);
+      await setDoc(doc(db, FIRESTORE_META_COL, FIRESTORE_META_DOC), {
+        deletedProductIds: currentDeleted.slice(-500),
+        updatedAt: new Date().toISOString()
+      });
+    } catch (error) {
+      try {
+        handleFirestoreError(error, OperationType.DELETE, `${FIRESTORE_PRODUCTS_COL}/${productId}`);
+      } catch (_) {}
+    }
+  }
+
+  // Real-time Firestore listener so changes on Vercel (computer) appear immediately on cellphone
+  export function subscribeToRealtimeCatalog(
+    onUpdate: (mergedProducts: Product[]) => void
+  ): () => void {
+    let latestFsProducts = new Map<string, Product>();
+    let latestDeletedIds = getDeletedProductIdsSync();
+    let hasLoadedMeta = false;
+    let hasLoadedProducts = false;
+
+    const recomputeAndNotify = () => {
+      // Wait until Firestore catalog_products snapshot has loaded before overwriting state
+      if (!hasLoadedProducts) return;
+
+      let baseProducts = PRODUCTS.filter((p) => !latestDeletedIds.has(p.id));
+      const customMap = new Map<string, Product>();
+      const editedMap = new Map<string, Product>();
+
+      // Include bundled snapshot items unless deleted
+      try {
+        const bundledCustom = (bundledData as any)?.customProducts;
+        if (Array.isArray(bundledCustom)) {
+          bundledCustom.forEach((p: Product) => {
+            if (p && p.id && !latestDeletedIds.has(p.id) && !PRODUCTS.some((dp) => dp.id === p.id)) {
+              customMap.set(p.id, p);
+            }
+          });
+        }
+        const bundledEdited = (bundledData as any)?.editedProducts;
+        if (Array.isArray(bundledEdited)) {
+          bundledEdited.forEach((p: Product) => {
+            if (p && p.id && !latestDeletedIds.has(p.id) && PRODUCTS.some((dp) => dp.id === p.id)) {
+              editedMap.set(p.id, p);
+            }
+          });
+        }
+      } catch (_) {}
+
+      // Overlay live Firestore products
+      latestFsProducts.forEach((p) => {
+        if (p && p.id && !latestDeletedIds.has(p.id)) {
+          if (PRODUCTS.some((dp) => dp.id === p.id)) {
+            editedMap.set(p.id, p);
+          } else {
+            customMap.set(p.id, p);
+          }
+        }
+      });
+
+      baseProducts = baseProducts.map((p) => {
+        const edited = editedMap.get(p.id);
+        return edited ? edited : p;
+      });
+
+      const merged = [...Array.from(customMap.values()), ...baseProducts];
+      saveProductsToStorage(merged);
+      onUpdate(merged);
+    };
+
+    const unsubMeta = onSnapshot(
+      doc(db, FIRESTORE_META_COL, FIRESTORE_META_DOC),
+      (docSnap) => {
+        hasLoadedMeta = true;
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (Array.isArray(data?.deletedProductIds)) {
+            latestDeletedIds = new Set<string>(data.deletedProductIds);
+            try {
+              localStorage.setItem('maris_deleted_product_ids', JSON.stringify(data.deletedProductIds));
+            } catch (_) {}
+            // Also purge any deleted items from IndexedDB so stale local items do not reappear
+            openDatabase().then((idb) => {
+              try {
+                const txC = idb.transaction(STORE_CUSTOM, 'readwrite');
+                const storeC = txC.objectStore(STORE_CUSTOM);
+                data.deletedProductIds.forEach((id: string) => storeC.delete(id));
+              } catch (_) {}
+            }).catch(() => {});
+          }
+        }
+        recomputeAndNotify();
+      },
+      (error) => {
+        try {
+          handleFirestoreError(error, OperationType.GET, `${FIRESTORE_META_COL}/${FIRESTORE_META_DOC}`);
+        } catch (_) {}
+      }
+    );
 
   const unsubProducts = onSnapshot(
     collection(db, FIRESTORE_PRODUCTS_COL),

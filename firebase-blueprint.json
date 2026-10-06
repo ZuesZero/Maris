@@ -116,6 +116,46 @@
         }
       },
       "required": ["fit", "positionX", "positionY", "zoom", "padding", "backgroundColor"]
+    },
+    "HeroSlide": {
+      "title": "HeroSlide",
+      "description": "A fashion showcase slide in the landing page 5-minute rotation frame.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "image": {
+          "type": "string",
+          "description": "Image URL or optimized data URL"
+        },
+        "kicker": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "badge": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "subtitle": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "order": {
+          "type": "number"
+        },
+        "updatedAt": {
+          "type": "string",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "image", "title"]
     }
   },
   "firestore": {
@@ -130,6 +170,10 @@
     "/image_frames/{frameId}": {
       "schema": { "$ref": "#/entities/ImageFrameDoc" },
       "description": "Cloud-synced product image framing settings."
+    },
+    "/hero_slides/{slideId}": {
+      "schema": { "$ref": "#/entities/HeroSlide" },
+      "description": "Cloud-synced landing page hero rotation slides uploaded by admin."
     }
   }
 }

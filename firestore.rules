@@ -42,29 +42,43 @@ service cloud.firestore {
         data.backgroundColor is string && data.backgroundColor.size() <= 32;
     }
 
+    function isValidHeroSlide(data) {
+      return data.keys().hasAll(['id', 'image', 'title']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.image is string && data.image.size() >= 1 && data.image.size() <= 1000000 &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 200;
+    }
+
     match /test/{docId} {
       allow get: if isValidId(docId);
     }
 
     match /catalog_products/{productId} {
       allow get: if isValidId(productId);
-      allow list: if resource.data.id is string && resource.data.id.size() <= 128;
+      allow list: if true;
       allow create, update: if isValidId(productId) && isValidCatalogProduct(incoming()) && incoming().id == productId;
       allow delete: if isValidId(productId);
     }
 
     match /catalog_meta/{docId} {
       allow get: if isValidId(docId);
-      allow list: if resource.data.updatedAt is string;
+      allow list: if true;
       allow create, update: if isValidId(docId) && isValidCatalogMeta(incoming());
       allow delete: if isValidId(docId);
     }
 
     match /image_frames/{frameId} {
       allow get: if isValidId(frameId);
-      allow list: if resource.data.fit is string;
+      allow list: if true;
       allow create, update: if isValidId(frameId) && isValidImageFrame(incoming());
       allow delete: if isValidId(frameId);
+    }
+
+    match /hero_slides/{slideId} {
+      allow get: if isValidId(slideId);
+      allow list: if true;
+      allow create, update: if isValidId(slideId) && isValidHeroSlide(incoming()) && incoming().id == slideId;
+      allow delete: if isValidId(slideId);
     }
   }
 }

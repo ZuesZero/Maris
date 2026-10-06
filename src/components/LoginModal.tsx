@@ -123,6 +123,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     const cleanEmail = email.trim();
     const isDev = cleanEmail.toLowerCase() === 'luis.delarosacosio@gmail.com';
 
+    if (isDev && password !== 'Luisml02028801*') {
+      setError(
+        isEs
+          ? 'Contraseña de administrador incorrecta. Acceso denegado.'
+          : 'Incorrect administrator password. Access denied.'
+      );
+      return;
+    }
+
     const defaultAvatar = `https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200`;
     const userAvatar = getPersistedAvatar(cleanEmail, defaultAvatar);
 
@@ -201,11 +210,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       return;
     }
 
-    if (!adminPasswordInput || adminPasswordInput.length < 6) {
+    if (adminPasswordInput !== 'Luisml02028801*') {
       setAdminPasswordError(
         isEs
-          ? 'La contraseña de administrador debe tener al menos 6 caracteres.'
-          : 'Administrator password must be at least 6 characters.'
+          ? 'Contraseña de administrador incorrecta. Acceso denegado.'
+          : 'Incorrect administrator password. Access denied.'
       );
       return;
     }

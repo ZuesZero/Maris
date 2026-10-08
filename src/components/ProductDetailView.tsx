@@ -20,6 +20,7 @@ interface ProductDetailViewProps {
   onBack?: () => void;
   currentUser?: User | null;
   onEditProduct?: (product: Product) => void;
+  onUpdateProduct?: (product: Product) => void;
   onDeleteProduct?: (productId: string) => void;
   language?: Language;
 }
@@ -37,10 +38,16 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   onBack,
   currentUser,
   onEditProduct,
+  onUpdateProduct,
   onDeleteProduct,
   language = 'en'
 }) => {
-  const product = getTranslatedProduct(rawProduct, language);
+  const [currentProduct, setCurrentProduct] = useState<Product>(rawProduct);
+  React.useEffect(() => {
+    setCurrentProduct(rawProduct);
+  }, [rawProduct]);
+
+  const product = getTranslatedProduct(currentProduct, language);
   const isAdminUser = currentUser?.email?.toLowerCase().trim() === 'luis.delarosacosio@gmail.com';
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState<Size>(product.sizes[0] || 'EU 48');
@@ -51,14 +58,15 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
 
   // Picture frame adjustment tool state
   const [isFrameToolOpen, setIsFrameToolOpen] = useState(false);
-  const [currentProduct, setCurrentProduct] = useState<Product>(rawProduct);
 
-  const activeProduct = getTranslatedProduct(currentProduct, language);
+  const activeProduct = product;
   const frameStyles = getImageFrameStyles(activeProduct);
 
   const handleUpdateProductFromTool = (updated: Product) => {
     setCurrentProduct(updated);
-    if (onEditProduct) {
+    if (onUpdateProduct) {
+      onUpdateProduct(updated);
+    } else if (onEditProduct) {
       onEditProduct(updated);
     }
   };

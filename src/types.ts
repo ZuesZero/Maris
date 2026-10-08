@@ -9,6 +9,13 @@ export interface ImageFrameSettings {
   zoom: number; // 50 to 200
   padding: number; // 0 to 40
   backgroundColor: string; // e.g. '#F4F0EA'
+  rotation?: number; // 0, 90, 180, 270, 360
+  mirrorX?: boolean; // horizontal flip
+  mirrorY?: boolean; // vertical flip
+  cropTop?: number; // 0 to 45 (%)
+  cropRight?: number; // 0 to 45 (%)
+  cropBottom?: number; // 0 to 45 (%)
+  cropLeft?: number; // 0 to 45 (%)
 }
 
 export interface Product {

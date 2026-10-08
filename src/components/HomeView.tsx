@@ -1,19 +1,24 @@
 import React, { useState, useRef } from 'react';
 import { Product, ViewMode, User } from '../types';
-import { ArrowRight, Sparkles, Heart, ShoppingBag, Eye, ShieldCheck, Feather, Award, Globe, PlusCircle, Upload, UserCheck, User as UserIcon, Pencil } from 'lucide-react';
+import { ArrowRight, Sparkles, Heart, ShoppingBag, Eye, ShieldCheck, Feather, Award, Globe, PlusCircle, Upload, UserCheck, User as UserIcon, Pencil, Sliders } from 'lucide-react';
 import { Language, translations } from '../data/translations';
 import { formatPrice } from '../utils/currency';
 import { getTranslatedProduct } from '../utils/productTranslations';
+import { getImageFrameStyles } from '../utils/imageFrame';
 import { HeroRotationFrame } from './HeroRotationFrame';
+import { ImageFrameAdjusterModal } from './ImageFrameAdjusterModal';
 
 const ProductCardImage: React.FC<{
   images: string[];
   name: string;
   isHovered: boolean;
-}> = ({ images, name, isHovered }) => {
+  product?: Product;
+}> = ({ images, name, isHovered, product }) => {
   const [currentIdx, setCurrentIdx] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
+
+  const frameStyles = getImageFrameStyles(product);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.targetTouches[0].clientX;
@@ -42,14 +47,16 @@ const ProductCardImage: React.FC<{
 
   return (
     <div
-      className="w-full h-full relative touch-pan-y select-none"
+      className="w-full h-full relative touch-pan-y select-none flex items-center justify-center transition-all duration-300"
+      style={frameStyles.containerStyle}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
       <img
         src={activeSrc}
         alt={name}
-        className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105 pointer-events-none select-none"
+        style={frameStyles.imageStyle}
+        className="w-full h-full transition-all duration-500 group-hover:scale-105 pointer-events-none select-none"
       />
       {images.length > 1 && (
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1 z-10 bg-[#1C1B20]/60 px-2 py-0.5 rounded-full sm:hidden">
@@ -77,6 +84,7 @@ interface HomeViewProps {
   onOpenStylist: () => void;
   onOpenAddProduct?: () => void;
   onEditProduct?: (product: Product) => void;
+  onUpdateProduct?: (product: Product) => void;
   currency: string;
   language: Language;
   onChangeLanguage: (lang: Language) => void;
@@ -96,6 +104,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onOpenStylist,
   onOpenAddProduct,
   onEditProduct,
+  onUpdateProduct,
   currency,
   language,
   onChangeLanguage,
@@ -106,6 +115,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 }) => {
   const [activeCategoryTab, setActiveCategoryTab] = useState<string>(initialCategory || 'All');
   const [hoveredProductId, setHoveredProductId] = useState<string | null>(null);
+  const [frameAdjustProduct, setFrameAdjustProduct] = useState<Product | null>(null);
 
   const isAdminUser = currentUser?.email?.toLowerCase().trim() === 'luis.delarosacosio@gmail.com';
 
@@ -183,23 +193,40 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     images={product.images}
                     name={product.name}
                     isHovered={isHovered}
+                    product={product}
                   />
 
                   {/* Badges */}
                   <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-                    {isAdminUser && onEditProduct && (
-                      <button
-                        id={`btn-edit-home-${product.id}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onEditProduct(product);
-                        }}
-                        className="px-2.5 py-1 bg-[#B88A58] hover:bg-[#1C1B20] text-white text-[9px] uppercase tracking-widest font-bold rounded-xs flex items-center gap-1 shadow-md transition-all cursor-pointer"
-                        title="Edit piece (Luis Delarosa Admin)"
-                      >
-                        <Pencil className="w-3 h-3 text-white" />
-                        <span>Edit</span>
-                      </button>
+                    {isAdminUser && (
+                      <div className="flex items-center gap-1">
+                        {onEditProduct && (
+                          <button
+                            id={`btn-edit-home-${product.id}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onEditProduct(product);
+                            }}
+                            className="px-2.5 py-1 bg-[#B88A58] hover:bg-[#1C1B20] text-white text-[9px] uppercase tracking-widest font-bold rounded-xs flex items-center gap-1 shadow-md transition-all cursor-pointer"
+                            title="Edit piece (Luis Delarosa Admin)"
+                          >
+                            <Pencil className="w-3 h-3 text-white" />
+                            <span>Edit</span>
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setFrameAdjustProduct(rawProduct);
+                          }}
+                          className="px-2 py-1 bg-[#1C1B20]/90 hover:bg-[#1C1B20] text-white border border-[#B88A58]/60 text-[9px] uppercase tracking-wider font-mono rounded-xs flex items-center gap-1 shadow-md transition-all cursor-pointer"
+                          title={language === 'es' ? 'Ajustar Marco, Rotación, Espejo y Corte' : 'Adjust Frame, Rotation, Mirror & Cut'}
+                        >
+                          <Sliders className="w-3 h-3 text-[#B88A58]" />
+                          <span>{language === 'es' ? 'Marco' : 'Frame'}</span>
+                        </button>
+                      </div>
                     )}
                     {product.isNewArrival && (
                       <span className="px-2.5 py-1 bg-[#1C1B20] text-white text-[9px] uppercase tracking-widest font-semibold rounded-xs">
@@ -324,6 +351,20 @@ export const HomeView: React.FC<HomeViewProps> = ({
       </section>
 
       {/* 4. MOVEMENT & STRUCTURE EDITORIAL BANNER - REMOVED AS REQUESTED */}
+      {frameAdjustProduct && (
+        <ImageFrameAdjusterModal
+          isOpen={!!frameAdjustProduct}
+          onClose={() => setFrameAdjustProduct(null)}
+          product={frameAdjustProduct}
+          onUpdateProduct={(updated) => {
+            if (onUpdateProduct) {
+              onUpdateProduct(updated);
+            }
+          }}
+          currentUser={currentUser}
+          language={language}
+        />
+      )}
     </div>
   );
 };

@@ -113,6 +113,30 @@
         "backgroundColor": {
           "type": "string",
           "maxLength": 32
+        },
+        "rotation": {
+          "type": "number",
+          "description": "Rotation angle in degrees (90, 180, 270, 360)"
+        },
+        "mirrorX": {
+          "type": "boolean",
+          "description": "Horizontal mirror flip"
+        },
+        "mirrorY": {
+          "type": "boolean",
+          "description": "Vertical mirror flip"
+        },
+        "cropTop": {
+          "type": "number"
+        },
+        "cropRight": {
+          "type": "number"
+        },
+        "cropBottom": {
+          "type": "number"
+        },
+        "cropLeft": {
+          "type": "number"
         }
       },
       "required": ["fit", "positionX", "positionY", "zoom", "padding", "backgroundColor"]

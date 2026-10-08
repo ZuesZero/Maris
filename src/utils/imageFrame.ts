@@ -18,7 +18,14 @@ export const DEFAULT_IMAGE_FRAME_SETTINGS: ImageFrameSettings = {
   positionX: 50,
   zoom: 100,
   padding: 0,
-  backgroundColor: '#F4F0EA'
+  backgroundColor: '#F4F0EA',
+  rotation: 0,
+  mirrorX: false,
+  mirrorY: false,
+  cropTop: 0,
+  cropRight: 0,
+  cropBottom: 0,
+  cropLeft: 0
 };
 
 export const HAT_CENTERED_PRESET: ImageFrameSettings = {
@@ -82,7 +89,14 @@ export function saveStoredImageSettings(productId: string, settings: ImageFrameS
       positionY: Number(settings.positionY) || 0,
       zoom: Number(settings.zoom) || 100,
       padding: Number(settings.padding) || 0,
-      backgroundColor: String(settings.backgroundColor || '#F4F0EA').slice(0, 32)
+      backgroundColor: String(settings.backgroundColor || '#F4F0EA').slice(0, 32),
+      rotation: Number(settings.rotation) || 0,
+      mirrorX: Boolean(settings.mirrorX),
+      mirrorY: Boolean(settings.mirrorY),
+      cropTop: Number(settings.cropTop) || 0,
+      cropRight: Number(settings.cropRight) || 0,
+      cropBottom: Number(settings.cropBottom) || 0,
+      cropLeft: Number(settings.cropLeft) || 0
     };
     setDoc(doc(db, FIRESTORE_FRAMES_COL, safeId), cleanSettings).catch(error => {
       try {
@@ -169,16 +183,40 @@ export function subscribeToRealtimeImageFrames(onUpdate?: () => void): () => voi
 export function getImageFrameStyles(product?: Product, customSettings?: ImageFrameSettings) {
   const settings = customSettings || product?.imageFrameSettings || (product ? getStoredImageSettings(product.id) : null) || DEFAULT_IMAGE_FRAME_SETTINGS;
 
+  const zoomScale = (settings.zoom ?? 100) / 100;
+  const rotationDeg = settings.rotation ?? 0;
+  const flipX = settings.mirrorX ? -1 : 1;
+  const flipY = settings.mirrorY ? -1 : 1;
+
+  const cropT = Math.max(0, Math.min(45, settings.cropTop ?? 0));
+  const cropR = Math.max(0, Math.min(45, settings.cropRight ?? 0));
+  const cropB = Math.max(0, Math.min(45, settings.cropBottom ?? 0));
+  const cropL = Math.max(0, Math.min(45, settings.cropLeft ?? 0));
+  const hasCrop = cropT > 0 || cropR > 0 || cropB > 0 || cropL > 0;
+
+  // Build transform string combining zoom, rotation, and mirror flips
+  const transforms: string[] = [`scale(${zoomScale})`];
+  if (rotationDeg !== 0) {
+    transforms.push(`rotate(${rotationDeg}deg)`);
+  }
+  if (flipX !== 1 || flipY !== 1) {
+    transforms.push(`scale(${flipX}, ${flipY})`);
+  }
+
+  // If rotation or mirror or crop is applied, center transform origin so turning 90/180/270/360 or mirroring stays inside the frame
+  const useCenterOrigin = rotationDeg !== 0 || flipX !== 1 || flipY !== 1;
+
   return {
     containerStyle: {
       backgroundColor: settings.backgroundColor || '#F4F0EA',
-      padding: `${settings.padding}px`,
+      padding: `${settings.padding ?? 0}px`,
     } as React.CSSProperties,
     imageStyle: {
       objectFit: settings.fit || 'cover',
-      objectPosition: `${settings.positionX}% ${settings.positionY}%`,
-      transform: `scale(${settings.zoom / 100})`,
-      transformOrigin: `${settings.positionX}% ${settings.positionY}%`,
+      objectPosition: `${settings.positionX ?? 50}% ${settings.positionY ?? 0}%`,
+      transform: transforms.join(' '),
+      transformOrigin: useCenterOrigin ? '50% 50%' : `${settings.positionX ?? 50}% ${settings.positionY ?? 0}%`,
+      clipPath: hasCrop ? `inset(${cropT}% ${cropR}% ${cropB}% ${cropL}%)` : undefined,
     } as React.CSSProperties
   };
 }

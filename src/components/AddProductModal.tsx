@@ -1,10 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { X, Upload, Plus, Trash2, Check, Image as ImageIcon, Sparkles, Tag, DollarSign, Layers, Pencil } from 'lucide-react';
-import { Product, Category, Size } from '../types';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  X,
+  Upload,
+  Plus,
+  Trash2,
+  Check,
+  Image as ImageIcon,
+  Sparkles,
+  Tag,
+  DollarSign,
+  Layers,
+  Pencil,
+  Sliders,
+  RotateCw,
+  FlipHorizontal,
+  FlipVertical,
+  Scissors,
+  Crop,
+  Maximize2,
+  Minimize2,
+  RotateCcw,
+  ChevronDown,
+  ChevronUp
+} from 'lucide-react';
+import { Product, Category, Size, ImageFrameSettings } from '../types';
 import { Language } from '../data/translations';
 import { getCategoryDisplayName } from '../utils/productTranslations';
 import { convertUSDToCurrency, convertCurrencyToUSD } from '../utils/currency';
 import { optimizeImageFile } from '../utils/productStorage';
+import {
+  DEFAULT_IMAGE_FRAME_SETTINGS,
+  HAT_CENTERED_PRESET,
+  LUXURY_FULL_BLEED_PRESET,
+  getStoredImageSettings,
+  saveStoredImageSettings,
+  getImageFrameStyles
+} from '../utils/imageFrame';
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -65,6 +96,19 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
   // Images (data URLs or URLs)
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [imageUrlInput, setImageUrlInput] = useState('');
+
+  // Optional: Adjust Frame, Rotation, Mirror & Cut state
+  const [showFrameStudio, setShowFrameStudio] = useState<boolean>(true);
+  const [enableCustomFrame, setEnableCustomFrame] = useState<boolean>(true);
+  const [frameSettings, setFrameSettings] = useState<ImageFrameSettings>(DEFAULT_IMAGE_FRAME_SETTINGS);
+  const [activeStudioImgIdx, setActiveStudioImgIdx] = useState<number>(0);
+  const [isInteractiveCutMode, setIsInteractiveCutMode] = useState<boolean>(false);
+  const [isApplyingCut, setIsApplyingCut] = useState<boolean>(false);
+  const [originalImagesBackup, setOriginalImagesBackup] = useState<Record<number, string>>({});
+  const previewContainerRef = useRef<HTMLDivElement>(null);
+  const [draggingHandle, setDraggingHandle] = useState<
+    null | 'top' | 'bottom' | 'left' | 'right' | 'tl' | 'tr' | 'bl' | 'br'
+  >(null);
   
   // Colors
   const [colors, setColors] = useState<{ name: string; hex: string }[]>([
@@ -120,6 +164,18 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
 
         setStockUnits(initialStockTotal);
         setStockPerSize(initialStockMap);
+
+        const existingFrame =
+          productToEdit.imageFrameSettings ||
+          getStoredImageSettings(productToEdit.id) ||
+          DEFAULT_IMAGE_FRAME_SETTINGS;
+        setFrameSettings({
+          ...DEFAULT_IMAGE_FRAME_SETTINGS,
+          ...existingFrame,
+        });
+        setEnableCustomFrame(true);
+        setActiveStudioImgIdx(0);
+        setOriginalImagesBackup({});
       } else {
         setName('');
         setSubtitle('');
@@ -139,11 +195,75 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
         setIsFeatured(false);
         setStockUnits(1);
         setStockPerSize({ 'EU 48': 1 });
+        setFrameSettings({ ...DEFAULT_IMAGE_FRAME_SETTINGS });
+        setEnableCustomFrame(true);
+        setActiveStudioImgIdx(0);
+        setOriginalImagesBackup({});
       }
+      setIsInteractiveCutMode(false);
       setErrorMsg('');
       setIsSuccess(false);
     }
   }, [isOpen, productToEdit, currency]);
+
+  // Interactive Cut Box drag handler on live preview
+  useEffect(() => {
+    if (!draggingHandle) return;
+
+    const handleMouseMove = (e: MouseEvent | TouchEvent) => {
+      if (!previewContainerRef.current) return;
+      const rect = previewContainerRef.current.getBoundingClientRect();
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
+      const relX = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+      const relY = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100));
+
+      setFrameSettings((prev) => {
+        let top = prev.cropTop ?? 0;
+        let right = prev.cropRight ?? 0;
+        let bottom = prev.cropBottom ?? 0;
+        let left = prev.cropLeft ?? 0;
+
+        if (draggingHandle === 'top' || draggingHandle === 'tl' || draggingHandle === 'tr') {
+          top = Math.min(45, Math.max(0, Math.round(relY)));
+        }
+        if (draggingHandle === 'bottom' || draggingHandle === 'bl' || draggingHandle === 'br') {
+          bottom = Math.min(45, Math.max(0, Math.round(100 - relY)));
+        }
+        if (draggingHandle === 'left' || draggingHandle === 'tl' || draggingHandle === 'bl') {
+          left = Math.min(45, Math.max(0, Math.round(relX)));
+        }
+        if (draggingHandle === 'right' || draggingHandle === 'tr' || draggingHandle === 'br') {
+          right = Math.min(45, Math.max(0, Math.round(100 - relX)));
+        }
+
+        return {
+          ...prev,
+          cropTop: top,
+          cropRight: right,
+          cropBottom: bottom,
+          cropLeft: left
+        };
+      });
+    };
+
+    const handleMouseUp = () => {
+      setDraggingHandle(null);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('touchmove', handleMouseMove);
+    window.addEventListener('touchend', handleMouseUp);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('touchmove', handleMouseMove);
+      window.removeEventListener('touchend', handleMouseUp);
+    };
+  }, [draggingHandle]);
 
   // Close on Escape key
   useEffect(() => {
@@ -214,7 +334,138 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
   };
 
   const handleRemoveImage = (index: number) => {
-    setUploadedImages(prev => prev.filter((_, i) => i !== index));
+    setUploadedImages(prev => {
+      const next = prev.filter((_, i) => i !== index);
+      if (activeStudioImgIdx >= next.length) {
+        setActiveStudioImgIdx(Math.max(0, next.length - 1));
+      }
+      return next;
+    });
+  };
+
+  const handleSetRotation = (deg: number) => {
+    setEnableCustomFrame(true);
+    setFrameSettings(prev => ({
+      ...prev,
+      rotation: deg === 360 ? 360 : deg
+    }));
+  };
+
+  const handleStepRotation = () => {
+    setEnableCustomFrame(true);
+    setFrameSettings(prev => {
+      const current = prev.rotation ?? 0;
+      const next = current === 0 ? 90 : current === 90 ? 180 : current === 180 ? 270 : current === 270 ? 360 : 90;
+      return { ...prev, rotation: next };
+    });
+  };
+
+  const handleToggleMirrorX = () => {
+    setEnableCustomFrame(true);
+    setFrameSettings(prev => ({ ...prev, mirrorX: !prev.mirrorX }));
+  };
+
+  const handleToggleMirrorY = () => {
+    setEnableCustomFrame(true);
+    setFrameSettings(prev => ({ ...prev, mirrorY: !prev.mirrorY }));
+  };
+
+  const handleApplyCutToUploadedImage = async () => {
+    const currentImageSrc = uploadedImages[activeStudioImgIdx];
+    if (!currentImageSrc) return;
+
+    setIsApplyingCut(true);
+    try {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = (err) => reject(err);
+        img.src = currentImageSrc;
+      });
+
+      const naturalW = img.naturalWidth || img.width || 1000;
+      const naturalH = img.naturalHeight || img.height || 1250;
+
+      const cTop = Math.max(0, Math.min(45, frameSettings.cropTop ?? 0)) / 100;
+      const cRight = Math.max(0, Math.min(45, frameSettings.cropRight ?? 0)) / 100;
+      const cBottom = Math.max(0, Math.min(45, frameSettings.cropBottom ?? 0)) / 100;
+      const cLeft = Math.max(0, Math.min(45, frameSettings.cropLeft ?? 0)) / 100;
+
+      const sx = Math.round(naturalW * cLeft);
+      const sy = Math.round(naturalH * cTop);
+      const sw = Math.max(40, Math.round(naturalW * (1 - cLeft - cRight)));
+      const sh = Math.max(40, Math.round(naturalH * (1 - cTop - cBottom)));
+
+      const rot = (frameSettings.rotation ?? 0) % 360;
+      const isSwapped = rot === 90 || rot === 270;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = isSwapped ? sh : sw;
+      canvas.height = isSwapped ? sw : sh;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Canvas context unavailable');
+
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      if (rot !== 0) {
+        ctx.rotate((rot * Math.PI) / 180);
+      }
+      const scaleX = frameSettings.mirrorX ? -1 : 1;
+      const scaleY = frameSettings.mirrorY ? -1 : 1;
+      if (scaleX !== 1 || scaleY !== 1) {
+        ctx.scale(scaleX, scaleY);
+      }
+
+      ctx.drawImage(img, sx, sy, sw, sh, -sw / 2, -sh / 2, sw, sh);
+      ctx.restore();
+
+      const newDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+
+      setOriginalImagesBackup(prev => ({
+        ...prev,
+        [activeStudioImgIdx]: prev[activeStudioImgIdx] || currentImageSrc
+      }));
+
+      setUploadedImages(prev => {
+        const next = [...prev];
+        next[activeStudioImgIdx] = newDataUrl;
+        return next;
+      });
+
+      setFrameSettings(prev => ({
+        ...prev,
+        cropTop: 0,
+        cropRight: 0,
+        cropBottom: 0,
+        cropLeft: 0,
+        rotation: 0,
+        mirrorX: false,
+        mirrorY: false
+      }));
+      setIsInteractiveCutMode(false);
+    } catch (err) {
+      console.warn('Canvas cut fallback to non-destructive clip-path:', err);
+      setIsInteractiveCutMode(false);
+    } finally {
+      setIsApplyingCut(false);
+    }
+  };
+
+  const handleUndoImageCut = () => {
+    const backup = originalImagesBackup[activeStudioImgIdx];
+    if (!backup) return;
+    setUploadedImages(prev => {
+      const next = [...prev];
+      next[activeStudioImgIdx] = backup;
+      return next;
+    });
+    setOriginalImagesBackup(prev => {
+      const copy = { ...prev };
+      delete copy[activeStudioImgIdx];
+      return copy;
+    });
   };
 
   const handleToggleSize = (size: Size) => {
@@ -259,6 +510,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
       : { 'One Size': stockUnits };
 
     const actualTotalStock = (Object.values(finalStockMap) as number[]).reduce((a, b) => a + b, 0);
+    const activeFrameSettings = enableCustomFrame ? frameSettings : undefined;
 
     if (productToEdit) {
       const updatedProduct: Product = {
@@ -278,8 +530,13 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
         isFeatured,
         stockQuantity: actualTotalStock,
         inStock: actualTotalStock > 0,
-        stock: finalStockMap
+        stock: finalStockMap,
+        ...(activeFrameSettings ? { imageFrameSettings: activeFrameSettings } : {})
       };
+
+      if (activeFrameSettings) {
+        saveStoredImageSettings(updatedProduct.id, activeFrameSettings, false);
+      }
 
       if (onEditProduct) {
         onEditProduct(updatedProduct);
@@ -294,6 +551,10 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
         const fallbackTitle = uploadedImages.length > 1 ? `${name.trim()} #${idx + 1}` : name.trim();
         const finalTitle = customTitle || fallbackTitle;
         const newProductId = `custom-${Date.now()}-${idx}-${finalTitle.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
+
+        if (activeFrameSettings) {
+          saveStoredImageSettings(newProductId, activeFrameSettings, false);
+        }
 
         return {
           id: newProductId,
@@ -314,6 +575,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
           stockQuantity: actualTotalStock,
           inStock: actualTotalStock > 0,
           stock: finalStockMap,
+          ...(activeFrameSettings ? { imageFrameSettings: activeFrameSettings } : {}),
           reviews: [
             {
               id: `rev-${Date.now()}-${idx}`,
@@ -342,6 +604,10 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
       setCreatedBatchCount(1);
       const newProductId = `custom-${Date.now()}-${name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
 
+      if (activeFrameSettings) {
+        saveStoredImageSettings(newProductId, activeFrameSettings, false);
+      }
+
       const newProduct: Product = {
         id: newProductId,
         name: name.trim(),
@@ -361,6 +627,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
         stockQuantity: actualTotalStock,
         inStock: actualTotalStock > 0,
         stock: finalStockMap,
+        ...(activeFrameSettings ? { imageFrameSettings: activeFrameSettings } : {}),
         reviews: [
           {
             id: `rev-${Date.now()}`,
@@ -387,10 +654,21 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
   };
 
   const isEditing = Boolean(productToEdit);
+  const currentPreviewImg = uploadedImages[activeStudioImgIdx] || uploadedImages[0] || '';
+  const { containerStyle, imageStyle } = getImageFrameStyles(
+    undefined,
+    enableCustomFrame ? frameSettings : DEFAULT_IMAGE_FRAME_SETTINGS
+  );
+  const cropT = Math.max(0, Math.min(45, frameSettings.cropTop ?? 0));
+  const cropR = Math.max(0, Math.min(45, frameSettings.cropRight ?? 0));
+  const cropB = Math.max(0, Math.min(45, frameSettings.cropBottom ?? 0));
+  const cropL = Math.max(0, Math.min(45, frameSettings.cropLeft ?? 0));
+  const hasActiveCrop = cropT > 0 || cropR > 0 || cropB > 0 || cropL > 0;
+  const activeRotation = frameSettings.rotation ?? 0;
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
-      <div className="bg-[#FAF8F5] text-[#1C1B20] w-full max-w-3xl rounded-md shadow-2xl overflow-hidden border border-[#E8E2D9] my-8 relative flex flex-col max-h-[90vh]">
+      <div className="bg-[#FAF8F5] text-[#1C1B20] w-full max-w-4xl rounded-md shadow-2xl overflow-hidden border border-[#E8E2D9] my-8 relative flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="bg-[#1C1B20] text-[#FAF8F5] px-6 py-5 flex items-center justify-between border-b border-[#3E3C45]">
           <div className="flex items-center gap-2.5">
@@ -573,12 +851,29 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                     </p>
                     <div className={isBatchMode ? "grid grid-cols-2 sm:grid-cols-3 gap-3" : "grid grid-cols-4 sm:grid-cols-6 gap-3"}>
                       {uploadedImages.map((img, idx) => (
-                        <div key={idx} className="bg-white p-2 border border-[#D1C9BD] rounded-sm shadow-xs space-y-1.5 group relative">
-                          <div className="relative aspect-[4/5] rounded-xs overflow-hidden border border-[#E8E2D9] bg-[#FAF8F5]">
-                            <img src={img} alt={`Upload ${idx}`} className="w-full h-full object-cover" />
+                        <div
+                          key={idx}
+                          onClick={() => setActiveStudioImgIdx(idx)}
+                          className={`bg-white p-2 border rounded-sm shadow-xs space-y-1.5 group relative cursor-pointer transition-all ${
+                            activeStudioImgIdx === idx ? 'border-[#B88A58] ring-1 ring-[#B88A58]' : 'border-[#D1C9BD]'
+                          }`}
+                        >
+                          <div
+                            className="relative aspect-[4/5] rounded-xs overflow-hidden border border-[#E8E2D9]"
+                            style={containerStyle}
+                          >
+                            <img
+                              src={img}
+                              alt={`Upload ${idx}`}
+                              className="w-full h-full transition-all duration-200"
+                              style={imageStyle}
+                            />
                             <button
                               type="button"
-                              onClick={() => handleRemoveImage(idx)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemoveImage(idx);
+                              }}
                               className="absolute top-1 right-1 bg-black/70 text-white p-1 rounded-full opacity-80 hover:opacity-100 hover:bg-red-600 transition-colors"
                               title={isEs ? "Eliminar imagen" : "Remove image"}
                             >
@@ -598,6 +893,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                                 type="text"
                                 placeholder={name.trim() ? `${name.trim()} #${idx + 1}` : `Prenda #${idx + 1}`}
                                 value={batchTitles[idx] || ''}
+                                onClick={(e) => e.stopPropagation()}
                                 onChange={(e) => setBatchTitles(prev => ({ ...prev, [idx]: e.target.value }))}
                                 className="w-full text-[11px] px-1.5 py-1 border border-[#D1C9BD] bg-[#FAF8F5] rounded-xs focus:outline-none focus:border-[#B88A58] focus:bg-white"
                               />
@@ -608,6 +904,625 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                     </div>
                   </div>
                 )}
+
+                {/* OPTIONAL: ADJUST FRAME, ROTATION, MIRROR & CUT */}
+                <div className="mt-3 border border-[#D8D1C5] rounded-md bg-[#F4F0EA]/80 overflow-hidden">
+                  {/* Top Toggle Bar */}
+                  <div className="px-3.5 py-2.5 bg-[#1C1B20] text-[#FAF8F5] flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <Sliders className="w-4 h-4 text-[#B88A58]" />
+                      <span className="text-[11px] font-bold uppercase tracking-wider">
+                        {isEs
+                          ? 'Ajustar Marco, Rotación, Espejo y Recorte'
+                          : 'Adjust Frame, Rotation, Mirror & Cut'}
+                      </span>
+                      <span className="text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#B88A58]/25 text-[#E5C158] border border-[#B88A58]/40">
+                        {isEs ? 'Opcional' : 'Optional'}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <label className="flex items-center gap-1.5 text-[10px] text-[#D8D1C5] cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={enableCustomFrame}
+                          onChange={(e) => setEnableCustomFrame(e.target.checked)}
+                          className="rounded text-[#B88A58] focus:ring-[#B88A58] w-3.5 h-3.5"
+                        />
+                        <span>{isEs ? 'Aplicar al publicar' : 'Apply on publish'}</span>
+                      </label>
+
+                      <button
+                        type="button"
+                        onClick={() => setShowFrameStudio(prev => !prev)}
+                        className="px-2.5 py-1 bg-white/10 hover:bg-white/20 text-[10px] font-bold uppercase tracking-wider rounded-xs flex items-center gap-1 transition-colors cursor-pointer"
+                      >
+                        {showFrameStudio ? (
+                          <>
+                            <span>{isEs ? 'Ocultar' : 'Hide'}</span>
+                            <ChevronUp className="w-3.5 h-3.5" />
+                          </>
+                        ) : (
+                          <>
+                            <span>{isEs ? 'Mostrar Opciones' : 'Show Options'}</span>
+                            <ChevronDown className="w-3.5 h-3.5" />
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Single-Shot Studio Body */}
+                  {showFrameStudio && (
+                    <div className="p-3 grid grid-cols-1 md:grid-cols-12 gap-3 items-start">
+                      {/* Left Column: Live Preview & Quick Presets */}
+                      <div className="md:col-span-4 flex flex-col items-center bg-white border border-[#E2DCD3] rounded-sm p-2.5">
+                        <div className="w-full flex items-center justify-between mb-1.5">
+                          <span className="text-[9px] font-bold uppercase tracking-widest text-[#706B63]">
+                            {isEs ? 'Vista Previa en Vivo' : 'Live Frame Preview'}
+                          </span>
+                          {uploadedImages.length > 1 && (
+                            <span className="text-[9px] font-mono text-[#B88A58] font-bold">
+                              #{activeStudioImgIdx + 1} / {uploadedImages.length}
+                            </span>
+                          )}
+                        </div>
+
+                        <div
+                          ref={previewContainerRef}
+                          className="w-full max-w-[185px] aspect-[4/5] rounded-xs overflow-hidden border border-[#D8D1C5] relative select-none flex items-center justify-center"
+                          style={containerStyle}
+                        >
+                          {currentPreviewImg ? (
+                            <>
+                              <img
+                                src={currentPreviewImg}
+                                alt="Live Frame Preview"
+                                className="w-full h-full transition-all duration-150 pointer-events-none"
+                                style={{
+                                  ...imageStyle,
+                                  clipPath: isInteractiveCutMode ? undefined : imageStyle.clipPath,
+                                }}
+                              />
+
+                              {/* Interactive Cut Overlay */}
+                              {isInteractiveCutMode && (
+                                <div className="absolute inset-0 z-20">
+                                  <div
+                                    className="absolute top-0 left-0 right-0 bg-black/55 pointer-events-none"
+                                    style={{ height: `${cropT}%` }}
+                                  />
+                                  <div
+                                    className="absolute bottom-0 left-0 right-0 bg-black/55 pointer-events-none"
+                                    style={{ height: `${cropB}%` }}
+                                  />
+                                  <div
+                                    className="absolute left-0 bg-black/55 pointer-events-none"
+                                    style={{ top: `${cropT}%`, bottom: `${cropB}%`, width: `${cropL}%` }}
+                                  />
+                                  <div
+                                    className="absolute right-0 bg-black/55 pointer-events-none"
+                                    style={{ top: `${cropT}%`, bottom: `${cropB}%`, width: `${cropR}%` }}
+                                  />
+
+                                  <div
+                                    className="absolute border-2 border-[#E5C158] shadow-[0_0_0_1px_rgba(0,0,0,0.5)]"
+                                    style={{
+                                      top: `${cropT}%`,
+                                      right: `${cropR}%`,
+                                      bottom: `${cropB}%`,
+                                      left: `${cropL}%`,
+                                    }}
+                                  >
+                                    <div
+                                      onMouseDown={() => setDraggingHandle('top')}
+                                      onTouchStart={() => setDraggingHandle('top')}
+                                      className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-3.5 bg-[#1C1B20] border border-[#E5C158] rounded-full cursor-ns-resize"
+                                    />
+                                    <div
+                                      onMouseDown={() => setDraggingHandle('bottom')}
+                                      onTouchStart={() => setDraggingHandle('bottom')}
+                                      className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-8 h-3.5 bg-[#1C1B20] border border-[#E5C158] rounded-full cursor-ns-resize"
+                                    />
+                                    <div
+                                      onMouseDown={() => setDraggingHandle('left')}
+                                      onTouchStart={() => setDraggingHandle('left')}
+                                      className="absolute top-1/2 -left-2 -translate-y-1/2 w-3.5 h-8 bg-[#1C1B20] border border-[#E5C158] rounded-full cursor-ew-resize"
+                                    />
+                                    <div
+                                      onMouseDown={() => setDraggingHandle('right')}
+                                      onTouchStart={() => setDraggingHandle('right')}
+                                      className="absolute top-1/2 -right-2 -translate-y-1/2 w-3.5 h-8 bg-[#1C1B20] border border-[#E5C158] rounded-full cursor-ew-resize"
+                                    />
+                                  </div>
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <div className="text-center p-3 space-y-1">
+                              <ImageIcon className="w-6 h-6 text-[#B88A58]/70 mx-auto" />
+                              <p className="text-[10px] font-medium text-[#66635B] leading-tight">
+                                {isEs
+                                  ? 'Suba una imagen arriba para previsualizar el ajuste en vivo'
+                                  : 'Upload an image above to preview adjustments live'}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Status badges */}
+                          <div className="absolute top-1.5 left-1.5 flex flex-wrap gap-1 z-30 pointer-events-none">
+                            <span className="bg-black/75 text-white text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-xs">
+                              {frameSettings.fit} · {frameSettings.zoom}%
+                            </span>
+                            {activeRotation !== 0 && (
+                              <span className="bg-[#B88A58] text-[#1C1B20] text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-xs">
+                                {activeRotation}°
+                              </span>
+                            )}
+                            {(frameSettings.mirrorX || frameSettings.mirrorY) && (
+                              <span className="bg-[#1C1B20] text-[#E5C158] text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-xs">
+                                {frameSettings.mirrorX && frameSettings.mirrorY
+                                  ? 'Mirror H+V'
+                                  : frameSettings.mirrorX
+                                  ? 'Mirror H'
+                                  : 'Mirror V'}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Quick Presets */}
+                        <div className="w-full mt-2 pt-2 border-t border-[#E8E2D9] grid grid-cols-2 gap-1">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEnableCustomFrame(true);
+                              setFrameSettings(prev => ({ ...prev, ...HAT_CENTERED_PRESET }));
+                            }}
+                            className="px-2 py-1 text-[9px] font-bold uppercase bg-[#FAF8F5] hover:bg-[#1C1B20] hover:text-white border border-[#D8D1C5] rounded-xs transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                          >
+                            <Minimize2 className="w-2.5 h-2.5 text-[#B88A58]" />
+                            {isEs ? 'Accesorio' : 'Accessory'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEnableCustomFrame(true);
+                              setFrameSettings(prev => ({ ...prev, ...LUXURY_FULL_BLEED_PRESET }));
+                            }}
+                            className="px-2 py-1 text-[9px] font-bold uppercase bg-[#FAF8F5] hover:bg-[#1C1B20] hover:text-white border border-[#D8D1C5] rounded-xs transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                          >
+                            <Maximize2 className="w-2.5 h-2.5 text-[#B88A58]" />
+                            {isEs ? 'Completo' : 'Full Bleed'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEnableCustomFrame(true);
+                              setFrameSettings(prev => ({
+                                ...prev,
+                                fit: 'cover',
+                                positionX: 50,
+                                positionY: 20,
+                                zoom: 115,
+                                padding: 0
+                              }));
+                            }}
+                            className="px-2 py-1 text-[9px] font-bold uppercase bg-[#FAF8F5] hover:bg-[#1C1B20] hover:text-white border border-[#D8D1C5] rounded-xs transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                          >
+                            {isEs ? 'Zoom 115%' : 'Zoom 115%'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setFrameSettings({ ...DEFAULT_IMAGE_FRAME_SETTINGS });
+                              setIsInteractiveCutMode(false);
+                            }}
+                            className="px-2 py-1 text-[9px] font-bold uppercase bg-[#FAF8F5] hover:bg-red-600 hover:text-white border border-[#D8D1C5] rounded-xs transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                          >
+                            <RotateCcw className="w-2.5 h-2.5" />
+                            {isEs ? 'Restablecer' : 'Reset'}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Right Column: Rotation, Mirror, Cut & Frame Controls in One Shot */}
+                      <div className="md:col-span-8 space-y-2.5">
+                        {/* Row 1: Rotation (90°, 180°, 270°, 360°) & Mirror (Horizontal, Vertical) */}
+                        <div className="grid grid-cols-1 sm:grid-cols-12 gap-2">
+                          <div className="sm:col-span-7 bg-white border border-[#E2DCD3] rounded-sm p-2.5">
+                            <div className="flex items-center justify-between mb-1.5">
+                              <span className="text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1">
+                                <RotateCw className="w-3 h-3 text-[#B88A58]" />
+                                {isEs ? 'Rotación de Imagen' : 'Image Rotation'}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={handleStepRotation}
+                                className="px-1.5 py-0.5 bg-[#1C1B20] text-[#E5C158] rounded-xs text-[9px] font-bold uppercase hover:bg-black transition-colors cursor-pointer"
+                              >
+                                {isEs ? 'Girar +90°' : 'Turn +90°'}
+                              </button>
+                            </div>
+                            <div className="grid grid-cols-4 gap-1">
+                              {[90, 180, 270, 360].map((deg) => {
+                                const isActive =
+                                  deg === 360
+                                    ? activeRotation === 360 || activeRotation === 0
+                                    : activeRotation === deg;
+                                return (
+                                  <button
+                                    key={deg}
+                                    type="button"
+                                    onClick={() => handleSetRotation(deg)}
+                                    className={`py-1.5 px-1 rounded-xs text-[10px] font-bold border transition-all cursor-pointer ${
+                                      isActive
+                                        ? 'bg-[#1C1B20] text-[#E5C158] border-[#1C1B20]'
+                                        : 'bg-[#FAF8F5] text-[#55524B] border-[#D8D1C5] hover:border-[#1C1B20]'
+                                    }`}
+                                  >
+                                    {deg}°
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+
+                          <div className="sm:col-span-5 bg-white border border-[#E2DCD3] rounded-sm p-2.5">
+                            <div className="flex items-center justify-between mb-1.5">
+                              <span className="text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1">
+                                <FlipHorizontal className="w-3 h-3 text-[#B88A58]" />
+                                {isEs ? 'Opción Espejo' : 'Mirror Option'}
+                              </span>
+                              {(frameSettings.mirrorX || frameSettings.mirrorY) && (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setFrameSettings(prev => ({ ...prev, mirrorX: false, mirrorY: false }))
+                                  }
+                                  className="text-[9px] text-[#8C867E] hover:text-[#1C1B20] underline cursor-pointer"
+                                >
+                                  {isEs ? 'Normal' : 'Normal'}
+                                </button>
+                              )}
+                            </div>
+                            <div className="grid grid-cols-2 gap-1">
+                              <button
+                                type="button"
+                                onClick={handleToggleMirrorX}
+                                className={`py-1.5 px-1.5 rounded-xs text-[10px] font-bold border transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                                  frameSettings.mirrorX
+                                    ? 'bg-[#1C1B20] text-[#E5C158] border-[#1C1B20]'
+                                    : 'bg-[#FAF8F5] text-[#55524B] border-[#D8D1C5] hover:border-[#1C1B20]'
+                                }`}
+                              >
+                                <FlipHorizontal className="w-3 h-3" />
+                                <span>{isEs ? 'Horizontal' : 'Horizontal'}</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={handleToggleMirrorY}
+                                className={`py-1.5 px-1.5 rounded-xs text-[10px] font-bold border transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                                  frameSettings.mirrorY
+                                    ? 'bg-[#1C1B20] text-[#E5C158] border-[#1C1B20]'
+                                    : 'bg-[#FAF8F5] text-[#55524B] border-[#D8D1C5] hover:border-[#1C1B20]'
+                                }`}
+                              >
+                                <FlipVertical className="w-3 h-3" />
+                                <span>{isEs ? 'Vertical' : 'Vertical'}</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Row 2: Cut Image to Adjust */}
+                        <div className="bg-white border border-[#E2DCD3] rounded-sm p-2.5 space-y-2">
+                          <div className="flex flex-wrap items-center justify-between gap-1.5">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1">
+                              <Scissors className="w-3 h-3 text-[#B88A58]" />
+                              {isEs ? 'Cortar Imagen para Ajustar' : 'Cut Image to Adjust'}
+                            </span>
+
+                            <div className="flex flex-wrap items-center gap-1">
+                              <button
+                                type="button"
+                                onClick={() => setIsInteractiveCutMode(prev => !prev)}
+                                className={`px-2 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-wider transition-all flex items-center gap-1 border cursor-pointer ${
+                                  isInteractiveCutMode
+                                    ? 'bg-[#E5C158] text-[#1C1B20] border-[#B88A58]'
+                                    : 'bg-[#FAF8F5] text-[#1C1B20] border-[#D8D1C5] hover:bg-[#1C1B20] hover:text-white'
+                                }`}
+                              >
+                                <Crop className="w-2.5 h-2.5" />
+                                {isInteractiveCutMode
+                                  ? (isEs ? 'Cerrando Caja' : 'Hide Cut Box')
+                                  : (isEs ? 'Caja de Corte' : 'Cut Box')}
+                              </button>
+
+                              <button
+                                type="button"
+                                disabled={!currentPreviewImg || isApplyingCut}
+                                onClick={handleApplyCutToUploadedImage}
+                                className="px-2 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-wider bg-[#B88A58] text-[#1C1B20] hover:bg-[#c99b68] transition-all flex items-center gap-1 cursor-pointer disabled:opacity-40"
+                              >
+                                <Scissors className="w-2.5 h-2.5" />
+                                {isApplyingCut
+                                  ? (isEs ? 'Cortando...' : 'Cutting...')
+                                  : (isEs ? 'Aplicar Corte' : 'Apply Cut')}
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setEnableCustomFrame(true);
+                                  setFrameSettings(prev => ({
+                                    ...prev,
+                                    cropTop: 8,
+                                    cropRight: 8,
+                                    cropBottom: 8,
+                                    cropLeft: 8
+                                  }));
+                                }}
+                                className="px-1.5 py-0.5 text-[9px] font-semibold bg-[#FAF8F5] border border-[#D8D1C5] rounded-xs hover:border-[#1C1B20] cursor-pointer"
+                              >
+                                {isEs ? 'Bordes 8%' : 'Trim 8%'}
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setEnableCustomFrame(true);
+                                  setFrameSettings(prev => ({
+                                    ...prev,
+                                    cropTop: 15,
+                                    cropRight: 0,
+                                    cropBottom: 15,
+                                    cropLeft: 0
+                                  }));
+                                }}
+                                className="px-1.5 py-0.5 text-[9px] font-semibold bg-[#FAF8F5] border border-[#D8D1C5] rounded-xs hover:border-[#1C1B20] cursor-pointer"
+                              >
+                                {isEs ? 'Cuadrado 15%' : 'Square 15%'}
+                              </button>
+
+                              {hasActiveCrop && (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setFrameSettings(prev => ({
+                                      ...prev,
+                                      cropTop: 0,
+                                      cropRight: 0,
+                                      cropBottom: 0,
+                                      cropLeft: 0
+                                    }))
+                                  }
+                                  className="px-1.5 py-0.5 text-[9px] font-semibold text-red-700 bg-red-50 border border-red-200 rounded-xs hover:bg-red-100 cursor-pointer"
+                                >
+                                  {isEs ? 'Limpiar' : 'Clear'}
+                                </button>
+                              )}
+
+                              {originalImagesBackup[activeStudioImgIdx] && (
+                                <button
+                                  type="button"
+                                  onClick={handleUndoImageCut}
+                                  className="px-1.5 py-0.5 text-[9px] font-bold text-[#1C1B20] bg-[#E5C158]/30 border border-[#B88A58] rounded-xs hover:bg-[#E5C158]/50 cursor-pointer"
+                                >
+                                  {isEs ? 'Deshacer Corte' : 'Undo Cut'}
+                                </button>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-0.5">
+                            <div>
+                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
+                                <span>{isEs ? 'Arriba' : 'Cut Top'}</span>
+                                <span className="font-mono text-[#B88A58]">{cropT}%</span>
+                              </div>
+                              <input
+                                type="range"
+                                min={0}
+                                max={45}
+                                value={cropT}
+                                onChange={(e) => {
+                                  setEnableCustomFrame(true);
+                                  setFrameSettings(prev => ({ ...prev, cropTop: Number(e.target.value) }));
+                                }}
+                                className="w-full accent-[#1C1B20] cursor-pointer h-1"
+                              />
+                            </div>
+                            <div>
+                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
+                                <span>{isEs ? 'Abajo' : 'Cut Bottom'}</span>
+                                <span className="font-mono text-[#B88A58]">{cropB}%</span>
+                              </div>
+                              <input
+                                type="range"
+                                min={0}
+                                max={45}
+                                value={cropB}
+                                onChange={(e) => {
+                                  setEnableCustomFrame(true);
+                                  setFrameSettings(prev => ({ ...prev, cropBottom: Number(e.target.value) }));
+                                }}
+                                className="w-full accent-[#1C1B20] cursor-pointer h-1"
+                              />
+                            </div>
+                            <div>
+                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
+                                <span>{isEs ? 'Izquierda' : 'Cut Left'}</span>
+                                <span className="font-mono text-[#B88A58]">{cropL}%</span>
+                              </div>
+                              <input
+                                type="range"
+                                min={0}
+                                max={45}
+                                value={cropL}
+                                onChange={(e) => {
+                                  setEnableCustomFrame(true);
+                                  setFrameSettings(prev => ({ ...prev, cropLeft: Number(e.target.value) }));
+                                }}
+                                className="w-full accent-[#1C1B20] cursor-pointer h-1"
+                              />
+                            </div>
+                            <div>
+                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
+                                <span>{isEs ? 'Derecha' : 'Cut Right'}</span>
+                                <span className="font-mono text-[#B88A58]">{cropR}%</span>
+                              </div>
+                              <input
+                                type="range"
+                                min={0}
+                                max={45}
+                                value={cropR}
+                                onChange={(e) => {
+                                  setEnableCustomFrame(true);
+                                  setFrameSettings(prev => ({ ...prev, cropRight: Number(e.target.value) }));
+                                }}
+                                className="w-full accent-[#1C1B20] cursor-pointer h-1"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Row 3: Adjust Frame Fit, Zoom, Position X/Y, Padding & Canvas Color */}
+                        <div className="bg-white border border-[#E2DCD3] rounded-sm p-2.5 grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
+                          {/* Fit Mode */}
+                          <div className="sm:col-span-4 space-y-1">
+                            <span className="block text-[9px] font-bold uppercase tracking-wider text-[#1C1B20]">
+                              {isEs ? 'Modo de Ajuste (Fit)' : 'Frame Fit Mode'}
+                            </span>
+                            <div className="grid grid-cols-2 gap-1">
+                              {(['cover', 'contain', 'scale-down', 'fill'] as const).map((fitMode) => (
+                                <button
+                                  key={fitMode}
+                                  type="button"
+                                  onClick={() => {
+                                    setEnableCustomFrame(true);
+                                    setFrameSettings(prev => ({ ...prev, fit: fitMode }));
+                                  }}
+                                  className={`py-1 px-1.5 rounded-xs text-[9px] font-bold uppercase border transition-all cursor-pointer ${
+                                    frameSettings.fit === fitMode
+                                      ? 'bg-[#1C1B20] text-white border-[#1C1B20]'
+                                      : 'bg-[#FAF8F5] text-[#55524B] border-[#D8D1C5] hover:border-[#1C1B20]'
+                                  }`}
+                                >
+                                  {fitMode === 'cover'
+                                    ? 'Cover'
+                                    : fitMode === 'contain'
+                                    ? 'Contain'
+                                    : fitMode === 'scale-down'
+                                    ? 'Scale'
+                                    : 'Stretch'}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Zoom & Position Sliders */}
+                          <div className="sm:col-span-5 grid grid-cols-2 gap-2">
+                            <div>
+                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
+                                <span>Zoom</span>
+                                <span className="font-mono text-[#B88A58]">{frameSettings.zoom}%</span>
+                              </div>
+                              <input
+                                type="range"
+                                min={50}
+                                max={200}
+                                value={frameSettings.zoom}
+                                onChange={(e) => {
+                                  setEnableCustomFrame(true);
+                                  setFrameSettings(prev => ({ ...prev, zoom: Number(e.target.value) }));
+                                }}
+                                className="w-full accent-[#B88A58] cursor-pointer h-1"
+                              />
+                            </div>
+                            <div>
+                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
+                                <span>{isEs ? 'Margen' : 'Padding'}</span>
+                                <span className="font-mono text-[#B88A58]">{frameSettings.padding}px</span>
+                              </div>
+                              <input
+                                type="range"
+                                min={0}
+                                max={40}
+                                value={frameSettings.padding}
+                                onChange={(e) => {
+                                  setEnableCustomFrame(true);
+                                  setFrameSettings(prev => ({ ...prev, padding: Number(e.target.value) }));
+                                }}
+                                className="w-full accent-[#B88A58] cursor-pointer h-1"
+                              />
+                            </div>
+                            <div>
+                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
+                                <span>Pos X</span>
+                                <span className="font-mono text-[#B88A58]">{frameSettings.positionX}%</span>
+                              </div>
+                              <input
+                                type="range"
+                                min={0}
+                                max={100}
+                                value={frameSettings.positionX}
+                                onChange={(e) => {
+                                  setEnableCustomFrame(true);
+                                  setFrameSettings(prev => ({ ...prev, positionX: Number(e.target.value) }));
+                                }}
+                                className="w-full accent-[#B88A58] cursor-pointer h-1"
+                              />
+                            </div>
+                            <div>
+                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
+                                <span>Pos Y</span>
+                                <span className="font-mono text-[#B88A58]">{frameSettings.positionY}%</span>
+                              </div>
+                              <input
+                                type="range"
+                                min={0}
+                                max={100}
+                                value={frameSettings.positionY}
+                                onChange={(e) => {
+                                  setEnableCustomFrame(true);
+                                  setFrameSettings(prev => ({ ...prev, positionY: Number(e.target.value) }));
+                                }}
+                                className="w-full accent-[#B88A58] cursor-pointer h-1"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Canvas Color */}
+                          <div className="sm:col-span-3 space-y-1">
+                            <span className="block text-[9px] font-bold uppercase tracking-wider text-[#1C1B20]">
+                              {isEs ? 'Fondo del Marco' : 'Canvas Color'}
+                            </span>
+                            <div className="flex items-center gap-1.5">
+                              {['#F4F0EA', '#FFFFFF', '#EFECE6', '#1C1B20', '#E5DFD3'].map((hex) => (
+                                <button
+                                  key={hex}
+                                  type="button"
+                                  onClick={() => {
+                                    setEnableCustomFrame(true);
+                                    setFrameSettings(prev => ({ ...prev, backgroundColor: hex }));
+                                  }}
+                                  className={`w-5 h-5 rounded-full border transition-all cursor-pointer ${
+                                    frameSettings.backgroundColor === hex
+                                      ? 'border-[#B88A58] scale-110 ring-2 ring-[#B88A58]/40'
+                                      : 'border-black/20'
+                                  }`}
+                                  style={{ backgroundColor: hex }}
+                                  title={hex}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* SECTION 2: BASIC DETAILS */}

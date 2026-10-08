@@ -5,6 +5,7 @@ import { Eye, Heart, ShoppingBag, SlidersHorizontal, X, ArrowUpDown, Grid, Layou
 import { formatPrice } from '../utils/currency';
 import { getTranslatedProduct, getCategoryDisplayName } from '../utils/productTranslations';
 import { getImageFrameStyles } from '../utils/imageFrame';
+import { ImageFrameAdjusterModal } from './ImageFrameAdjusterModal';
 
 const ProductCardImage: React.FC<{
   images: string[];
@@ -83,6 +84,7 @@ interface CatalogViewProps {
   initialSearchQuery?: string;
   onOpenAddProduct?: () => void;
   onEditProduct?: (product: Product) => void;
+  onUpdateProduct?: (product: Product) => void;
   onDeleteProduct?: (productId: string) => void;
   onCategoryChange?: (category: string) => void;
   currentUser?: User | null;
@@ -100,6 +102,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   initialSearchQuery = '',
   onOpenAddProduct,
   onEditProduct,
+  onUpdateProduct,
   onDeleteProduct,
   onCategoryChange,
   currentUser,
@@ -107,6 +110,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
 }) => {
   const isAdminUser = currentUser?.email?.toLowerCase().trim() === 'luis.delarosacosio@gmail.com';
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [frameAdjustProduct, setFrameAdjustProduct] = useState<Product | null>(null);
   const [filters, setFilters] = useState<FilterState>({
     category: initialCategory,
     color: '',
@@ -632,6 +636,18 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
                             <span>Edit</span>
                           </button>
                         )}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setFrameAdjustProduct(rawProduct);
+                          }}
+                          className="px-2 py-1 bg-[#1C1B20]/90 hover:bg-[#1C1B20] text-white border border-[#B88A58]/60 text-[9px] uppercase tracking-wider font-mono rounded-xs flex items-center gap-1 shadow-md transition-all cursor-pointer"
+                          title={language === 'es' ? 'Ajustar Marco, Rotación, Espejo y Corte' : 'Adjust Frame, Rotation, Mirror & Cut'}
+                        >
+                          <SlidersHorizontal className="w-3 h-3 text-[#B88A58]" />
+                          <span>{language === 'es' ? 'Marco' : 'Frame'}</span>
+                        </button>
                         {onDeleteProduct && (
                           <button
                             id={`btn-delete-catalog-${product.id}`}
@@ -867,6 +883,21 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
             </div>
           </div>
         </div>
+      )}
+
+      {frameAdjustProduct && (
+        <ImageFrameAdjusterModal
+          isOpen={!!frameAdjustProduct}
+          onClose={() => setFrameAdjustProduct(null)}
+          product={frameAdjustProduct}
+          onUpdateProduct={(updated) => {
+            if (onUpdateProduct) {
+              onUpdateProduct(updated);
+            }
+          }}
+          currentUser={currentUser}
+          language={language}
+        />
       )}
     </div>
   );

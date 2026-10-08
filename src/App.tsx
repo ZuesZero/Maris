@@ -616,6 +616,7 @@ export default function App() {
             onOpenStylist={() => setIsStylistOpen(true)}
             onOpenAddProduct={handleOpenAddProduct}
             onEditProduct={handleEditProduct}
+            onUpdateProduct={handleSaveProduct}
             currency={currency}
             language={language}
             onChangeLanguage={setLanguage}
@@ -638,6 +639,7 @@ export default function App() {
             initialSearchQuery={activeSearchQuery}
             onOpenAddProduct={handleOpenAddProduct}
             onEditProduct={handleEditProduct}
+            onUpdateProduct={handleSaveProduct}
             onCategoryChange={setActiveCategoryFilter}
             currentUser={currentUser}
             language={language}
@@ -656,6 +658,7 @@ export default function App() {
             initialSearchQuery=""
             onOpenAddProduct={handleOpenAddProduct}
             onEditProduct={handleEditProduct}
+            onUpdateProduct={handleSaveProduct}
             onDeleteProduct={isAdminUser ? handleDeleteProduct : undefined}
             currentUser={currentUser}
             language={language}
@@ -677,6 +680,7 @@ export default function App() {
             onBack={handleReturnToPreviousSection}
             currentUser={currentUser}
             onEditProduct={handleEditProduct}
+            onUpdateProduct={handleSaveProduct}
             onDeleteProduct={isAdminUser ? handleDeleteProduct : undefined}
             language={language}
           />

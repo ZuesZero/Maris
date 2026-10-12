@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { CartItem, Product, Size } from '../types';
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Tag, Gift, Truck } from 'lucide-react';
 import { formatPrice } from '../utils/currency';
+import { Language } from '../data/translations';
+import { getSizeDisplayName } from '../utils/productTranslations';
 
 interface ShoppingBagDrawerProps {
   isOpen: boolean;
@@ -13,6 +15,7 @@ interface ShoppingBagDrawerProps {
   currency: string;
   allProducts: Product[];
   onSelectProduct: (product: Product) => void;
+  language?: Language;
 }
 
 export const ShoppingBagDrawer: React.FC<ShoppingBagDrawerProps> = ({
@@ -24,7 +27,8 @@ export const ShoppingBagDrawer: React.FC<ShoppingBagDrawerProps> = ({
   onProceedToCheckout,
   currency,
   allProducts,
-  onSelectProduct
+  onSelectProduct,
+  language = 'en'
 }) => {
   const [promoCode, setPromoCode] = useState('');
   const [appliedDiscountRate, setAppliedDiscountRate] = useState(0);
@@ -189,7 +193,7 @@ export const ShoppingBagDrawer: React.FC<ShoppingBagDrawerProps> = ({
                         </div>
 
                         <p className="text-[11px] text-[#8C9083] uppercase tracking-wider font-mono mt-0.5">
-                          Color: {item.selectedColor} • Size: {item.selectedSize}
+                          Color: {item.selectedColor} • {language === 'es' ? 'Talla' : 'Size'}: {getSizeDisplayName(item.selectedSize, language)}
                         </p>
                       </div>
 

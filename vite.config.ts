@@ -19,6 +19,8 @@ export default defineConfig(({ command }) => {
         'firebase-admin/auth',
         'archiver',
         'express',
+        'onnxruntime-web',
+        '@imgly/background-removal',
       ],
     },
     resolve: {

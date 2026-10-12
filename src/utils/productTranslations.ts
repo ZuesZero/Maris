@@ -348,3 +348,25 @@ export function getCategoryDisplayName(category: Category | string, language: La
   const langKey = language === 'es' ? 'es' : 'en';
   return CATEGORY_TRANSLATIONS[category as Category]?.[langKey] || category;
 }
+
+export const MEXICAN_SIZE_TRANSLATIONS: Record<string, string> = {
+  'EU 40': 'MX 25.5',
+  'EU 41': 'MX 26.5',
+  'EU 42': 'MX 27',
+  'EU 43': 'MX 28',
+  'EU 44': 'MX 28.5',
+  'EU 46': 'MX 36 (CH)',
+  'EU 48': 'MX 38 (M)',
+  'EU 50': 'MX 40 (G)',
+  'EU 52': 'MX 42 (EG)',
+  'EU 54': 'MX 44 (EEG)',
+  'One Size': 'Unitalla'
+};
+
+export function getSizeDisplayName(size: string, language: Language | string = 'en'): string {
+  if (language === 'es') {
+    return MEXICAN_SIZE_TRANSLATIONS[size] || size;
+  }
+  return size;
+}
+

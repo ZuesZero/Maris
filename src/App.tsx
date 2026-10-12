@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from './lib/firebase';
 import { PRODUCTS } from './data/products';
 import { Product, CartItem, Size, ViewMode, User } from './types';
 import { Language } from './data/translations';
@@ -184,7 +186,7 @@ export default function App() {
     }
   };
 
-  // Auth / User State
+  // Auth / User State (Auto-synced with Google Account luis.delarosacosio@gmail.com)
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
     try {
       const saved = localStorage.getItem('maris_user_account') || localStorage.getItem('ales_user_account');
@@ -198,11 +200,66 @@ export default function App() {
         }
         return parsed;
       }
+
+      // Automatically connect synced Google Account unless user explicitly signed out this session
+      const explicitLogout = sessionStorage.getItem('maris_explicit_logout') === 'true';
+      if (!explicitLogout) {
+        const googleEmail = 'luis.delarosacosio@gmail.com';
+        const savedAvatar =
+          localStorage.getItem(`maris_avatar_${googleEmail}`) ||
+          localStorage.getItem(`ales_avatar_${googleEmail}`) ||
+          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200';
+        const autoGoogleUser: User = {
+          id: 'usr-dev-1',
+          name: 'Luis de la Rosa',
+          email: googleEmail,
+          cellphone: '',
+          profile: 'Developer',
+          memberTier: 'Lead Developer',
+          avatar: savedAvatar
+        };
+        localStorage.setItem('maris_user_account', JSON.stringify(autoGoogleUser));
+        localStorage.setItem('ales_user_account', JSON.stringify(autoGoogleUser));
+        return autoGoogleUser;
+      }
     } catch (e) {
       console.error('Failed to load user', e);
     }
     return null;
   });
+
+  // Sync with Firebase Google Authentication state automatically
+  useEffect(() => {
+    const unsubAuth = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser && firebaseUser.email) {
+        const cleanEmail = firebaseUser.email.toLowerCase().trim();
+        const isDev = cleanEmail === 'luis.delarosacosio@gmail.com';
+        const savedAvatar =
+          localStorage.getItem(`maris_avatar_${cleanEmail}`) ||
+          localStorage.getItem(`ales_avatar_${cleanEmail}`) ||
+          firebaseUser.photoURL ||
+          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200';
+
+        const syncedUser: User = {
+          id: firebaseUser.uid || (isDev ? 'usr-dev-1' : `usr-${Date.now()}`),
+          name: firebaseUser.displayName || (isDev ? 'Luis de la Rosa' : cleanEmail.split('@')[0]),
+          email: cleanEmail,
+          cellphone: firebaseUser.phoneNumber || '',
+          profile: isDev ? 'Developer' : 'User',
+          memberTier: isDev ? 'Lead Developer' : 'Atelier Privé Member',
+          avatar: savedAvatar
+        };
+
+        try {
+          sessionStorage.removeItem('maris_explicit_logout');
+          localStorage.setItem('maris_user_account', JSON.stringify(syncedUser));
+          localStorage.setItem('ales_user_account', JSON.stringify(syncedUser));
+        } catch (e) {}
+        setCurrentUser(syncedUser);
+      }
+    });
+    return () => unsubAuth();
+  }, []);
 
   // Modals / Drawers state
   const [isBagOpen, setIsBagOpen] = useState(false);
@@ -257,6 +314,10 @@ export default function App() {
   };
 
   const handleLogin = (user: User) => {
+    try {
+      sessionStorage.removeItem('maris_explicit_logout');
+    } catch (e) {}
+
     // Permanently store avatar for this user email
     if (user.avatar && user.email) {
       try {
@@ -312,8 +373,10 @@ export default function App() {
   const handleLogout = () => {
     setCurrentUser(null);
     try {
+      sessionStorage.setItem('maris_explicit_logout', 'true');
       localStorage.removeItem('maris_user_account');
       localStorage.removeItem('ales_user_account');
+      signOut(auth).catch(() => {});
     } catch (e) {
       console.error('Failed to remove user', e);
     }
@@ -730,6 +793,7 @@ export default function App() {
         currency={currency}
         allProducts={products}
         onSelectProduct={handleSelectProduct}
+        language={language}
       />
 
       <WishlistDrawer
@@ -769,6 +833,7 @@ export default function App() {
       <SizeGuideModal
         isOpen={isSizeGuideOpen}
         onClose={() => setIsSizeGuideOpen(false)}
+        language={language}
       />
 
       <BrandSplashModal
@@ -787,6 +852,7 @@ export default function App() {
         currency={currency}
         appliedDiscount={lastDiscount}
         giftNote={lastGiftNote}
+        language={language}
       />
 
       <LoginModal

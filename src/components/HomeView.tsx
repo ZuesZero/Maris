@@ -3,7 +3,7 @@ import { Product, ViewMode, User } from '../types';
 import { ArrowRight, Sparkles, Heart, ShoppingBag, Eye, ShieldCheck, Feather, Award, Globe, PlusCircle, Upload, UserCheck, User as UserIcon, Pencil, Sliders } from 'lucide-react';
 import { Language, translations } from '../data/translations';
 import { formatPrice } from '../utils/currency';
-import { getTranslatedProduct } from '../utils/productTranslations';
+import { getTranslatedProduct, getSizeDisplayName } from '../utils/productTranslations';
 import { getImageFrameStyles } from '../utils/imageFrame';
 import { HeroRotationFrame } from './HeroRotationFrame';
 import { ImageFrameAdjusterModal } from './ImageFrameAdjusterModal';
@@ -167,6 +167,21 @@ export const HomeView: React.FC<HomeViewProps> = ({
         onSeeDetails={() => onNavigate('catalog')}
       />
 
+      {/* 2. UPLOAD NEW PIECE ACTION BAR (BELOW LANDING PAGE IMAGE) */}
+      {onOpenAddProduct && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-1">
+          <div className="text-center flex flex-wrap justify-center items-center gap-4">
+            <button
+              onClick={onOpenAddProduct}
+              className="px-8 py-4 bg-[#F4F0EA] border border-[#B88A58] text-[#1C1B20] text-xs uppercase tracking-[0.2em] font-bold hover:bg-[#1C1B20] hover:text-white transition-colors rounded-sm inline-flex items-center gap-2 shadow-xs cursor-pointer"
+            >
+              <Upload className="w-4 h-4 text-[#B88A58]" />
+              <span>{language === 'es' ? 'CARGAR NUEVA PIEZA' : 'UPLOAD NEW PIECE'}</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* 3. CURATED ESSENTIALS COLLECTION OVERVIEW */}
       <section id="products-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2">
         {/* Product Cards Grid */}
@@ -316,7 +331,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       <button
                         onClick={() => onQuickAdd(rawProduct, rawProduct.sizes[0] || 'One Size')}
                         className="p-1.5 text-[#1A1A1A] hover:text-[#B88A58] hover:bg-[#F4F0EA] transition-colors rounded-sm"
-                        title={`Quick add size ${rawProduct.sizes[0] || 'One Size'}`}
+                        title={language === 'es' ? `Añadir rápido talla ${getSizeDisplayName(rawProduct.sizes[0] || 'One Size', language)}` : `Quick add size ${rawProduct.sizes[0] || 'One Size'}`}
                       >
                         <ShoppingBag className="w-4 h-4" />
                       </button>
@@ -326,27 +341,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
               </div>
             );
           })}
-        </div>
-
-        {/* View All Button */}
-        <div className="text-center mt-12 flex flex-wrap justify-center items-center gap-4">
-          <button
-            onClick={() => onNavigate('catalog')}
-            className="px-10 py-4 bg-[#1C1B20] text-white text-xs uppercase tracking-[0.2em] font-semibold hover:bg-[#B88A58] transition-colors rounded-sm inline-flex items-center gap-3 shadow-md"
-          >
-            <span>{t.exploreCatalog} ({products.length} {language === 'es' ? 'Piezas' : 'Pieces'})</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-
-          {onOpenAddProduct && (
-            <button
-              onClick={onOpenAddProduct}
-              className="px-8 py-4 bg-[#F4F0EA] border border-[#B88A58] text-[#1C1B20] text-xs uppercase tracking-[0.2em] font-bold hover:bg-[#1C1B20] hover:text-white transition-colors rounded-sm inline-flex items-center gap-2 shadow-xs cursor-pointer"
-            >
-              <Upload className="w-4 h-4 text-[#B88A58]" />
-              <span>{language === 'es' ? 'CARGAR NUEVA PIEZA' : 'UPLOAD NEW PIECE'}</span>
-            </button>
-          )}
         </div>
       </section>
 

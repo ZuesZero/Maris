@@ -21,11 +21,12 @@ import {
   Minimize2,
   RotateCcw,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Wand2
 } from 'lucide-react';
 import { Product, Category, Size, ImageFrameSettings } from '../types';
 import { Language } from '../data/translations';
-import { getCategoryDisplayName } from '../utils/productTranslations';
+import { getCategoryDisplayName, getSizeDisplayName } from '../utils/productTranslations';
 import { convertUSDToCurrency, convertCurrencyToUSD } from '../utils/currency';
 import { optimizeImageFile } from '../utils/productStorage';
 import {
@@ -36,6 +37,11 @@ import {
   saveStoredImageSettings,
   getImageFrameStyles
 } from '../utils/imageFrame';
+import {
+  STUDIO_BG_PRESETS,
+  StudioBgPresetId,
+  processProfessionalBackground
+} from '../utils/backgroundStudio';
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -102,6 +108,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
   const [enableCustomFrame, setEnableCustomFrame] = useState<boolean>(true);
   const [frameSettings, setFrameSettings] = useState<ImageFrameSettings>(DEFAULT_IMAGE_FRAME_SETTINGS);
   const [activeStudioImgIdx, setActiveStudioImgIdx] = useState<number>(0);
+  const [mobileStudioTab, setMobileStudioTab] = useState<'rotation' | 'mirror' | 'cut' | 'fit' | 'presets'>('rotation');
   const [isInteractiveCutMode, setIsInteractiveCutMode] = useState<boolean>(false);
   const [isApplyingCut, setIsApplyingCut] = useState<boolean>(false);
   const [originalImagesBackup, setOriginalImagesBackup] = useState<Record<number, string>>({});
@@ -109,6 +116,16 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
   const [draggingHandle, setDraggingHandle] = useState<
     null | 'top' | 'bottom' | 'left' | 'right' | 'tl' | 'tr' | 'bl' | 'br'
   >(null);
+
+  // Photoroom Professional Background Studio State
+  const [selectedBgPreset, setSelectedBgPreset] = useState<StudioBgPresetId>('pure-white');
+  const [bgTolerance, setBgTolerance] = useState<number>(52);
+  const [addStudioShadow, setAddStudioShadow] = useState<boolean>(true);
+  const [enhanceGarmentLight, setEnhanceGarmentLight] = useState<boolean>(false);
+  const [isProcessingBg, setIsProcessingBg] = useState<boolean>(false);
+  const [autoWhiteBgOnUpload, setAutoWhiteBgOnUpload] = useState<boolean>(false);
+  const [extraBgPoints, setExtraBgPoints] = useState<Record<number, Array<{ xNorm: number; yNorm: number }>>>({});
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Colors
   const [colors, setColors] = useState<{ name: string; hex: string }[]>([
@@ -176,6 +193,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
         setEnableCustomFrame(true);
         setActiveStudioImgIdx(0);
         setOriginalImagesBackup({});
+        setExtraBgPoints({});
       } else {
         setName('');
         setSubtitle('');
@@ -199,6 +217,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
         setEnableCustomFrame(true);
         setActiveStudioImgIdx(0);
         setOriginalImagesBackup({});
+        setExtraBgPoints({});
       }
       setIsInteractiveCutMode(false);
       setErrorMsg('');
@@ -304,6 +323,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    const startIndex = uploadedImages.length;
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       if (!file || !file.type.startsWith('image/')) {
@@ -312,7 +332,21 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
       }
       try {
         const optimizedUrl = await optimizeImageFile(file);
-        setUploadedImages(prev => [...prev, optimizedUrl]);
+        if (autoWhiteBgOnUpload) {
+          const idx = startIndex + i;
+          setOriginalImagesBackup(prev => ({ ...prev, [idx]: optimizedUrl }));
+          const whiteBgUrl = await processProfessionalBackground(optimizedUrl, {
+            preset: selectedBgPreset,
+            tolerance: bgTolerance,
+            addStudioShadow,
+            enhanceGarmentLight
+          });
+          setUploadedImages(prev => [...prev, whiteBgUrl]);
+          setEnableCustomFrame(true);
+          setFrameSettings(prev => ({ ...prev, backgroundColor: '#FFFFFF' }));
+        } else {
+          setUploadedImages(prev => [...prev, optimizedUrl]);
+        }
       } catch (err) {
         console.error('Error optimizing image', err);
         const reader = new FileReader();
@@ -466,6 +500,135 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
       delete copy[activeStudioImgIdx];
       return copy;
     });
+    setExtraBgPoints(prev => {
+      const copy = { ...prev };
+      delete copy[activeStudioImgIdx];
+      return copy;
+    });
+  };
+
+  const handleApplyPhotoroomBg = async (
+    presetOverride?: StudioBgPresetId,
+    toleranceOverride?: number,
+    targetIndexOverride?: number,
+    shadowOverride?: boolean,
+    lightOverride?: boolean,
+    pointsOverride?: Array<{ xNorm: number; yNorm: number }>
+  ) => {
+    const idx = targetIndexOverride !== undefined ? targetIndexOverride : activeStudioImgIdx;
+    const sourceImg = originalImagesBackup[idx] || uploadedImages[idx];
+    const targetPreset = presetOverride || selectedBgPreset;
+    setSelectedBgPreset(targetPreset);
+
+    if (!sourceImg) {
+      // If no image uploaded yet, enable auto white background on upload and open file picker!
+      setAutoWhiteBgOnUpload(true);
+      fileInputRef.current?.click();
+      return;
+    }
+
+    const targetTol = toleranceOverride !== undefined ? toleranceOverride : bgTolerance;
+    const targetShadow = shadowOverride !== undefined ? shadowOverride : true;
+    setAddStudioShadow(targetShadow);
+    const targetLight = lightOverride !== undefined ? lightOverride : enhanceGarmentLight;
+    const targetPoints = pointsOverride !== undefined ? pointsOverride : (extraBgPoints[idx] || []);
+
+    setIsProcessingBg(true);
+
+    try {
+      if (!originalImagesBackup[idx]) {
+        setOriginalImagesBackup(prev => ({
+          ...prev,
+          [idx]: sourceImg
+        }));
+      }
+
+      const processedDataUrl = await processProfessionalBackground(sourceImg, {
+        preset: targetPreset,
+        tolerance: targetTol,
+        addStudioShadow: targetShadow,
+        enhanceGarmentLight: targetLight,
+        extraSamplePoints: targetPoints
+      });
+
+      setUploadedImages(prev => {
+        const next = [...prev];
+        next[idx] = processedDataUrl;
+        return next;
+      });
+
+      // Match frame canvas background to white when choosing Photoroom White presets
+      if (
+        targetPreset === 'pure-white' ||
+        targetPreset === 'studio-floor' ||
+        targetPreset === 'studio-daylight'
+      ) {
+        setEnableCustomFrame(true);
+        setFrameSettings(prev => ({
+          ...prev,
+          backgroundColor: '#FFFFFF'
+        }));
+      } else if (targetPreset === 'warm-alabaster') {
+        setEnableCustomFrame(true);
+        setFrameSettings(prev => ({
+          ...prev,
+          backgroundColor: '#FAF8F5'
+        }));
+      } else if (targetPreset === 'atelier-cream') {
+        setEnableCustomFrame(true);
+        setFrameSettings(prev => ({
+          ...prev,
+          backgroundColor: '#F4F0EA'
+        }));
+      } else if (targetPreset === 'pearl-grey') {
+        setEnableCustomFrame(true);
+        setFrameSettings(prev => ({
+          ...prev,
+          backgroundColor: '#EFEFF1'
+        }));
+      }
+    } catch (err) {
+      console.error('Error applying Photoroom background:', err);
+    } finally {
+      setIsProcessingBg(false);
+    }
+  };
+
+  const handleApplyPhotoroomToAll = async () => {
+    if (uploadedImages.length === 0) return;
+    setIsProcessingBg(true);
+    try {
+      const nextImages = [...uploadedImages];
+      const nextBackups = { ...originalImagesBackup };
+
+      for (let i = 0; i < nextImages.length; i++) {
+        const src = nextBackups[i] || nextImages[i];
+        if (!nextBackups[i]) {
+          nextBackups[i] = src;
+        }
+        nextImages[i] = await processProfessionalBackground(src, {
+          preset: selectedBgPreset,
+          tolerance: bgTolerance,
+          addStudioShadow,
+          enhanceGarmentLight
+        });
+      }
+
+      setOriginalImagesBackup(nextBackups);
+      setUploadedImages(nextImages);
+      if (
+        selectedBgPreset === 'pure-white' ||
+        selectedBgPreset === 'studio-floor' ||
+        selectedBgPreset === 'studio-daylight'
+      ) {
+        setEnableCustomFrame(true);
+        setFrameSettings(prev => ({ ...prev, backgroundColor: '#FFFFFF' }));
+      }
+    } catch (err) {
+      console.error('Error applying Photoroom background to all photos:', err);
+    } finally {
+      setIsProcessingBg(false);
+    }
   };
 
   const handleToggleSize = (size: Size) => {
@@ -495,7 +658,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
       return;
     }
     if (selectedSizes.length === 0) {
-      setErrorMsg(isEs ? 'Por favor seleccione al menos un talle disponible.' : 'Please select at least one available size.');
+      setErrorMsg(isEs ? 'Por favor seleccione al menos una talla disponible.' : 'Please select at least one available size.');
       return;
     }
 
@@ -722,120 +885,123 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {errorMsg && (
-                <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-sm">
+                <div className="p-2.5 bg-red-50 border border-red-200 text-red-700 text-xs rounded-sm">
                   {errorMsg}
                 </div>
               )}
 
-              {/* UPLOAD MODE SWITCHER (When creating new pieces) */}
+              {/* UPLOAD MODE SWITCHER (Compact) */}
               {!isEditing && (
-                <div className="bg-[#EFEAE1]/70 border border-[#D8D1C5] p-3.5 rounded-sm">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                      <span className="text-xs font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1.5">
-                        <Layers className="w-4 h-4 text-[#B88A58]" />
-                        {isEs ? 'Modo de Carga' : 'Upload Mode'}
+                <div className="bg-[#EFEAE1]/70 border border-[#D8D1C5] px-2.5 py-1.5 rounded-sm">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1 shrink-0">
+                        <Layers className="w-3 h-3 text-[#B88A58]" />
+                        {isEs ? 'Modo de Carga:' : 'Upload Mode:'}
                       </span>
-                      <p className="text-[11px] text-[#66635B] mt-0.5">
+                      <p className="text-[10px] text-[#66635B] truncate">
                         {isBatchMode
                           ? (isEs
-                              ? 'Carga múltiple: Cada imagen que selecciones creará una prenda individual en la tienda con la misma categoría, precio y stock.'
-                              : 'Batch mode: Each selected image creates an individual item with shared category, price, and stock.')
+                              ? 'Cada foto crea 1 prenda individual.'
+                              : 'Each photo creates 1 individual item.')
                           : (isEs
-                              ? 'Carga individual: Todas las fotos subidas pertenecerán a una sola prenda.'
-                              : 'Single mode: All uploaded photos belong to one single garment.')}
+                              ? 'Todas las fotos pertenecen a 1 sola prenda.'
+                              : 'All uploaded photos belong to one single garment.')}
                       </p>
                     </div>
 
-                    <div className="flex items-center bg-[#E5DFD5] p-1 rounded-sm shrink-0">
+                    <div className="flex items-center bg-[#E5DFD5] p-0.5 rounded-sm shrink-0">
                       <button
                         type="button"
                         onClick={() => setIsBatchMode(false)}
-                        className={`px-3 py-1.5 text-xs font-bold rounded-xs transition-all cursor-pointer ${
+                        className={`px-2 py-1 text-[10px] font-bold rounded-xs transition-all cursor-pointer ${
                           !isBatchMode
                             ? 'bg-[#1C1B20] text-white shadow-xs'
                             : 'text-[#55524B] hover:text-[#1C1B20]'
                         }`}
                       >
-                        {isEs ? '1 Prenda (Vistas/Fotos)' : '1 Single Piece'}
+                        {isEs ? '1 Prenda' : '1 Single Piece'}
                       </button>
                       <button
                         type="button"
                         onClick={() => setIsBatchMode(true)}
-                        className={`px-3 py-1.5 text-xs font-bold rounded-xs transition-all cursor-pointer flex items-center gap-1.5 ${
+                        className={`px-2 py-1 text-[10px] font-bold rounded-xs transition-all cursor-pointer flex items-center gap-1 ${
                           isBatchMode
                             ? 'bg-[#B88A58] text-[#1C1B20] shadow-xs'
                             : 'text-[#55524B] hover:text-[#1C1B20]'
                         }`}
                       >
-                        <Layers className="w-3.5 h-3.5" />
-                        {isEs ? 'Múltiples Prendas (1 por Foto)' : 'Batch Items (1 per photo)'}
+                        <Layers className="w-3 h-3" />
+                        {isEs ? 'Lote (1 por Foto)' : 'Batch Items (1 per photo)'}
                       </button>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* SECTION 1: IMAGE UPLOAD */}
-              <div className="space-y-3">
+              {/* SECTION 1: IMAGE UPLOAD (Compact) */}
+              <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="block text-xs font-bold tracking-wider uppercase text-[#1C1B20] flex items-center gap-1.5">
-                    <ImageIcon className="w-4 h-4 text-[#B88A58]" />
+                  <label className="block text-[10px] font-bold tracking-wider uppercase text-[#1C1B20] flex items-center gap-1">
+                    <ImageIcon className="w-3.5 h-3.5 text-[#B88A58]" />
                     <span>
                       {isBatchMode
-                        ? (isEs ? `1. SELECCIONAR IMÁGENES (${uploadedImages.length} PRENDAS INDIVIDUALES) *` : `1. Select Images (${uploadedImages.length} Individual Items) *`)
-                        : (isEs ? '1. UPLOAD PRODUCT IMAGE(S) *' : '1. Upload Product Image(s) *')}
+                        ? (isEs ? `1. SELECCIONAR IMÁGENES (${uploadedImages.length} PRENDAS) *` : `1. Select Images (${uploadedImages.length} Items) *`)
+                        : (isEs ? '1. SUBIR IMAGEN(ES) DEL PRODUCTO *' : '1. Upload Product Image(s) *')}
                     </span>
                   </label>
                   {isBatchMode && uploadedImages.length > 0 && (
-                    <span className="text-[11px] font-bold text-[#B88A58] bg-[#B88A58]/10 px-2 py-0.5 rounded-full">
-                      {isEs ? `${uploadedImages.length} prendas a crear` : `${uploadedImages.length} items to create`}
+                    <span className="text-[10px] font-bold text-[#B88A58] bg-[#B88A58]/10 px-1.5 py-0.5 rounded-full">
+                      {isEs ? `${uploadedImages.length} prendas` : `${uploadedImages.length} items`}
                     </span>
                   )}
                 </div>
 
-                {/* Drag & Drop File Upload */}
-                <div className="border border-dashed border-[#D1C9BD] hover:border-[#B88A58] transition-colors rounded-md py-4 px-4 text-center bg-[#F4F0EA]/60 cursor-pointer relative group">
+                {/* Compact Drag & Drop File Upload */}
+                <div className="border border-dashed border-[#D1C9BD] hover:border-[#B88A58] transition-colors rounded-sm py-2 px-3 bg-[#F4F0EA]/60 cursor-pointer relative group">
                   <input
+                    ref={fileInputRef}
                     type="file"
                     accept="image/*"
                     multiple
                     onChange={handleFileUpload}
                     className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10"
                   />
-                  <div className="flex flex-col items-center justify-center gap-1.5 pointer-events-none">
-                    <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#B88A58] shadow-xs group-hover:scale-105 transition-transform">
-                      <Upload className="w-4 h-4" />
+                  <div className="flex items-center justify-center gap-2.5 pointer-events-none">
+                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center text-[#B88A58] shadow-xs shrink-0 group-hover:scale-105 transition-transform">
+                      <Upload className="w-3 h-3" />
                     </div>
-                    <p className="text-xs font-medium text-[#1C1B20] leading-tight">
-                      <span className="font-bold text-[#B88A58]">
-                        {isEs ? 'Haga clic para elegir varias imágenes' : 'Click to choose multiple images'}
-                      </span>{' '}
-                      {isEs ? 'o arrastre y suelte los archivos' : 'or drag & drop files'}
-                    </p>
-                    <p className="text-[10px] text-[#88847C] leading-none">
-                      {isBatchMode
-                        ? (isEs ? '💡 Puede seleccionar varias fotos a la vez con Ctrl o Shift' : '💡 You can select multiple files at once using Ctrl or Shift')
-                        : (isEs ? 'Soporta PNG, JPG, WEBP, GIF (Se recomienda alta resolución)' : 'Supports PNG, JPG, WEBP, GIF (High resolution recommended)')}
-                    </p>
+                    <div className="text-left">
+                      <p className="text-[11px] font-medium text-[#1C1B20] leading-tight">
+                        <span className="font-bold text-[#B88A58]">
+                          {isEs ? 'Clic para elegir imágenes' : 'Click to choose multiple images'}
+                        </span>{' '}
+                        {isEs ? 'o arrastrar y soltar' : 'or drag & drop files'}
+                      </p>
+                      <p className="text-[9px] text-[#88847C] leading-tight">
+                        {isBatchMode
+                          ? (isEs ? '💡 Seleccione varias fotos con Ctrl o Shift' : '💡 Select multiple files at once using Ctrl or Shift')
+                          : (isEs ? 'PNG, JPG, WEBP, GIF (Alta resolución)' : 'Supports PNG, JPG, WEBP, GIF (High resolution recommended)')}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                {/* Fallback Image URL Input */}
-                <div className="flex gap-2 items-center">
+                {/* Compact Fallback Image URL Input (Hidden on mobile view) */}
+                <div className="hidden sm:flex gap-1.5 items-center">
                   <input
                     type="url"
                     placeholder={isEs ? "O pegue la URL de la imagen (ej. https://...)" : "Or paste image URL (e.g., https://...)"}
                     value={imageUrlInput}
                     onChange={(e) => setImageUrlInput(e.target.value)}
-                    className="flex-1 text-xs px-3 py-2 border border-[#D1C9BD] bg-white rounded-sm focus:outline-none focus:border-[#B88A58]"
+                    className="flex-1 text-[11px] px-2.5 py-1 border border-[#D1C9BD] bg-white rounded-xs focus:outline-none focus:border-[#B88A58]"
                   />
                   <button
                     type="button"
                     onClick={handleAddImageUrl}
-                    className="px-3 py-2 bg-[#1C1B20] text-white text-xs font-bold rounded-sm hover:bg-[#3B3A40] transition-colors"
+                    className="px-2.5 py-1 bg-[#1C1B20] text-white text-[10px] font-bold rounded-xs hover:bg-[#3B3A40] transition-colors cursor-pointer"
                   >
                     {isEs ? 'Agregar URL' : 'Add URL'}
                   </button>
@@ -985,6 +1151,15 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                                 }}
                               />
 
+                              {isProcessingBg && (
+                                <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-40 flex flex-col items-center justify-center gap-1.5 p-2 text-center">
+                                  <Wand2 className="w-5 h-5 text-[#B88A58] animate-spin" />
+                                  <span className="text-[9px] font-bold uppercase tracking-wider text-[#1C1B20]">
+                                    {isEs ? 'Estudio Photoroom...' : 'Photoroom Studio...'}
+                                  </span>
+                                </div>
+                              )}
+
                               {/* Interactive Cut Overlay */}
                               {isInteractiveCutMode && (
                                 <div className="absolute inset-0 z-20">
@@ -1071,8 +1246,8 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                           </div>
                         </div>
 
-                        {/* Quick Presets */}
-                        <div className="w-full mt-2 pt-2 border-t border-[#E8E2D9] grid grid-cols-2 gap-1">
+                        {/* Quick Presets (Desktop view under preview; moved to 5th tab on Mobile) */}
+                        <div className="hidden sm:grid w-full mt-2 pt-2 border-t border-[#E8E2D9] grid-cols-2 gap-1">
                           <button
                             type="button"
                             onClick={() => {
@@ -1126,25 +1301,107 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                         </div>
                       </div>
 
-                      {/* Right Column: Rotation, Mirror, Cut & Frame Controls in One Shot */}
-                      <div className="md:col-span-8 space-y-2.5">
+                      {/* Right Column: Rotation, Mirror, Cut, Frame Controls & Presets (5 Tabs on Mobile) */}
+                      <div className="md:col-span-8 space-y-3 sm:space-y-2.5">
+                        {/* Mobile 5-Tab Bar (Icons Only): 1. IMAGE ROTATION, 2. MIRROR OPTION, 3. CUT IMAGE ADJUST, 4. FRAME FIT MODE, 5. QUICK PRESETS */}
+                        <div className="grid grid-cols-5 gap-1.5 sm:hidden bg-[#E8E2D9]/80 p-1.5 rounded-sm border border-[#D8D1C5]">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setMobileStudioTab('rotation');
+                              handleStepRotation();
+                            }}
+                            title={isEs ? 'Girar +90°' : 'Turn +90°'}
+                            aria-label={isEs ? 'Girar +90°' : 'Turn +90°'}
+                            className={`flex items-center justify-center py-2.5 px-1 rounded-xs transition-all cursor-pointer min-h-[44px] ${
+                              mobileStudioTab === 'rotation'
+                                ? 'bg-[#1C1B20] text-[#E5C158] shadow-xs border border-[#1C1B20]'
+                                : 'bg-white text-[#55524B] border border-[#D8D1C5]'
+                            }`}
+                          >
+                            <RotateCw className={`w-5 h-5 shrink-0 ${mobileStudioTab === 'rotation' ? 'text-[#E5C158]' : 'text-[#B88A58]'}`} />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setMobileStudioTab('mirror');
+                              handleToggleMirrorX();
+                            }}
+                            title={isEs ? 'Espejo Horizontal' : 'Horizontal Mirror'}
+                            aria-label={isEs ? 'Espejo Horizontal' : 'Horizontal Mirror'}
+                            className={`flex items-center justify-center py-2.5 px-1 rounded-xs transition-all cursor-pointer min-h-[44px] ${
+                              mobileStudioTab === 'mirror'
+                                ? 'bg-[#1C1B20] text-[#E5C158] shadow-xs border border-[#1C1B20]'
+                                : 'bg-white text-[#55524B] border border-[#D8D1C5]'
+                            }`}
+                          >
+                            <FlipHorizontal className={`w-5 h-5 shrink-0 ${mobileStudioTab === 'mirror' ? 'text-[#E5C158]' : 'text-[#B88A58]'}`} />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsInteractiveCutMode(prev => (mobileStudioTab === 'cut' ? !prev : true));
+                              setMobileStudioTab('cut');
+                            }}
+                            title={isEs ? 'Caja de Corte' : 'Cut Box'}
+                            aria-label={isEs ? 'Caja de Corte' : 'Cut Box'}
+                            className={`flex items-center justify-center py-2.5 px-1 rounded-xs transition-all cursor-pointer min-h-[44px] ${
+                              mobileStudioTab === 'cut'
+                                ? 'bg-[#1C1B20] text-[#E5C158] shadow-xs border border-[#1C1B20]'
+                                : 'bg-white text-[#55524B] border border-[#D8D1C5]'
+                            }`}
+                          >
+                            <Scissors className={`w-5 h-5 shrink-0 ${mobileStudioTab === 'cut' ? 'text-[#E5C158]' : 'text-[#B88A58]'}`} />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => setMobileStudioTab('fit')}
+                            title={isEs ? 'Modo Ajuste' : 'Frame Fit Mode'}
+                            aria-label={isEs ? 'Modo Ajuste' : 'Frame Fit Mode'}
+                            className={`flex items-center justify-center py-2.5 px-1 rounded-xs transition-all cursor-pointer min-h-[44px] ${
+                              mobileStudioTab === 'fit'
+                                ? 'bg-[#1C1B20] text-[#E5C158] shadow-xs border border-[#1C1B20]'
+                                : 'bg-white text-[#55524B] border border-[#D8D1C5]'
+                            }`}
+                          >
+                            <Maximize2 className={`w-5 h-5 shrink-0 ${mobileStudioTab === 'fit' ? 'text-[#E5C158]' : 'text-[#B88A58]'}`} />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => setMobileStudioTab('presets')}
+                            title={isEs ? 'Ajustes Rápidos' : 'Quick Presets'}
+                            aria-label={isEs ? 'Ajustes Rápidos' : 'Quick Presets'}
+                            className={`flex items-center justify-center py-2.5 px-1 rounded-xs transition-all cursor-pointer min-h-[44px] ${
+                              mobileStudioTab === 'presets'
+                                ? 'bg-[#1C1B20] text-[#E5C158] shadow-xs border border-[#1C1B20]'
+                                : 'bg-white text-[#55524B] border border-[#D8D1C5]'
+                            }`}
+                          >
+                            <Sliders className={`w-5 h-5 shrink-0 ${mobileStudioTab === 'presets' ? 'text-[#E5C158]' : 'text-[#B88A58]'}`} />
+                          </button>
+                        </div>
+
                         {/* Row 1: Rotation (90°, 180°, 270°, 360°) & Mirror (Horizontal, Vertical) */}
-                        <div className="grid grid-cols-1 sm:grid-cols-12 gap-2">
-                          <div className="sm:col-span-7 bg-white border border-[#E2DCD3] rounded-sm p-2.5">
-                            <div className="flex items-center justify-between mb-1.5">
-                              <span className="text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1">
-                                <RotateCw className="w-3 h-3 text-[#B88A58]" />
+                        <div className={`${mobileStudioTab === 'rotation' || mobileStudioTab === 'mirror' ? 'grid' : 'hidden sm:grid'} grid-cols-1 sm:grid-cols-12 gap-2.5 sm:gap-2`}>
+                          <div className={`${mobileStudioTab === 'rotation' ? 'block' : 'hidden sm:block'} sm:col-span-7 bg-white border border-[#E2DCD3] rounded-sm p-3.5 sm:p-2.5`}>
+                            <div className="flex items-center justify-between mb-2.5 sm:mb-1.5">
+                              <span className="text-xs sm:text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1.5 sm:gap-1">
+                                <RotateCw className="w-4 h-4 sm:w-3 sm:h-3 text-[#B88A58]" />
                                 {isEs ? 'Rotación de Imagen' : 'Image Rotation'}
                               </span>
                               <button
                                 type="button"
                                 onClick={handleStepRotation}
-                                className="px-1.5 py-0.5 bg-[#1C1B20] text-[#E5C158] rounded-xs text-[9px] font-bold uppercase hover:bg-black transition-colors cursor-pointer"
+                                className="px-3 py-1.5 sm:px-1.5 sm:py-0.5 bg-[#1C1B20] text-[#E5C158] rounded-xs text-xs sm:text-[9px] font-bold uppercase hover:bg-black transition-colors cursor-pointer"
                               >
                                 {isEs ? 'Girar +90°' : 'Turn +90°'}
                               </button>
                             </div>
-                            <div className="grid grid-cols-4 gap-1">
+                            <div className="grid grid-cols-4 gap-2 sm:gap-1">
                               {[90, 180, 270, 360].map((deg) => {
                                 const isActive =
                                   deg === 360
@@ -1155,7 +1412,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                                     key={deg}
                                     type="button"
                                     onClick={() => handleSetRotation(deg)}
-                                    className={`py-1.5 px-1 rounded-xs text-[10px] font-bold border transition-all cursor-pointer ${
+                                    className={`py-2.5 sm:py-1.5 px-2 sm:px-1 rounded-xs text-xs sm:text-[10px] font-bold border transition-all cursor-pointer min-h-[42px] sm:min-h-0 ${
                                       isActive
                                         ? 'bg-[#1C1B20] text-[#E5C158] border-[#1C1B20]'
                                         : 'bg-[#FAF8F5] text-[#55524B] border-[#D8D1C5] hover:border-[#1C1B20]'
@@ -1168,10 +1425,10 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                             </div>
                           </div>
 
-                          <div className="sm:col-span-5 bg-white border border-[#E2DCD3] rounded-sm p-2.5">
-                            <div className="flex items-center justify-between mb-1.5">
-                              <span className="text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1">
-                                <FlipHorizontal className="w-3 h-3 text-[#B88A58]" />
+                          <div className={`${mobileStudioTab === 'mirror' ? 'block' : 'hidden sm:block'} sm:col-span-5 bg-white border border-[#E2DCD3] rounded-sm p-3.5 sm:p-2.5`}>
+                            <div className="flex items-center justify-between mb-2.5 sm:mb-1.5">
+                              <span className="text-xs sm:text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1.5 sm:gap-1">
+                                <FlipHorizontal className="w-4 h-4 sm:w-3 sm:h-3 text-[#B88A58]" />
                                 {isEs ? 'Opción Espejo' : 'Mirror Option'}
                               </span>
                               {(frameSettings.mirrorX || frameSettings.mirrorY) && (
@@ -1180,35 +1437,35 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                                   onClick={() =>
                                     setFrameSettings(prev => ({ ...prev, mirrorX: false, mirrorY: false }))
                                   }
-                                  className="text-[9px] text-[#8C867E] hover:text-[#1C1B20] underline cursor-pointer"
+                                  className="text-xs sm:text-[9px] text-[#8C867E] hover:text-[#1C1B20] underline cursor-pointer py-1 sm:py-0"
                                 >
                                   {isEs ? 'Normal' : 'Normal'}
                                 </button>
                               )}
                             </div>
-                            <div className="grid grid-cols-2 gap-1">
+                            <div className="grid grid-cols-2 gap-2 sm:gap-1">
                               <button
                                 type="button"
                                 onClick={handleToggleMirrorX}
-                                className={`py-1.5 px-1.5 rounded-xs text-[10px] font-bold border transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                                className={`py-2.5 sm:py-1.5 px-2.5 sm:px-1.5 rounded-xs text-xs sm:text-[10px] font-bold border transition-all flex items-center justify-center gap-1.5 sm:gap-1 cursor-pointer min-h-[42px] sm:min-h-0 ${
                                   frameSettings.mirrorX
                                     ? 'bg-[#1C1B20] text-[#E5C158] border-[#1C1B20]'
                                     : 'bg-[#FAF8F5] text-[#55524B] border-[#D8D1C5] hover:border-[#1C1B20]'
                                 }`}
                               >
-                                <FlipHorizontal className="w-3 h-3" />
+                                <FlipHorizontal className="w-4 h-4 sm:w-3 sm:h-3" />
                                 <span>{isEs ? 'Horizontal' : 'Horizontal'}</span>
                               </button>
                               <button
                                 type="button"
                                 onClick={handleToggleMirrorY}
-                                className={`py-1.5 px-1.5 rounded-xs text-[10px] font-bold border transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                                className={`py-2.5 sm:py-1.5 px-2.5 sm:px-1.5 rounded-xs text-xs sm:text-[10px] font-bold border transition-all flex items-center justify-center gap-1.5 sm:gap-1 cursor-pointer min-h-[42px] sm:min-h-0 ${
                                   frameSettings.mirrorY
                                     ? 'bg-[#1C1B20] text-[#E5C158] border-[#1C1B20]'
                                     : 'bg-[#FAF8F5] text-[#55524B] border-[#D8D1C5] hover:border-[#1C1B20]'
                                 }`}
                               >
-                                <FlipVertical className="w-3 h-3" />
+                                <FlipVertical className="w-4 h-4 sm:w-3 sm:h-3" />
                                 <span>{isEs ? 'Vertical' : 'Vertical'}</span>
                               </button>
                             </div>
@@ -1216,24 +1473,24 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                         </div>
 
                         {/* Row 2: Cut Image to Adjust */}
-                        <div className="bg-white border border-[#E2DCD3] rounded-sm p-2.5 space-y-2">
-                          <div className="flex flex-wrap items-center justify-between gap-1.5">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1">
-                              <Scissors className="w-3 h-3 text-[#B88A58]" />
+                        <div className={`${mobileStudioTab === 'cut' ? 'block' : 'hidden sm:block'} bg-white border border-[#E2DCD3] rounded-sm p-3.5 sm:p-2.5 space-y-3 sm:space-y-2`}>
+                          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center justify-between gap-2.5 sm:gap-1.5">
+                            <span className="text-xs sm:text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1.5 sm:gap-1">
+                              <Scissors className="w-4 h-4 sm:w-3 sm:h-3 text-[#B88A58]" />
                               {isEs ? 'Cortar Imagen para Ajustar' : 'Cut Image to Adjust'}
                             </span>
 
-                            <div className="flex flex-wrap items-center gap-1">
+                            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-1 w-full sm:w-auto">
                               <button
                                 type="button"
                                 onClick={() => setIsInteractiveCutMode(prev => !prev)}
-                                className={`px-2 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-wider transition-all flex items-center gap-1 border cursor-pointer ${
+                                className={`px-3 py-2.5 sm:px-2 sm:py-0.5 rounded-xs text-xs sm:text-[9px] font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-1 border cursor-pointer min-h-[42px] sm:min-h-0 ${
                                   isInteractiveCutMode
                                     ? 'bg-[#E5C158] text-[#1C1B20] border-[#B88A58]'
                                     : 'bg-[#FAF8F5] text-[#1C1B20] border-[#D8D1C5] hover:bg-[#1C1B20] hover:text-white'
                                 }`}
                               >
-                                <Crop className="w-2.5 h-2.5" />
+                                <Crop className="w-4 h-4 sm:w-2.5 sm:h-2.5 shrink-0" />
                                 {isInteractiveCutMode
                                   ? (isEs ? 'Cerrando Caja' : 'Hide Cut Box')
                                   : (isEs ? 'Caja de Corte' : 'Cut Box')}
@@ -1243,46 +1500,12 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                                 type="button"
                                 disabled={!currentPreviewImg || isApplyingCut}
                                 onClick={handleApplyCutToUploadedImage}
-                                className="px-2 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-wider bg-[#B88A58] text-[#1C1B20] hover:bg-[#c99b68] transition-all flex items-center gap-1 cursor-pointer disabled:opacity-40"
+                                className="px-3 py-2.5 sm:px-2 sm:py-0.5 rounded-xs text-xs sm:text-[9px] font-bold uppercase tracking-wider bg-[#B88A58] text-[#1C1B20] hover:bg-[#c99b68] transition-all flex items-center justify-center gap-1.5 sm:gap-1 cursor-pointer disabled:opacity-40 min-h-[42px] sm:min-h-0"
                               >
-                                <Scissors className="w-2.5 h-2.5" />
+                                <Scissors className="w-4 h-4 sm:w-2.5 sm:h-2.5 shrink-0" />
                                 {isApplyingCut
                                   ? (isEs ? 'Cortando...' : 'Cutting...')
                                   : (isEs ? 'Aplicar Corte' : 'Apply Cut')}
-                              </button>
-
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setEnableCustomFrame(true);
-                                  setFrameSettings(prev => ({
-                                    ...prev,
-                                    cropTop: 8,
-                                    cropRight: 8,
-                                    cropBottom: 8,
-                                    cropLeft: 8
-                                  }));
-                                }}
-                                className="px-1.5 py-0.5 text-[9px] font-semibold bg-[#FAF8F5] border border-[#D8D1C5] rounded-xs hover:border-[#1C1B20] cursor-pointer"
-                              >
-                                {isEs ? 'Bordes 8%' : 'Trim 8%'}
-                              </button>
-
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setEnableCustomFrame(true);
-                                  setFrameSettings(prev => ({
-                                    ...prev,
-                                    cropTop: 15,
-                                    cropRight: 0,
-                                    cropBottom: 15,
-                                    cropLeft: 0
-                                  }));
-                                }}
-                                className="px-1.5 py-0.5 text-[9px] font-semibold bg-[#FAF8F5] border border-[#D8D1C5] rounded-xs hover:border-[#1C1B20] cursor-pointer"
-                              >
-                                {isEs ? 'Cuadrado 15%' : 'Square 15%'}
                               </button>
 
                               {hasActiveCrop && (
@@ -1297,7 +1520,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                                       cropLeft: 0
                                     }))
                                   }
-                                  className="px-1.5 py-0.5 text-[9px] font-semibold text-red-700 bg-red-50 border border-red-200 rounded-xs hover:bg-red-100 cursor-pointer"
+                                  className="px-3 py-2.5 sm:px-1.5 sm:py-0.5 text-xs sm:text-[9px] font-semibold text-red-700 bg-red-50 border border-red-200 rounded-xs hover:bg-red-100 cursor-pointer min-h-[40px] sm:min-h-0"
                                 >
                                   {isEs ? 'Limpiar' : 'Clear'}
                                 </button>
@@ -1307,94 +1530,23 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                                 <button
                                   type="button"
                                   onClick={handleUndoImageCut}
-                                  className="px-1.5 py-0.5 text-[9px] font-bold text-[#1C1B20] bg-[#E5C158]/30 border border-[#B88A58] rounded-xs hover:bg-[#E5C158]/50 cursor-pointer"
+                                  className="px-3 py-2.5 sm:px-1.5 sm:py-0.5 text-xs sm:text-[9px] font-bold text-[#1C1B20] bg-[#E5C158]/30 border border-[#B88A58] rounded-xs hover:bg-[#E5C158]/50 cursor-pointer min-h-[40px] sm:min-h-0"
                                 >
                                   {isEs ? 'Deshacer Corte' : 'Undo Cut'}
                                 </button>
                               )}
                             </div>
                           </div>
-
-                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-0.5">
-                            <div>
-                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
-                                <span>{isEs ? 'Arriba' : 'Cut Top'}</span>
-                                <span className="font-mono text-[#B88A58]">{cropT}%</span>
-                              </div>
-                              <input
-                                type="range"
-                                min={0}
-                                max={45}
-                                value={cropT}
-                                onChange={(e) => {
-                                  setEnableCustomFrame(true);
-                                  setFrameSettings(prev => ({ ...prev, cropTop: Number(e.target.value) }));
-                                }}
-                                className="w-full accent-[#1C1B20] cursor-pointer h-1"
-                              />
-                            </div>
-                            <div>
-                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
-                                <span>{isEs ? 'Abajo' : 'Cut Bottom'}</span>
-                                <span className="font-mono text-[#B88A58]">{cropB}%</span>
-                              </div>
-                              <input
-                                type="range"
-                                min={0}
-                                max={45}
-                                value={cropB}
-                                onChange={(e) => {
-                                  setEnableCustomFrame(true);
-                                  setFrameSettings(prev => ({ ...prev, cropBottom: Number(e.target.value) }));
-                                }}
-                                className="w-full accent-[#1C1B20] cursor-pointer h-1"
-                              />
-                            </div>
-                            <div>
-                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
-                                <span>{isEs ? 'Izquierda' : 'Cut Left'}</span>
-                                <span className="font-mono text-[#B88A58]">{cropL}%</span>
-                              </div>
-                              <input
-                                type="range"
-                                min={0}
-                                max={45}
-                                value={cropL}
-                                onChange={(e) => {
-                                  setEnableCustomFrame(true);
-                                  setFrameSettings(prev => ({ ...prev, cropLeft: Number(e.target.value) }));
-                                }}
-                                className="w-full accent-[#1C1B20] cursor-pointer h-1"
-                              />
-                            </div>
-                            <div>
-                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
-                                <span>{isEs ? 'Derecha' : 'Cut Right'}</span>
-                                <span className="font-mono text-[#B88A58]">{cropR}%</span>
-                              </div>
-                              <input
-                                type="range"
-                                min={0}
-                                max={45}
-                                value={cropR}
-                                onChange={(e) => {
-                                  setEnableCustomFrame(true);
-                                  setFrameSettings(prev => ({ ...prev, cropRight: Number(e.target.value) }));
-                                }}
-                                className="w-full accent-[#1C1B20] cursor-pointer h-1"
-                              />
-                            </div>
-                          </div>
                         </div>
 
                         {/* Row 3: Adjust Frame Fit, Zoom, Position X/Y, Padding & Canvas Color */}
-                        <div className="bg-white border border-[#E2DCD3] rounded-sm p-2.5 grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
+                        <div className={`${mobileStudioTab === 'fit' ? 'grid' : 'hidden sm:grid'} bg-white border border-[#E2DCD3] rounded-sm p-3.5 sm:p-2.5 grid-cols-1 sm:grid-cols-12 gap-3.5 sm:gap-2.5 items-center`}>
                           {/* Fit Mode */}
-                          <div className="sm:col-span-4 space-y-1">
-                            <span className="block text-[9px] font-bold uppercase tracking-wider text-[#1C1B20]">
+                          <div className="sm:col-span-4 space-y-2 sm:space-y-1">
+                            <span className="block text-xs sm:text-[9px] font-bold uppercase tracking-wider text-[#1C1B20]">
                               {isEs ? 'Modo de Ajuste (Fit)' : 'Frame Fit Mode'}
                             </span>
-                            <div className="grid grid-cols-2 gap-1">
+                            <div className="grid grid-cols-2 gap-2 sm:gap-1">
                               {(['cover', 'contain', 'scale-down', 'fill'] as const).map((fitMode) => (
                                 <button
                                   key={fitMode}
@@ -1403,7 +1555,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                                     setEnableCustomFrame(true);
                                     setFrameSettings(prev => ({ ...prev, fit: fitMode }));
                                   }}
-                                  className={`py-1 px-1.5 rounded-xs text-[9px] font-bold uppercase border transition-all cursor-pointer ${
+                                  className={`py-2.5 sm:py-1 px-2.5 sm:px-1.5 rounded-xs text-xs sm:text-[9px] font-bold uppercase border transition-all cursor-pointer min-h-[42px] sm:min-h-0 ${
                                     frameSettings.fit === fitMode
                                       ? 'bg-[#1C1B20] text-white border-[#1C1B20]'
                                       : 'bg-[#FAF8F5] text-[#55524B] border-[#D8D1C5] hover:border-[#1C1B20]'
@@ -1422,9 +1574,9 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                           </div>
 
                           {/* Zoom & Position Sliders */}
-                          <div className="sm:col-span-5 grid grid-cols-2 gap-2">
-                            <div>
-                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
+                          <div className="sm:col-span-5 grid grid-cols-2 gap-3.5 sm:gap-2">
+                            <div className="space-y-1.5 sm:space-y-0">
+                              <div className="flex justify-between text-xs sm:text-[9px] font-semibold text-[#55524B]">
                                 <span>Zoom</span>
                                 <span className="font-mono text-[#B88A58]">{frameSettings.zoom}%</span>
                               </div>
@@ -1437,11 +1589,11 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                                   setEnableCustomFrame(true);
                                   setFrameSettings(prev => ({ ...prev, zoom: Number(e.target.value) }));
                                 }}
-                                className="w-full accent-[#B88A58] cursor-pointer h-1"
+                                className="w-full accent-[#B88A58] cursor-pointer h-2.5 sm:h-1"
                               />
                             </div>
-                            <div>
-                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
+                            <div className="space-y-1.5 sm:space-y-0">
+                              <div className="flex justify-between text-xs sm:text-[9px] font-semibold text-[#55524B]">
                                 <span>{isEs ? 'Margen' : 'Padding'}</span>
                                 <span className="font-mono text-[#B88A58]">{frameSettings.padding}px</span>
                               </div>
@@ -1454,11 +1606,11 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                                   setEnableCustomFrame(true);
                                   setFrameSettings(prev => ({ ...prev, padding: Number(e.target.value) }));
                                 }}
-                                className="w-full accent-[#B88A58] cursor-pointer h-1"
+                                className="w-full accent-[#B88A58] cursor-pointer h-2.5 sm:h-1"
                               />
                             </div>
-                            <div>
-                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
+                            <div className="space-y-1.5 sm:space-y-0">
+                              <div className="flex justify-between text-xs sm:text-[9px] font-semibold text-[#55524B]">
                                 <span>Pos X</span>
                                 <span className="font-mono text-[#B88A58]">{frameSettings.positionX}%</span>
                               </div>
@@ -1471,11 +1623,11 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                                   setEnableCustomFrame(true);
                                   setFrameSettings(prev => ({ ...prev, positionX: Number(e.target.value) }));
                                 }}
-                                className="w-full accent-[#B88A58] cursor-pointer h-1"
+                                className="w-full accent-[#B88A58] cursor-pointer h-2.5 sm:h-1"
                               />
                             </div>
-                            <div>
-                              <div className="flex justify-between text-[9px] font-semibold text-[#55524B]">
+                            <div className="space-y-1.5 sm:space-y-0">
+                              <div className="flex justify-between text-xs sm:text-[9px] font-semibold text-[#55524B]">
                                 <span>Pos Y</span>
                                 <span className="font-mono text-[#B88A58]">{frameSettings.positionY}%</span>
                               </div>
@@ -1488,17 +1640,17 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                                   setEnableCustomFrame(true);
                                   setFrameSettings(prev => ({ ...prev, positionY: Number(e.target.value) }));
                                 }}
-                                className="w-full accent-[#B88A58] cursor-pointer h-1"
+                                className="w-full accent-[#B88A58] cursor-pointer h-2.5 sm:h-1"
                               />
                             </div>
                           </div>
 
                           {/* Canvas Color */}
-                          <div className="sm:col-span-3 space-y-1">
-                            <span className="block text-[9px] font-bold uppercase tracking-wider text-[#1C1B20]">
+                          <div className="sm:col-span-3 space-y-2 sm:space-y-1">
+                            <span className="block text-xs sm:text-[9px] font-bold uppercase tracking-wider text-[#1C1B20]">
                               {isEs ? 'Fondo del Marco' : 'Canvas Color'}
                             </span>
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-3 sm:gap-1.5">
                               {['#F4F0EA', '#FFFFFF', '#EFECE6', '#1C1B20', '#E5DFD3'].map((hex) => (
                                 <button
                                   key={hex}
@@ -1507,7 +1659,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                                     setEnableCustomFrame(true);
                                     setFrameSettings(prev => ({ ...prev, backgroundColor: hex }));
                                   }}
-                                  className={`w-5 h-5 rounded-full border transition-all cursor-pointer ${
+                                  className={`w-8 h-8 sm:w-5 sm:h-5 rounded-full border transition-all cursor-pointer ${
                                     frameSettings.backgroundColor === hex
                                       ? 'border-[#B88A58] scale-110 ring-2 ring-[#B88A58]/40'
                                       : 'border-black/20'
@@ -1517,6 +1669,66 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                                 />
                               ))}
                             </div>
+                          </div>
+                        </div>
+
+                        {/* Mobile 5th Tab Content: Quick Presets (Accessory, Full Bleed, Zoom 115%, Reset) */}
+                        <div className={`${mobileStudioTab === 'presets' ? 'block sm:hidden' : 'hidden'} bg-white border border-[#E2DCD3] rounded-sm p-3.5 space-y-2.5`}>
+                          <span className="text-xs font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1.5">
+                            <Sliders className="w-4 h-4 text-[#B88A58]" />
+                            {isEs ? 'Ajustes Rápidos' : 'Quick Presets'}
+                          </span>
+                          <div className="grid grid-cols-2 gap-2.5">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEnableCustomFrame(true);
+                                setFrameSettings(prev => ({ ...prev, ...HAT_CENTERED_PRESET }));
+                              }}
+                              className="px-3 py-3 text-xs font-bold uppercase bg-[#FAF8F5] hover:bg-[#1C1B20] hover:text-white border border-[#D8D1C5] rounded-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer min-h-[46px]"
+                            >
+                              <Minimize2 className="w-4 h-4 text-[#B88A58]" />
+                              {isEs ? 'Accesorio' : 'Accessory'}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEnableCustomFrame(true);
+                                setFrameSettings(prev => ({ ...prev, ...LUXURY_FULL_BLEED_PRESET }));
+                              }}
+                              className="px-3 py-3 text-xs font-bold uppercase bg-[#FAF8F5] hover:bg-[#1C1B20] hover:text-white border border-[#D8D1C5] rounded-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer min-h-[46px]"
+                            >
+                              <Maximize2 className="w-4 h-4 text-[#B88A58]" />
+                              {isEs ? 'Completo' : 'Full Bleed'}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEnableCustomFrame(true);
+                                setFrameSettings(prev => ({
+                                  ...prev,
+                                  fit: 'cover',
+                                  positionX: 50,
+                                  positionY: 20,
+                                  zoom: 115,
+                                  padding: 0
+                                }));
+                              }}
+                              className="px-3 py-3 text-xs font-bold uppercase bg-[#FAF8F5] hover:bg-[#1C1B20] hover:text-white border border-[#D8D1C5] rounded-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer min-h-[46px]"
+                            >
+                              {isEs ? 'Zoom 115%' : 'Zoom 115%'}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setFrameSettings({ ...DEFAULT_IMAGE_FRAME_SETTINGS });
+                                setIsInteractiveCutMode(false);
+                              }}
+                              className="px-3 py-3 text-xs font-bold uppercase bg-[#FAF8F5] hover:bg-red-600 hover:text-white border border-[#D8D1C5] rounded-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer min-h-[46px]"
+                            >
+                              <RotateCcw className="w-4 h-4" />
+                              {isEs ? 'Restablecer' : 'Reset'}
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -1634,13 +1846,13 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
               <div className="space-y-4 pt-2 border-t border-[#E8E2D9]">
                 <label className="block text-xs font-bold tracking-wider uppercase text-[#1C1B20] flex items-center gap-1.5">
                   <Layers className="w-4 h-4 text-[#B88A58]" />
-                  <span>{isEs ? '3. TALLES, STOCK Y OPCIONES DE COLOR' : '3. Sizes, Stock & Color Options'}</span>
+                  <span>{isEs ? '3. TALLAS MEXICANAS, STOCK Y OPCIONES DE COLOR' : '3. Sizes, Stock & Color Options'}</span>
                 </label>
 
                 {/* Sizes Selector */}
                 <div>
                   <p className="text-[11px] font-semibold text-[#55524B] mb-1.5">
-                    {isEs ? 'Talles Disponibles *' : 'Available Sizes *'}
+                    {isEs ? 'Tallas Disponibles (MX) *' : 'Available Sizes *'}
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {ALL_SIZES.map(sz => {
@@ -1656,7 +1868,7 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                               : 'bg-white text-[#55524B] border-[#D1C9BD] hover:border-[#1C1B20]'
                           }`}
                         >
-                          {sz} {isSelected && '✓'}
+                          {getSizeDisplayName(sz, language)} {isSelected && '✓'}
                         </button>
                       );
                     })}
@@ -1667,12 +1879,12 @@ export function AddProductModal({ isOpen, onClose, onAddProduct, onAddMultiplePr
                 {selectedSizes.length > 0 && (
                   <div className="bg-[#F4F0EA] p-3 rounded-sm border border-[#E8E2D9] space-y-2">
                     <p className="text-[11px] font-bold text-[#1C1B20] uppercase tracking-wider">
-                      {isEs ? 'Desglose de Stock por Talle (Ajustar Unidades Restantes)' : 'Stock Breakdown per Size (Adjust Items Left in Store)'}
+                      {isEs ? 'Desglose de Stock por Talla (Ajustar Unidades Restantes)' : 'Stock Breakdown per Size (Adjust Items Left in Store)'}
                     </p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                       {selectedSizes.map((sz) => (
                         <div key={sz} className="flex items-center gap-1.5 bg-white p-2 border border-[#D1C9BD] rounded-sm shadow-xs">
-                          <span className="text-[11px] font-mono font-semibold text-[#1C1B20] shrink-0">{sz}:</span>
+                          <span className="text-[11px] font-mono font-semibold text-[#1C1B20] shrink-0">{getSizeDisplayName(sz, language)}:</span>
                           <input
                             type="number"
                             min={0}

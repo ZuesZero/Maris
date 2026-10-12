@@ -2,6 +2,8 @@ import React from 'react';
 import { CartItem } from '../types';
 import { CheckCircle2, Package, Truck, Gift, Download, X, ArrowRight } from 'lucide-react';
 import { formatPrice } from '../utils/currency';
+import { Language } from '../data/translations';
+import { getSizeDisplayName } from '../utils/productTranslations';
 
 interface OrderConfirmationModalProps {
   isOpen: boolean;
@@ -10,6 +12,7 @@ interface OrderConfirmationModalProps {
   currency: string;
   appliedDiscount: number;
   giftNote: string;
+  language?: Language;
 }
 
 export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
@@ -18,7 +21,8 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
   cartItems,
   currency,
   appliedDiscount,
-  giftNote
+  giftNote,
+  language = 'en'
 }) => {
   // Close on Escape key
   React.useEffect(() => {
@@ -96,7 +100,7 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
                   <img src={item.product.images[0]} alt={item.product.name} className="w-12 h-16 object-cover rounded-xs border border-[#E8E2D9]" />
                   <div>
                     <h5 className="font-serif text-sm text-[#1A1A1A] font-medium">{item.product.name}</h5>
-                    <p className="text-[10px] text-[#8C9083] font-mono">Size: {item.selectedSize} • Qty: {item.quantity}</p>
+                    <p className="text-[10px] text-[#8C9083] font-mono">{language === 'es' ? 'Talla' : 'Size'}: {getSizeDisplayName(item.selectedSize, language)} • {language === 'es' ? 'Cant' : 'Qty'}: {item.quantity}</p>
                   </div>
                 </div>
                 <span className="font-sans text-sm font-medium text-[#1A1A1A] tabular-nums">

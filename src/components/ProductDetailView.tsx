@@ -3,7 +3,7 @@ import { Product, Size, User } from '../types';
 import { Language } from '../data/translations';
 import { Heart, ShoppingBag, Sparkles, ShieldCheck, Truck, RotateCcw, ChevronDown, ChevronUp, Star, Ruler, Check, Share2, ArrowRight, ArrowLeft, Pencil, ChevronLeft, ChevronRight, Sliders, Trash2, AlertTriangle, X } from 'lucide-react';
 import { formatPrice } from '../utils/currency';
-import { getTranslatedProduct, getCategoryDisplayName } from '../utils/productTranslations';
+import { getTranslatedProduct, getCategoryDisplayName, getSizeDisplayName } from '../utils/productTranslations';
 import { getImageFrameStyles } from '../utils/imageFrame';
 import { ImageFrameAdjusterModal } from './ImageFrameAdjusterModal';
 
@@ -377,18 +377,18 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
             <div className="space-y-3 pt-2">
               <div className="flex justify-between items-center text-xs">
                 <span className="font-semibold uppercase tracking-wider text-[#1A1A1A]">
-                  {language === 'es' ? 'TALLA DE LA PRENDA (EU)' : 'Garment Size (EU)'}
+                  {language === 'es' ? 'TALLA DE LA PRENDA (MX)' : 'Garment Size (EU)'}
                 </span>
                 <button
                   onClick={onOpenSizeGuide}
                   className="text-[#B88A58] hover:underline flex items-center gap-1 font-medium"
                 >
                   <Ruler className="w-3.5 h-3.5" />
-                  <span>{language === 'es' ? 'Guía de Tallas y Ajuste' : 'Size Guide & Fits'}</span>
+                  <span>{language === 'es' ? 'Guía de Tallas (MX) y Ajuste' : 'Size Guide & Fits'}</span>
                 </button>
               </div>
 
-              <div className="grid grid-cols-5 gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                 {product.sizes.map((s) => {
                   const sizeStock = (product.stock && product.stock[s] !== undefined)
                     ? product.stock[s]
@@ -400,7 +400,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                       key={s}
                       disabled={sizeStock === 0}
                       onClick={() => setSelectedSize(s)}
-                      className={`py-3 text-xs font-mono rounded-xs border transition-all flex flex-col items-center justify-center gap-0.5 ${
+                      className={`py-3 px-1.5 text-[11px] sm:text-xs font-mono rounded-xs border transition-all flex flex-col items-center justify-center gap-0.5 ${
                         sizeStock === 0
                           ? 'bg-neutral-100 text-neutral-400 border-neutral-200 cursor-not-allowed opacity-60'
                           : isSelected
@@ -408,7 +408,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                           : 'bg-white text-[#1A1A1A] border-[#E8E2D9] hover:border-[#1A1A1A] cursor-pointer'
                       }`}
                     >
-                      <span>{s}</span>
+                      <span>{getSizeDisplayName(s, language)}</span>
                       <span className={`text-[9px] ${sizeStock === 0 ? 'text-rose-500 font-semibold' : isSelected ? 'text-[#DED3C4]' : 'text-[#8C9083]'}`}>
                         ({sizeStock} {language === 'es' ? 'disp.' : 'left'})
                       </span>
@@ -423,10 +423,10 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                 <span>
                   {currentStock > 0
                     ? (language === 'es'
-                        ? `Solo ${currentStock} ${currentStock === 1 ? 'disponible' : 'disponibles'} en ${selectedSize} — Envío en 24 horas`
+                        ? `Solo ${currentStock} ${currentStock === 1 ? 'disponible' : 'disponibles'} en ${getSizeDisplayName(selectedSize, language)} — Envío en 24 horas`
                         : `Only ${currentStock} left in ${selectedSize} — Ships within 24 hours`)
                     : (language === 'es'
-                        ? `Agotado en tienda para ${selectedSize}`
+                        ? `Agotado en tienda para ${getSizeDisplayName(selectedSize, language)}`
                         : `Out of stock in store for ${selectedSize}`)}
                 </span>
               </div>
@@ -526,7 +526,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                     <ul className="list-disc list-inside space-y-1 text-[11px] text-[#4A4947]">
                       <li>
                         {language === 'es'
-                          ? 'El modelo mide 188cm y viste talla EU 48'
+                          ? 'El modelo mide 188cm y viste talla MX 38 (M)'
                           : 'Model is 188cm / 6\'2" wearing EU size 48'}
                       </li>
                       <li>

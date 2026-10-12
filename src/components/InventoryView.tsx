@@ -52,7 +52,7 @@ import { Product, User, SaleTransaction, Category } from '../types';
 import { INITIAL_SALES_TRANSACTIONS } from '../data/salesData';
 import { Language } from '../data/translations';
 import { getExchangeRate } from '../utils/currency';
-import { getTranslatedProduct, getCategoryDisplayName } from '../utils/productTranslations';
+import { getTranslatedProduct, getCategoryDisplayName, getSizeDisplayName } from '../utils/productTranslations';
 
 interface InventoryViewProps {
   products: Product[];
@@ -1181,7 +1181,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                             <div className="min-w-0 max-w-[150px]">
                               <span className="font-bold text-[#1C1B20] block text-[11px] truncate">{tx.productName}</span>
                               <div className="flex items-center gap-1.5 text-[9px] text-[#8C9083] truncate">
-                                <span>{tx.size}</span>
+                                <span>{getSizeDisplayName(tx.size, lang)}</span>
                                 <span>•</span>
                                 <span className="truncate">{tx.color}</span>
                               </div>
@@ -1810,7 +1810,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                                           className="p-2 bg-[#FAF8F5] border border-[#E8E2D9] rounded-xs flex flex-col justify-between gap-1.5"
                                         >
                                           <div className="flex justify-between items-center text-[11px] font-mono">
-                                            <span className="font-bold text-[#1C1B20]">{s}</span>
+                                            <span className="font-bold text-[#1C1B20]">{getSizeDisplayName(s, lang)}</span>
                                             <span className={sizeQty > 0 ? 'text-[#B88A58]' : 'text-rose-600 font-bold'}>
                                               {sizeQty > 0 ? `${sizeQty} ${lang === 'es' ? 'disp.' : 'left'}` : (lang === 'es' ? 'Agotado' : 'Out')}
                                             </span>
@@ -2010,7 +2010,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                         const szCount = p.stock?.[sz] ?? (p.stockQuantity ?? 0);
                         return (
                           <option key={sz} value={sz}>
-                            {sz} ({szCount} {lang === 'es' ? 'disp.' : 'avail.'})
+                            {getSizeDisplayName(sz, lang)} ({szCount} {lang === 'es' ? 'disp.' : 'avail.'})
                           </option>
                         );
                       })}
@@ -2154,7 +2154,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                     className="w-full p-2 bg-white border border-[#1C1B20] text-xs font-medium text-[#1C1B20]"
                   >
                     {['EU 46', 'EU 48', 'EU 50', 'EU 52', 'EU 54', 'One Size'].map(sz => (
-                      <option key={sz} value={sz}>{sz}</option>
+                      <option key={sz} value={sz}>{getSizeDisplayName(sz, lang)}</option>
                     ))}
                   </select>
                 </div>

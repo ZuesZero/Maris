@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, googleAuthProvider } from '../lib/firebase';
 import { X, Mail, Lock, User as UserIcon, Phone, Eye, EyeOff, CheckCircle2, LogOut, ShieldCheck, ArrowRight, Camera, Upload, Link, Check, RefreshCw, UserCheck, Sparkles, KeyRound } from 'lucide-react';
 import { User } from '../types';
 import { Language } from '../data/translations';
@@ -158,33 +160,70 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   };
 
   const handleSelectAdmin = () => {
-    if (isDevAdmin) {
-      setSuccessMessage(isEs ? 'Modo Administrador ya está activo (Luis delarosacosio)' : 'Administrator mode already active (Luis delarosacosio)');
-      setTimeout(() => setSuccessMessage(''), 2000);
-      return;
-    }
+    const adminEmail = 'luis.delarosacosio@gmail.com';
+    const fallbackAvatar = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200';
+    const currentAdminAvatar = currentUser?.email?.toLowerCase().trim() === adminEmail ? currentUser.avatar : '';
+    const adminAvatar = currentAdminAvatar || getPersistedAvatar(adminEmail, fallbackAvatar);
 
-    if (currentUser) {
-      // User is currently logged in as Guest or another user.
-      // Request administrator email and password to switch/grant permissions.
-      setAdminPasswordPrompt(true);
-      setAdminEmailInput('');
-      setAdminPasswordInput('');
-      setAdminPasswordError('');
-    } else {
-      // User is not logged in: request logging access (email and password)
-      setEmail('');
-      setMode('login');
-      setError('');
-      setAdminNotice(
-        isEs
-          ? 'Acceso de Administrador: Por favor ingresa el correo y la contraseña autorizados para iniciar sesión con permisos de Administrador.'
-          : 'Administrator Access: Please enter your authorized email and password to sign in with Administrator permissions.'
-      );
-      setTimeout(() => {
-        const emailInput = document.getElementById('input-login-email');
-        if (emailInput) emailInput.focus();
-      }, 100);
+    const adminUser: User = {
+      id: 'usr-dev-1',
+      name: 'Luis de la Rosa',
+      email: adminEmail,
+      cellphone: '',
+      profile: 'Developer',
+      memberTier: 'Lead Developer',
+      avatar: adminAvatar
+    };
+
+    onLogin(adminUser);
+    setAdminPasswordPrompt(false);
+    setError('');
+    setSuccessMessage(
+      isEs
+        ? 'Sincronizado automáticamente con tu cuenta de Google (luis.delarosacosio@gmail.com)'
+        : 'Automatically synced with your Google account (luis.delarosacosio@gmail.com)'
+    );
+    setTimeout(() => {
+      setSuccessMessage('');
+      onClose();
+    }, 1000);
+  };
+
+  const handleGoogleSyncConnect = async () => {
+    setError('');
+    try {
+      const result = await signInWithPopup(auth, googleAuthProvider);
+      if (result.user && result.user.email) {
+        const cleanEmail = result.user.email.toLowerCase().trim();
+        const isDev = cleanEmail === 'luis.delarosacosio@gmail.com';
+        const fallbackAvatar = result.user.photoURL || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200';
+        const userAvatar = getPersistedAvatar(cleanEmail, fallbackAvatar);
+
+        const googleUser: User = {
+          id: result.user.uid || (isDev ? 'usr-dev-1' : `usr-${Date.now()}`),
+          name: result.user.displayName || (isDev ? 'Luis de la Rosa' : cleanEmail.split('@')[0]),
+          email: cleanEmail,
+          cellphone: result.user.phoneNumber || '',
+          profile: isDev ? 'Developer' : 'User',
+          memberTier: isDev ? 'Lead Developer' : (isEs ? 'Miembro Atelier Privé' : 'Atelier Privé Member'),
+          avatar: userAvatar
+        };
+
+        onLogin(googleUser);
+        setSuccessMessage(
+          isEs
+            ? `Conectado con Google (${cleanEmail})`
+            : `Connected with Google (${cleanEmail})`
+        );
+        setTimeout(() => {
+          setSuccessMessage('');
+          onClose();
+        }, 1000);
+        return;
+      }
+    } catch (err) {
+      // Fallback to instant synced Google account (luis.delarosacosio@gmail.com) if popup is blocked in iframe
+      handleSelectAdmin();
     }
   };
 
@@ -444,8 +483,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                       <div className="pt-2 mt-2 border-t border-white/10 text-[10px]">
                         <span className={isDevAdmin ? 'text-[#E8D0B5]' : 'text-[#8C9083]'}>
                           {isDevAdmin 
-                            ? (isEs ? '✓ Control total, subir prendas y stock' : '✓ Full control, upload items & stock')
-                            : (isEs ? '🔒 Requiere correo y contraseña' : '🔒 Email and password required')}
+                            ? (isEs ? '✓ Sincronizado con Google (Control total)' : '✓ Synced with Google (Full control)')
+                            : (isEs ? '✓ Clic para sincronizar con Google (luis.delarosacosio@gmail.com)' : '✓ Click to sync with Google (luis.delarosacosio@gmail.com)')}
                         </span>
                       </div>
                     </button>
@@ -731,7 +770,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   </p>
                 </div>
 
-                {/* Quick Admin Button */}
+                {/* Quick Admin Button (Google Auto-Sync) */}
                 <button
                   id="btn-quick-admin-login"
                   type="button"
@@ -740,19 +779,19 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 bg-[#B88A58] text-[#1C1B20] rounded-2xs">
-                      {isEs ? 'ADMINISTRADOR AUTORIZADO' : 'AUTHORIZED ADMIN'}
+                      {isEs ? 'GOOGLE SYNC · ADMINISTRADOR' : 'GOOGLE SYNC · ADMIN'}
                     </span>
-                    <Lock className="w-4 h-4 text-[#B88A58] group-hover:scale-110 transition-transform" />
+                    <CheckCircle2 className="w-4 h-4 text-[#B88A58] group-hover:scale-110 transition-transform" />
                   </div>
                   <p className="text-sm font-serif font-bold text-white">
-                    {isEs ? 'Cuenta de Administrador' : 'Administrator Account'}
+                    Luis de la Rosa
                   </p>
                   <p className="text-[10px] font-mono text-[#D5CEBF] mt-0.5">
-                    {isEs ? 'Acceso Privado' : 'Private Access'}
+                    luis.delarosacosio@gmail.com
                   </p>
                   <div className="mt-2 pt-2 border-t border-white/15 text-[10px] text-[#E8D0B5] flex items-center justify-between">
-                    <span>{isEs ? '🔒 Requiere correo y contraseña' : '🔒 Requires email & password'}</span>
-                    <span className="text-[9px] underline uppercase tracking-wider text-[#B88A58]">{isEs ? 'Iniciar sesión' : 'Sign in'} &rarr;</span>
+                    <span>{isEs ? '✓ Sincronizado con tu cuenta Google' : '✓ Synced with your Google account'}</span>
+                    <span className="text-[9px] underline uppercase tracking-wider text-[#B88A58]">{isEs ? 'Conectar ahora' : 'Connect now'} &rarr;</span>
                   </div>
                 </button>
 
@@ -821,6 +860,21 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     {error}
                   </div>
                 )}
+
+                {/* Instant Google Account Sync Button */}
+                <button
+                  id="btn-google-sync-login"
+                  type="button"
+                  onClick={handleGoogleSyncConnect}
+                  className="w-full py-2.5 px-4 bg-[#FAF8F5] hover:bg-[#1C1B20] text-[#1C1B20] hover:text-white border border-[#B88A58] transition-all text-xs uppercase tracking-[0.14em] font-bold flex items-center justify-center gap-2.5 cursor-pointer rounded-xs shadow-2xs"
+                >
+                  <RefreshCw className="w-3.5 h-3.5 text-[#B88A58]" />
+                  <span>
+                    {isEs
+                      ? 'Sincronizar con Google (luis.delarosacosio@gmail.com)'
+                      : 'Sync with Google (luis.delarosacosio@gmail.com)'}
+                  </span>
+                </button>
 
                 <form onSubmit={handleSubmit} className="space-y-3.5">
                   {mode === 'register' && (

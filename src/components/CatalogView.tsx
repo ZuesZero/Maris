@@ -3,7 +3,7 @@ import { Product, FilterState, User, Category } from '../types';
 import { Language } from '../data/translations';
 import { Eye, Heart, ShoppingBag, SlidersHorizontal, X, ArrowUpDown, Grid, LayoutGrid, PlusCircle, Pencil, Sparkles, Mic, MicOff, Search, Trash2, AlertTriangle } from 'lucide-react';
 import { formatPrice } from '../utils/currency';
-import { getTranslatedProduct, getCategoryDisplayName } from '../utils/productTranslations';
+import { getTranslatedProduct, getCategoryDisplayName, getSizeDisplayName } from '../utils/productTranslations';
 import { getImageFrameStyles } from '../utils/imageFrame';
 import { ImageFrameAdjusterModal } from './ImageFrameAdjusterModal';
 
@@ -422,7 +422,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
               <input
                 id="input-catalog-voice-search"
                 type="text"
-                placeholder={language === 'es' ? 'Buscar cashmere, seda, abrigo, cruzado, color, talle...' : 'Search cashmere, silk, overcoat, double-breasted, color, size...'}
+                placeholder={language === 'es' ? 'Buscar cashmere, seda, abrigo, cruzado, color, talla...' : 'Search cashmere, silk, overcoat, double-breasted, color, size...'}
                 value={filters.searchQuery}
                 onChange={(e) => setFilters({ ...filters, searchQuery: e.target.value })}
                 className="w-full bg-transparent py-2 px-3 text-xs text-[#1A1A1A] focus:outline-none placeholder-[#8C9083]"
@@ -488,7 +488,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
 
             {/* Size Filter */}
             <div className="space-y-2">
-              <label className="text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]">{language === 'es' ? 'Talle' : 'Garment Size'}</label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]">{language === 'es' ? 'Talla (MX)' : 'Garment Size'}</label>
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {sizes.map((s) => (
                   <button
@@ -500,7 +500,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
                         : 'bg-white text-[#4A4947] border-[#E8E2D9] hover:border-[#1A1A1A]'
                     }`}
                   >
-                    {s}
+                    {getSizeDisplayName(s, language)}
                   </button>
                 ))}
               </div>
@@ -544,7 +544,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           )}
           {filters.size && (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1C1B20] text-white text-[10px] uppercase font-semibold rounded-full">
-              Size: {filters.size}
+              {language === 'es' ? 'Talla' : 'Size'}: {getSizeDisplayName(filters.size, language)}
               <X className="w-3 h-3 cursor-pointer" onClick={() => setFilters({ ...filters, size: '' })} />
             </span>
           )}
@@ -719,7 +719,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
                                 }`}
                                 title={isOutOfStock ? (language === 'es' ? 'Talla agotada' : 'Size out of stock') : `${sizeStock} ${language === 'es' ? 'disponibles' : 'available'}`}
                               >
-                                <span>{s}</span>
+                                <span>{getSizeDisplayName(s, language)}</span>
                                 <span className={`text-[9px] ${isOutOfStock ? 'text-neutral-400' : 'text-[#B88A58] font-bold'}`}>
                                   ({sizeStock})
                                 </span>

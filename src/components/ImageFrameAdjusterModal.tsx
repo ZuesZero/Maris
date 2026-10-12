@@ -57,6 +57,7 @@ export const ImageFrameAdjusterModal: React.FC<ImageFrameAdjusterModalProps> = (
 
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [mobileTab, setMobileTab] = useState<'rotation' | 'mirror' | 'cut' | 'fit' | 'presets'>('rotation');
   const [isCutModeActive, setIsCutModeActive] = useState(false);
   const [isCuttingImage, setIsCuttingImage] = useState(false);
 
@@ -476,8 +477,8 @@ export const ImageFrameAdjusterModal: React.FC<ImageFrameAdjusterModalProps> = (
                 )}
               </div>
 
-              {/* Compact Quick Presets under Preview */}
-              <div className="mt-3 pt-2.5 border-t border-[#E8E2D9] space-y-1.5">
+              {/* Compact Quick Presets under Preview (Desktop only; moved to 5th tab on Mobile) */}
+              <div className="hidden sm:block mt-3 pt-2.5 border-t border-[#E8E2D9] space-y-1.5">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] block">
                   {isEs ? 'Ajustes Rápidos (Presets)' : 'Quick Presets'}
                 </span>
@@ -510,27 +511,109 @@ export const ImageFrameAdjusterModal: React.FC<ImageFrameAdjusterModalProps> = (
               </div>
             </div>
 
-            {/* RIGHT COLUMN (8 cols): All Picture Modification Controls in One Shot */}
+            {/* RIGHT COLUMN (8 cols): All Picture Modification Controls in One Shot (5 Tabs on Mobile) */}
             <div className="lg:col-span-8 flex flex-col justify-between gap-3">
+              {/* Mobile 5-Tab Bar (Icons Only): 1. IMAGE ROTATION, 2. MIRROR OPTION, 3. CUT IMAGE ADJUST, 4. FRAME FIT MODE, 5. QUICK PRESETS */}
+              <div className="grid grid-cols-5 gap-1.5 sm:hidden bg-[#E8E2D9]/80 p-1.5 rounded-sm border border-[#D8D1C5]">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileTab('rotation');
+                    handleStepRotate90();
+                  }}
+                  title={isEs ? 'Girar +90°' : 'Turn +90°'}
+                  aria-label={isEs ? 'Girar +90°' : 'Turn +90°'}
+                  className={`flex items-center justify-center py-2.5 px-1 rounded-xs transition-all cursor-pointer min-h-[44px] ${
+                    mobileTab === 'rotation'
+                      ? 'bg-[#1C1B20] text-[#E5C158] shadow-xs border border-[#1C1B20]'
+                      : 'bg-white text-[#55524B] border border-[#D8D1C5]'
+                  }`}
+                >
+                  <RotateCw className={`w-5 h-5 shrink-0 ${mobileTab === 'rotation' ? 'text-[#E5C158]' : 'text-[#B88A58]'}`} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileTab('mirror');
+                    handleToggleMirrorX();
+                  }}
+                  title={isEs ? 'Espejo Horizontal' : 'Horizontal Mirror'}
+                  aria-label={isEs ? 'Espejo Horizontal' : 'Horizontal Mirror'}
+                  className={`flex items-center justify-center py-2.5 px-1 rounded-xs transition-all cursor-pointer min-h-[44px] ${
+                    mobileTab === 'mirror'
+                      ? 'bg-[#1C1B20] text-[#E5C158] shadow-xs border border-[#1C1B20]'
+                      : 'bg-white text-[#55524B] border border-[#D8D1C5]'
+                  }`}
+                >
+                  <FlipHorizontal2 className={`w-5 h-5 shrink-0 ${mobileTab === 'mirror' ? 'text-[#E5C158]' : 'text-[#B88A58]'}`} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsCutModeActive(prev => (mobileTab === 'cut' ? !prev : true));
+                    setMobileTab('cut');
+                  }}
+                  title={isEs ? 'Caja de Corte' : 'Cut Box'}
+                  aria-label={isEs ? 'Caja de Corte' : 'Cut Box'}
+                  className={`flex items-center justify-center py-2.5 px-1 rounded-xs transition-all cursor-pointer min-h-[44px] ${
+                    mobileTab === 'cut'
+                      ? 'bg-[#1C1B20] text-[#E5C158] shadow-xs border border-[#1C1B20]'
+                      : 'bg-white text-[#55524B] border border-[#D8D1C5]'
+                  }`}
+                >
+                  <Scissors className={`w-5 h-5 shrink-0 ${mobileTab === 'cut' ? 'text-[#E5C158]' : 'text-[#B88A58]'}`} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setMobileTab('fit')}
+                  title={isEs ? 'Modo Ajuste' : 'Frame Fit Mode'}
+                  aria-label={isEs ? 'Modo Ajuste' : 'Frame Fit Mode'}
+                  className={`flex items-center justify-center py-2.5 px-1 rounded-xs transition-all cursor-pointer min-h-[44px] ${
+                    mobileTab === 'fit'
+                      ? 'bg-[#1C1B20] text-[#E5C158] shadow-xs border border-[#1C1B20]'
+                      : 'bg-white text-[#55524B] border border-[#D8D1C5]'
+                  }`}
+                >
+                  <Maximize2 className={`w-5 h-5 shrink-0 ${mobileTab === 'fit' ? 'text-[#E5C158]' : 'text-[#B88A58]'}`} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setMobileTab('presets')}
+                  title={isEs ? 'Ajustes Rápidos' : 'Quick Presets'}
+                  aria-label={isEs ? 'Ajustes Rápidos' : 'Quick Presets'}
+                  className={`flex items-center justify-center py-2.5 px-1 rounded-xs transition-all cursor-pointer min-h-[44px] ${
+                    mobileTab === 'presets'
+                      ? 'bg-[#1C1B20] text-[#E5C158] shadow-xs border border-[#1C1B20]'
+                      : 'bg-white text-[#55524B] border border-[#D8D1C5]'
+                  }`}
+                >
+                  <Sliders className={`w-5 h-5 shrink-0 ${mobileTab === 'presets' ? 'text-[#E5C158]' : 'text-[#B88A58]'}`} />
+                </button>
+              </div>
+
               {/* 1. ROTATION (90°, 180°, 270°, 360°) & MIRROR OPTION */}
-              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 bg-white p-3 rounded-md border border-[#E8E2D9] shadow-xs">
+              <div className={`${mobileTab === 'rotation' || mobileTab === 'mirror' ? 'grid' : 'hidden sm:grid'} grid-cols-1 sm:grid-cols-12 gap-3 bg-white p-3 rounded-md border border-[#E8E2D9] shadow-xs`}>
                 {/* Image Rotation (7 cols) */}
-                <div className="sm:col-span-7 space-y-2">
+                <div className={`${mobileTab === 'rotation' ? 'block' : 'hidden sm:block'} sm:col-span-7 space-y-2`}>
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1">
-                      <RotateCw className="w-3.5 h-3.5 text-[#B88A58]" />
+                    <span className="text-xs sm:text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1">
+                      <RotateCw className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#B88A58]" />
                       {isEs ? 'Rotación de Imagen' : 'Image Rotation'}
                     </span>
                     <button
                       type="button"
                       onClick={handleStepRotate90}
-                      className="text-[10px] font-mono px-2 py-0.5 bg-[#F4F0EA] hover:bg-[#1C1B20] hover:text-white text-[#1C1B20] border border-[#D1C9BD] rounded-xs transition-colors cursor-pointer"
+                      className="text-xs sm:text-[10px] font-mono px-3 py-1.5 sm:px-2 sm:py-0.5 bg-[#F4F0EA] hover:bg-[#1C1B20] hover:text-white text-[#1C1B20] border border-[#D1C9BD] rounded-xs transition-colors cursor-pointer"
                     >
                       {isEs ? 'Girar +90°' : 'Turn +90°'}
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-4 gap-1.5">
+                  <div className="grid grid-cols-4 gap-2 sm:gap-1.5">
                     {[90, 180, 270, 360].map((deg) => {
                       const isActive = rotationDeg === deg;
                       return (
@@ -538,14 +621,14 @@ export const ImageFrameAdjusterModal: React.FC<ImageFrameAdjusterModalProps> = (
                           key={deg}
                           type="button"
                           onClick={() => handleSelectRotation(deg)}
-                          className={`py-1.5 px-2 text-xs font-mono font-bold rounded-xs border transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                          className={`py-2.5 sm:py-1.5 px-2 text-xs font-mono font-bold rounded-xs border transition-all flex items-center justify-center gap-1 cursor-pointer min-h-[42px] sm:min-h-0 ${
                             isActive
                               ? 'bg-[#1C1B20] text-[#FAF8F5] border-[#B88A58] ring-1 ring-[#B88A58]'
                               : 'bg-[#FAF8F5] hover:bg-[#F4F0EA] text-[#1C1B20] border-[#D1C9BD]'
                           }`}
                         >
                           <RotateCw
-                            className={`w-3 h-3 ${isActive ? 'text-[#D49B35]' : 'text-[#8C9083]'}`}
+                            className={`w-3.5 h-3.5 sm:w-3 sm:h-3 ${isActive ? 'text-[#D49B35]' : 'text-[#8C9083]'}`}
                             style={{ transform: `rotate(${deg}deg)` }}
                           />
                           <span>{deg}°</span>
@@ -556,47 +639,47 @@ export const ImageFrameAdjusterModal: React.FC<ImageFrameAdjusterModalProps> = (
                 </div>
 
                 {/* Mirror Option (5 cols) */}
-                <div className="sm:col-span-5 space-y-2">
+                <div className={`${mobileTab === 'mirror' ? 'block' : 'hidden sm:block'} sm:col-span-5 space-y-2`}>
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1">
-                      <FlipHorizontal2 className="w-3.5 h-3.5 text-[#B88A58]" />
+                    <span className="text-xs sm:text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] flex items-center gap-1">
+                      <FlipHorizontal2 className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#B88A58]" />
                       {isEs ? 'Opción Espejo' : 'Mirror Option'}
                     </span>
                     {(settings.mirrorX || settings.mirrorY) && (
                       <button
                         type="button"
                         onClick={() => setSettings((prev) => ({ ...prev, mirrorX: false, mirrorY: false }))}
-                        className="text-[9px] font-mono text-[#B88A58] hover:underline cursor-pointer"
+                        className="text-xs sm:text-[9px] font-mono text-[#B88A58] hover:underline cursor-pointer"
                       >
                         {isEs ? 'Reset' : 'Reset'}
                       </button>
                     )}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-1.5">
+                  <div className="grid grid-cols-2 gap-2 sm:gap-1.5">
                     <button
                       type="button"
                       onClick={handleToggleMirrorX}
-                      className={`py-1.5 px-2 text-[11px] font-semibold rounded-xs border transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                      className={`py-2.5 sm:py-1.5 px-2 text-xs sm:text-[11px] font-semibold rounded-xs border transition-all flex items-center justify-center gap-1.5 sm:gap-1 cursor-pointer min-h-[42px] sm:min-h-0 ${
                         settings.mirrorX
                           ? 'bg-[#1C1B20] text-[#FAF8F5] border-[#B88A58] ring-1 ring-[#B88A58]'
                           : 'bg-[#FAF8F5] hover:bg-[#F4F0EA] text-[#1C1B20] border-[#D1C9BD]'
                       }`}
                     >
-                      <FlipHorizontal2 className={`w-3.5 h-3.5 ${settings.mirrorX ? 'text-[#D49B35]' : 'text-[#8C9083]'}`} />
+                      <FlipHorizontal2 className={`w-4 h-4 sm:w-3.5 sm:h-3.5 ${settings.mirrorX ? 'text-[#D49B35]' : 'text-[#8C9083]'}`} />
                       <span>{isEs ? 'Horizontal' : 'Horizontal'}</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={handleToggleMirrorY}
-                      className={`py-1.5 px-2 text-[11px] font-semibold rounded-xs border transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                      className={`py-2.5 sm:py-1.5 px-2 text-xs sm:text-[11px] font-semibold rounded-xs border transition-all flex items-center justify-center gap-1.5 sm:gap-1 cursor-pointer min-h-[42px] sm:min-h-0 ${
                         settings.mirrorY
                           ? 'bg-[#1C1B20] text-[#FAF8F5] border-[#B88A58] ring-1 ring-[#B88A58]'
                           : 'bg-[#FAF8F5] hover:bg-[#F4F0EA] text-[#1C1B20] border-[#D1C9BD]'
                       }`}
                     >
-                      <FlipVertical2 className={`w-3.5 h-3.5 ${settings.mirrorY ? 'text-[#D49B35]' : 'text-[#8C9083]'}`} />
+                      <FlipVertical2 className={`w-4 h-4 sm:w-3.5 sm:h-3.5 ${settings.mirrorY ? 'text-[#D49B35]' : 'text-[#8C9083]'}`} />
                       <span>{isEs ? 'Vertical' : 'Vertical'}</span>
                     </button>
                   </div>
@@ -604,7 +687,7 @@ export const ImageFrameAdjusterModal: React.FC<ImageFrameAdjusterModalProps> = (
               </div>
 
               {/* 2. CUT IMAGE TO ADJUST (CROP / TRIM CONTROLS) */}
-              <div className="bg-white p-3 rounded-md border border-[#E8E2D9] shadow-xs space-y-2.5">
+              <div className={`${mobileTab === 'cut' ? 'block' : 'hidden sm:block'} bg-white p-3 rounded-md border border-[#E8E2D9] shadow-xs space-y-2.5`}>
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5">
                     <Scissors className="w-3.5 h-3.5 text-[#B88A58]" />
@@ -613,37 +696,17 @@ export const ImageFrameAdjusterModal: React.FC<ImageFrameAdjusterModalProps> = (
                     </span>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsCutModeActive(true);
-                        setSettings((prev) => ({ ...prev, cropTop: 8, cropBottom: 8, cropLeft: 8, cropRight: 8 }));
-                      }}
-                      className="px-2 py-1 text-[10px] font-mono bg-[#FAF8F5] hover:bg-[#F4F0EA] border border-[#D1C9BD] rounded-xs cursor-pointer"
-                    >
-                      {isEs ? 'Bordes 8%' : 'Trim 8%'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsCutModeActive(true);
-                        setSettings((prev) => ({ ...prev, cropTop: 15, cropBottom: 15, cropLeft: 0, cropRight: 0 }));
-                      }}
-                      className="px-2 py-1 text-[10px] font-mono bg-[#FAF8F5] hover:bg-[#F4F0EA] border border-[#D1C9BD] rounded-xs cursor-pointer"
-                    >
-                      {isEs ? 'Cuadrado 15%' : 'Square 15%'}
-                    </button>
+                  <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-1.5 w-full sm:w-auto">
                     <button
                       type="button"
                       onClick={() => setIsCutModeActive((prev) => !prev)}
-                      className={`px-2.5 py-1 text-[10px] font-semibold rounded-xs border transition-all flex items-center gap-1 cursor-pointer ${
+                      className={`px-3 py-2.5 sm:px-2.5 sm:py-1 text-xs sm:text-[10px] font-semibold rounded-xs border transition-all flex items-center justify-center gap-1.5 sm:gap-1 cursor-pointer min-h-[42px] sm:min-h-0 ${
                         isCutModeActive
                           ? 'bg-[#B88A58] text-white border-[#B88A58]'
                           : 'bg-[#FAF8F5] hover:bg-[#1C1B20] hover:text-white text-[#1C1B20] border-[#D1C9BD]'
                       }`}
                     >
-                      <Crop className="w-3 h-3" />
+                      <Crop className="w-4 h-4 sm:w-3 sm:h-3 shrink-0" />
                       <span>
                         {isCutModeActive
                           ? isEs ? 'Ocultar Caja' : 'Hide Cut Box'
@@ -651,21 +714,19 @@ export const ImageFrameAdjusterModal: React.FC<ImageFrameAdjusterModalProps> = (
                       </span>
                     </button>
 
-                    {hasActiveCrop && (
-                      <button
-                        type="button"
-                        disabled={isCuttingImage}
-                        onClick={handleApplyCutToImage}
-                        className="px-2.5 py-1 bg-[#1C1B20] hover:bg-[#B88A58] text-white text-[10px] font-semibold rounded-xs transition-all flex items-center gap-1 cursor-pointer"
-                      >
-                        <Scissors className="w-3 h-3 text-[#D49B35]" />
-                        <span>
-                          {isCuttingImage
-                            ? isEs ? 'Cortando...' : 'Cutting...'
-                            : isEs ? 'Cortar Ahora' : 'Apply Cut'}
-                        </span>
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      disabled={isCuttingImage}
+                      onClick={handleApplyCutToImage}
+                      className="px-3 py-2.5 sm:px-2.5 sm:py-1 bg-[#B88A58] hover:bg-[#c99b68] text-[#1C1B20] text-xs sm:text-[10px] font-bold uppercase tracking-wider rounded-xs transition-all flex items-center justify-center gap-1.5 sm:gap-1 cursor-pointer disabled:opacity-40 min-h-[42px] sm:min-h-0"
+                    >
+                      <Scissors className="w-4 h-4 sm:w-3 sm:h-3 shrink-0" />
+                      <span>
+                        {isCuttingImage
+                          ? isEs ? 'Cortando...' : 'Cutting...'
+                          : isEs ? 'Aplicar Corte' : 'Apply Cut'}
+                      </span>
+                    </button>
 
                     {(hasActiveCrop || hasAppliedCanvasCut) && (
                       <button
@@ -679,73 +740,10 @@ export const ImageFrameAdjusterModal: React.FC<ImageFrameAdjusterModalProps> = (
                     )}
                   </div>
                 </div>
-
-                {/* 4 Edge Cut Sliders in One Compact Row */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                  <div>
-                    <div className="flex justify-between text-[10px] font-semibold text-[#55524B]">
-                      <span>{isEs ? 'Arriba' : 'Cut Top'}</span>
-                      <span className="font-mono text-[#B88A58]">{cropT}%</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="0"
-                      max="45"
-                      value={cropT}
-                      onChange={(e) => setSettings({ ...settings, cropTop: Number(e.target.value) })}
-                      className="w-full h-1.5 accent-[#B88A58] cursor-pointer"
-                    />
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-[10px] font-semibold text-[#55524B]">
-                      <span>{isEs ? 'Abajo' : 'Cut Bottom'}</span>
-                      <span className="font-mono text-[#B88A58]">{cropB}%</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="0"
-                      max="45"
-                      value={cropB}
-                      onChange={(e) => setSettings({ ...settings, cropBottom: Number(e.target.value) })}
-                      className="w-full h-1.5 accent-[#B88A58] cursor-pointer"
-                    />
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-[10px] font-semibold text-[#55524B]">
-                      <span>{isEs ? 'Izquierda' : 'Cut Left'}</span>
-                      <span className="font-mono text-[#B88A58]">{cropL}%</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="0"
-                      max="45"
-                      value={cropL}
-                      onChange={(e) => setSettings({ ...settings, cropLeft: Number(e.target.value) })}
-                      className="w-full h-1.5 accent-[#B88A58] cursor-pointer"
-                    />
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-[10px] font-semibold text-[#55524B]">
-                      <span>{isEs ? 'Derecha' : 'Cut Right'}</span>
-                      <span className="font-mono text-[#B88A58]">{cropR}%</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="0"
-                      max="45"
-                      value={cropR}
-                      onChange={(e) => setSettings({ ...settings, cropRight: Number(e.target.value) })}
-                      className="w-full h-1.5 accent-[#B88A58] cursor-pointer"
-                    />
-                  </div>
-                </div>
               </div>
 
               {/* 3. MANUAL FRAME ADJUSTMENT CONTROLS (FIT, COLOR, ZOOM, PADDING, POS X/Y) */}
-              <div className="bg-white p-3 rounded-md border border-[#E8E2D9] shadow-xs space-y-2.5">
+              <div className={`${mobileTab === 'fit' ? 'block' : 'hidden sm:block'} bg-white p-3 rounded-md border border-[#E8E2D9] shadow-xs space-y-2.5`}>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#1C1B20] block">
                   {isEs ? 'Ajuste de Marco, Posición y Escala' : 'Frame Fit, Position & Zoom Controls'}
                 </span>
@@ -859,6 +857,47 @@ export const ImageFrameAdjusterModal: React.FC<ImageFrameAdjusterModalProps> = (
                       className="w-full h-1.5 accent-[#B88A58] cursor-pointer"
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* 4. MOBILE 5TH TAB: QUICK PRESETS (Accessory, Full Bleed, Zoom 115%, Reset) */}
+              <div className={`${mobileTab === 'presets' ? 'block sm:hidden' : 'hidden'} bg-white p-3.5 rounded-md border border-[#E8E2D9] shadow-xs space-y-2.5`}>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#1C1B20] block">
+                  {isEs ? 'Ajustes Rápidos (Presets)' : 'Quick Presets'}
+                </span>
+                <div className="grid grid-cols-2 gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => handleApplyPreset(HAT_CENTERED_PRESET)}
+                    className="px-3 py-3 bg-[#FAF8F5] hover:bg-[#1C1B20] hover:text-white border border-[#D8D1C5] rounded-xs text-xs font-bold uppercase text-[#1C1B20] transition-colors flex items-center justify-center gap-1.5 cursor-pointer min-h-[46px]"
+                  >
+                    <span>{isEs ? 'Accesorio' : 'Accessory'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleApplyPreset(LUXURY_FULL_BLEED_PRESET)}
+                    className="px-3 py-3 bg-[#FAF8F5] hover:bg-[#1C1B20] hover:text-white border border-[#D8D1C5] rounded-xs text-xs font-bold uppercase text-[#1C1B20] transition-colors flex items-center justify-center gap-1.5 cursor-pointer min-h-[46px]"
+                  >
+                    <span>{isEs ? 'Completo' : 'Full Bleed'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleApplyPreset({ ...HAT_CENTERED_PRESET, zoom: 115, padding: 0 })}
+                    className="px-3 py-3 bg-[#FAF8F5] hover:bg-[#1C1B20] hover:text-white border border-[#D8D1C5] rounded-xs text-xs font-bold uppercase text-[#1C1B20] transition-colors flex items-center justify-center gap-1.5 cursor-pointer min-h-[46px]"
+                  >
+                    <span>{isEs ? 'Zoom 115%' : 'Zoom 115%'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSettings(DEFAULT_IMAGE_FRAME_SETTINGS);
+                      setIsCutModeActive(false);
+                    }}
+                    className="px-3 py-3 bg-[#FAF8F5] hover:bg-red-600 hover:text-white border border-[#D8D1C5] rounded-xs text-xs font-bold uppercase text-[#1C1B20] transition-colors flex items-center justify-center gap-1.5 cursor-pointer min-h-[46px]"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                    <span>{isEs ? 'Restablecer' : 'Reset'}</span>
+                  </button>
                 </div>
               </div>
             </div>

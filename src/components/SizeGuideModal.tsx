@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { X, Ruler, Check } from 'lucide-react';
+import { X, Ruler } from 'lucide-react';
+import { Language } from '../data/translations';
 
 interface SizeGuideModalProps {
   isOpen: boolean;
   onClose: () => void;
+  language?: Language;
 }
 
-export const SizeGuideModal: React.FC<SizeGuideModalProps> = ({ isOpen, onClose }) => {
+export const SizeGuideModal: React.FC<SizeGuideModalProps> = ({ isOpen, onClose, language = 'en' }) => {
+  const isEs = language === 'es';
   const [unit, setUnit] = useState<'cm' | 'inches'>('cm');
 
   // Close on Escape key
@@ -24,11 +27,11 @@ export const SizeGuideModal: React.FC<SizeGuideModalProps> = ({ isOpen, onClose 
   if (!isOpen) return null;
 
   const measurements = [
-    { size: 'EU 46 (XS/S)', chestCm: '92-96', chestIn: '36-38', waistCm: '78-82', waistIn: '30-32', sleeveCm: '63', sleeveIn: '24.8' },
-    { size: 'EU 48 (S/M)', chestCm: '96-100', chestIn: '38-40', waistCm: '82-86', waistIn: '32-34', sleeveCm: '64', sleeveIn: '25.2' },
-    { size: 'EU 50 (M/L)', chestCm: '100-104', chestIn: '40-42', waistCm: '86-90', waistIn: '34-36', sleeveCm: '65', sleeveIn: '25.6' },
-    { size: 'EU 52 (L/XL)', chestCm: '104-108', chestIn: '42-44', waistCm: '90-94', waistIn: '36-38', sleeveCm: '66', sleeveIn: '26.0' },
-    { size: 'EU 54 (XL/XXL)', chestCm: '108-112', chestIn: '44-46', waistCm: '94-98', waistIn: '38-40', sleeveCm: '67', sleeveIn: '26.4' },
+    { size: isEs ? 'MX 36 (CH / XS-S)' : 'EU 46 (XS/S)', chestCm: '92-96', chestIn: '36-38', waistCm: '78-82', waistIn: '30-32', sleeveCm: '63', sleeveIn: '24.8' },
+    { size: isEs ? 'MX 38 (M / S-M)' : 'EU 48 (S/M)', chestCm: '96-100', chestIn: '38-40', waistCm: '82-86', waistIn: '32-34', sleeveCm: '64', sleeveIn: '25.2' },
+    { size: isEs ? 'MX 40 (G / M-L)' : 'EU 50 (M/L)', chestCm: '100-104', chestIn: '40-42', waistCm: '86-90', waistIn: '34-36', sleeveCm: '65', sleeveIn: '25.6' },
+    { size: isEs ? 'MX 42 (EG / L-XL)' : 'EU 52 (L/XL)', chestCm: '104-108', chestIn: '42-44', waistCm: '90-94', waistIn: '36-38', sleeveCm: '66', sleeveIn: '26.0' },
+    { size: isEs ? 'MX 44 (EEG / XL-XXL)' : 'EU 54 (XL/XXL)', chestCm: '108-112', chestIn: '44-46', waistCm: '94-98', waistIn: '38-40', sleeveCm: '67', sleeveIn: '26.4' },
   ];
 
   return (
@@ -45,13 +48,15 @@ export const SizeGuideModal: React.FC<SizeGuideModalProps> = ({ isOpen, onClose 
         <div className="space-y-2 border-b border-[#E8E2D9] pb-4">
           <div className="flex items-center gap-2 text-[#B88A58] text-xs font-semibold uppercase tracking-widest">
             <Ruler className="w-4 h-4" />
-            <span>Bespoke Fit Guide</span>
+            <span>{isEs ? 'Guía de Tallas Mexicanas (MX)' : 'Bespoke Fit Guide'}</span>
           </div>
           <h3 className="font-serif text-3xl font-light text-[#1A1A1A]">
-            Garment Measurements & Tailoring
+            {isEs ? 'Medidas de Prenda y Equivalencia de Tallas' : 'Garment Measurements & Tailoring'}
           </h3>
           <p className="text-xs text-[#666562]">
-            Mari's garments are cut according to classic Italian tailoring standards. Our outerwear features a sculpted shoulder with relaxed chest volume.
+            {isEs
+              ? 'Las prendas de Mari están confeccionadas bajo estándares clásicos de sastrería con equivalencia directa a tallas mexicanas (CH, M, G, EG, EEG).'
+              : "Mari's garments are cut according to classic Italian tailoring standards. Our outerwear features a sculpted shoulder with relaxed chest volume."}
           </p>
         </div>
 
@@ -62,13 +67,13 @@ export const SizeGuideModal: React.FC<SizeGuideModalProps> = ({ isOpen, onClose 
               onClick={() => setUnit('cm')}
               className={`px-3 py-1 rounded-xs transition-colors ${unit === 'cm' ? 'bg-[#1C1B20] text-white font-bold' : 'text-[#666562]'}`}
             >
-              Metric (cm)
+              {isEs ? 'Métrico (cm)' : 'Metric (cm)'}
             </button>
             <button
               onClick={() => setUnit('inches')}
               className={`px-3 py-1 rounded-xs transition-colors ${unit === 'inches' ? 'bg-[#1C1B20] text-white font-bold' : 'text-[#666562]'}`}
             >
-              Imperial (in)
+              {isEs ? 'Imperial (in)' : 'Imperial (in)'}
             </button>
           </div>
         </div>
@@ -78,10 +83,10 @@ export const SizeGuideModal: React.FC<SizeGuideModalProps> = ({ isOpen, onClose 
           <table className="w-full text-xs text-left text-[#1A1A1A]">
             <thead className="bg-[#1C1B20] text-[#F4F0EA] uppercase font-mono text-[10px] tracking-wider">
               <tr>
-                <th className="py-3 px-4">Size (EU)</th>
-                <th className="py-3 px-4">Chest ({unit})</th>
-                <th className="py-3 px-4">Waist ({unit})</th>
-                <th className="py-3 px-4">Sleeve ({unit})</th>
+                <th className="py-3 px-4">{isEs ? 'Talla (MX)' : 'Size (EU)'}</th>
+                <th className="py-3 px-4">{isEs ? `Pecho (${unit})` : `Chest (${unit})`}</th>
+                <th className="py-3 px-4">{isEs ? `Cintura (${unit})` : `Waist (${unit})`}</th>
+                <th className="py-3 px-4">{isEs ? `Manga (${unit})` : `Sleeve (${unit})`}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E8E2D9] font-mono">
@@ -99,9 +104,13 @@ export const SizeGuideModal: React.FC<SizeGuideModalProps> = ({ isOpen, onClose 
 
         {/* Tailoring Notes */}
         <div className="p-4 bg-[#F4F0EA] border border-[#E8E2D9] rounded-sm space-y-2 text-xs text-[#4A4947]">
-          <h4 className="font-serif text-lg text-[#1A1A1A]">Need Fit Assistance?</h4>
+          <h4 className="font-serif text-lg text-[#1A1A1A]">
+            {isEs ? '¿Necesitas Asistencia con tu Talla?' : 'Need Fit Assistance?'}
+          </h4>
           <p className="leading-relaxed">
-            If you fall between two sizes, we recommend selecting the larger size for a relaxed architectural drape, or consulting our AI Stylist concierge for personalized fitting notes based on your height and shoulder width.
+            {isEs
+              ? 'Si te encuentras entre dos tallas, recomendamos elegir la talla superior para una caída arquitectónica relajada, o consultar a nuestro Estilista IA para recomendaciones personalizadas según tu estatura.'
+              : 'If you fall between two sizes, we recommend selecting the larger size for a relaxed architectural drape, or consulting our AI Stylist concierge for personalized fitting notes based on your height and shoulder width.'}
           </p>
         </div>
 
@@ -109,7 +118,7 @@ export const SizeGuideModal: React.FC<SizeGuideModalProps> = ({ isOpen, onClose 
           onClick={onClose}
           className="w-full py-3 bg-[#1C1B20] text-white text-xs uppercase tracking-widest font-semibold rounded-sm hover:bg-[#B88A58] transition-colors"
         >
-          Return to Product
+          {isEs ? 'Regresar a la Prenda' : 'Return to Product'}
         </button>
       </div>
     </div>

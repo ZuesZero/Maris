@@ -82,6 +82,64 @@ async function startServer() {
 
   app.use(express.json({ limit: "50mb" }));
 
+  // Serve ONNX Runtime Web WASM and MJS worker files directly before Vite middleware
+  app.use(
+    "/ort-wasm",
+    express.static(path.join(process.cwd(), "node_modules/onnxruntime-web/dist"), {
+      maxAge: "7d",
+      setHeaders: (res, filePath) => {
+        if (filePath.endsWith(".mjs") || filePath.endsWith(".js")) {
+          res.setHeader("Content-Type", "application/javascript; charset=utf-8");
+        } else if (filePath.endsWith(".wasm")) {
+          res.setHeader("Content-Type", "application/wasm");
+        }
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+      },
+    })
+  );
+
+  // In-memory cache for the IS-Net Photoroom segmentation model (isnet_quint8)
+  let cachedIsnetModelBuffer: Buffer | null = null;
+  let isnetDownloadPromise: Promise<Buffer> | null = null;
+
+  app.get("/api/isnet-model", async (_req, res) => {
+    try {
+      if (!cachedIsnetModelBuffer) {
+        if (!isnetDownloadPromise) {
+          isnetDownloadPromise = (async () => {
+            const baseUrl = "https://staticimgly.com/@imgly/background-removal-data/1.7.0/dist/";
+            const metaRes = await fetch(baseUrl + "resources.json");
+            if (!metaRes.ok) throw new Error("Failed to fetch IS-Net resources.json");
+            const meta: any = await metaRes.json();
+            const entry = meta["/models/isnet_quint8"];
+            if (!entry || !Array.isArray(entry.chunks)) {
+              throw new Error("Invalid IS-Net model metadata");
+            }
+            const chunkBuffers = await Promise.all(
+              entry.chunks.map(async (c: { name: string }) => {
+                const r = await fetch(baseUrl + c.name);
+                if (!r.ok) throw new Error(`Failed chunk ${c.name}`);
+                return Buffer.from(await r.arrayBuffer());
+              })
+            );
+            cachedIsnetModelBuffer = Buffer.concat(chunkBuffers);
+            return cachedIsnetModelBuffer;
+          })().finally(() => {
+            isnetDownloadPromise = null;
+          });
+        }
+        cachedIsnetModelBuffer = await isnetDownloadPromise;
+      }
+      res.setHeader("Content-Type", "application/octet-stream");
+      res.setHeader("Cache-Control", "public, max-age=604800, immutable");
+      res.send(cachedIsnetModelBuffer);
+    } catch (err) {
+      console.error("IS-Net model proxy error:", err);
+      res.status(500).json({ error: "Failed to load IS-Net segmentation model" });
+    }
+  });
+
   // API Route: Download complete project as ZIP
   app.get("/api/download-zip", (req, res) => {
     try {

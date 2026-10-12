@@ -735,6 +735,8 @@ export async function optimizeImageFile(file: File): Promise<string> {
           return resolve(e.target?.result as string);
         }
 
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, width, height);
         ctx.drawImage(img, 0, 0, width, height);
         // Export as JPEG with 0.82 quality (crisp luxury look, fits well within Firestore 1MB limit)
         const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
